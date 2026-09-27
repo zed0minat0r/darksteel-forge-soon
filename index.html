@@ -120,16 +120,16 @@ form.notify input:focus{border-color:var(--ember)}
 .fade::before,.fade::after{content:"";position:absolute;top:0;bottom:0;width:clamp(40px,12vw,160px);z-index:2;pointer-events:none}
 .fade::before{left:0;background:linear-gradient(90deg,var(--bg) 10%,transparent)}
 .fade::after{right:0;background:linear-gradient(270deg,var(--bg) 10%,transparent)}
-.fade{min-height:clamp(212px,48vw,268px)}
+.fade{min-height:clamp(250px,58vw,318px)}
 .lane{display:flex;gap:1.1rem;width:max-content;padding:.4rem 0;opacity:0;transition:opacity .5s ease;animation:slide 58s linear infinite;animation-play-state:paused}
 .lane.ready{opacity:1;animation-play-state:running}
 .lane.back{animation:slideBack 74s linear infinite;animation-play-state:paused;margin-top:1.1rem}
-.lane.back.ready{opacity:.55}
+.lane.back.ready{opacity:.88}
 .lane:hover{animation-play-state:paused}
 @keyframes slide{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 @keyframes slideBack{from{transform:translateX(-50%)}to{transform:translateX(0)}}
-.lane figure{margin:0;width:clamp(132px,34vw,168px);flex:0 0 auto}
-.lane img{width:100%;aspect-ratio:63/88;object-fit:cover;border-radius:9px;background:#15181c;box-shadow:0 16px 32px rgba(0,0,0,.65);
+.lane figure{margin:0;width:clamp(158px,42vw,200px);flex:0 0 auto}
+.lane img{width:100%;height:auto;aspect-ratio:63/88;object-fit:contain;border-radius:9px;background:#15181c;filter:brightness(1.12) contrast(1.03) saturate(1.05);box-shadow:0 16px 32px rgba(0,0,0,.65);
   transition:transform .4s ease,box-shadow .4s ease}
 .lane figure:hover img{transform:translateY(-8px) scale(1.02);box-shadow:0 26px 46px rgba(0,0,0,.8)}
 .lane figcaption{margin-top:.55rem;font-size:.72rem;line-height:1.35;color:var(--ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -435,7 +435,7 @@ fetch("cards.json").then(r => r.json()).then(async cards => {
   const GAME = { magic: "Magic", pokemon: "Pokemon", onepiece: "One Piece", riftbound: "Riftbound" };
   const draw = (lane, c) => {
     const f = document.createElement("figure");
-    f.innerHTML = `<img src="${c.img}" alt="${c.name}" decoding="async" width="180" height="251"><figcaption>${c.name}<b>${GAME[c.game] || ""}</b></figcaption>`;
+    f.innerHTML = `<img src="${c.img}" alt="${c.name}" decoding="async" width="480" height="670"><figcaption>${c.name}<b>${GAME[c.game] || ""}</b></figcaption>`;
     lane.appendChild(f);
   };
   const a = cards.filter((_, i) => i % 2 === 0), b = cards.filter((_, i) => i % 2 === 1);
