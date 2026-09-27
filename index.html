@@ -175,11 +175,11 @@ form.notify input:focus{border-color:var(--ember)}
    Built the way procedural fire is done without WebGL: a band of stacked radial-gradient "tongues"
    driven through an SVG feTurbulence + feDisplacementMap filter, so the edge writhes instead of sliding.
    The turbulence seed animates, which is what stops it looking like a looping texture. */
-.emberline{position:relative;height:62px;margin:0;pointer-events:none;overflow:hidden}
+.emberline{position:relative;height:78px;margin:0;pointer-events:none;overflow:hidden}
 .emberline canvas{position:absolute;left:0;bottom:0;width:100%;height:100%;display:block;mix-blend-mode:screen}
-.emberline .core{position:absolute;left:-4%;right:-4%;bottom:10px;height:1px;
-  background:linear-gradient(90deg,transparent,rgba(255,130,35,.6) 10%,#ffe6bd 50%,rgba(255,130,35,.6) 90%,transparent);
-  box-shadow:0 0 12px rgba(255,120,30,.6),0 0 34px rgba(255,90,20,.32)}
+.emberline .core{position:absolute;left:0;right:0;bottom:0;height:18px;z-index:2;
+  background:radial-gradient(58% 130% at 50% 100%,rgba(255,150,50,.5),rgba(255,90,20,.14) 58%,transparent 82%);
+  filter:blur(5px)}
 /* ============================================================ SECTION TITLES
    Bigger, with a silver sheen travelling across the steel. */
 .strip h2,.road h2{font-size:clamp(1.7rem,6.4vw,2.9rem);letter-spacing:.14em}
@@ -189,6 +189,29 @@ form.notify input:focus{border-color:var(--ember)}
   animation:sheen 6s linear infinite;filter:drop-shadow(0 2px 0 rgba(0,0,0,.55)) drop-shadow(0 10px 26px rgba(0,0,0,.5))}
 @keyframes sheen{from{background-position:160% 0}to{background-position:-160% 0}}
 @media (prefers-reduced-motion:reduce){.shine{animation:none}}
+
+/* ============================================================ SOCIAL BANNER
+   A lit bar above the footer: the same flame band burning under three forged buttons. */
+.social{position:relative;padding:3.2rem 0 3.4rem;text-align:center;overflow:hidden;
+  background:radial-gradient(70% 120% at 50% 118%,rgba(255,106,26,.16),transparent 72%)}
+.social canvas{position:absolute;left:0;bottom:0;width:100%;height:86px;mix-blend-mode:screen;pointer-events:none}
+.social .wrap{position:relative;z-index:1}
+.social p{color:var(--ink-2);margin:.7rem auto 1.7rem;max-width:40ch}
+.social h2{font-size:clamp(1.4rem,5vw,2.2rem);letter-spacing:.14em;font-family:var(--display);text-transform:uppercase;font-weight:700}
+.socials{display:flex;gap:.9rem;justify-content:center;flex-wrap:wrap}
+.socials a{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:.6rem;
+  min-height:54px;padding:0 1.25rem;border-radius:999px;color:var(--ink);
+  border:1px solid rgba(255,255,255,.14);
+  background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.02));
+  font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;font-weight:700;
+  box-shadow:0 10px 26px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.12);
+  transition:transform .3s,border-color .3s,box-shadow .3s,background .3s}
+.socials a:hover{transform:translateY(-3px);border-color:rgba(255,150,60,.6);
+  background:linear-gradient(180deg,rgba(255,140,50,.20),rgba(255,90,20,.08));
+  box-shadow:0 14px 34px rgba(255,106,26,.28),0 0 0 1px rgba(255,150,60,.25),inset 0 1px 0 rgba(255,255,255,.18)}
+.socials svg{width:20px;height:20px;fill:currentColor;flex:0 0 auto}
+.socials a:hover svg{color:#ffb347}
+@media(max-width:420px){.socials a{padding:0 1rem;font-size:.66rem;letter-spacing:.18em}}
 
 footer{padding:2.2rem 0 3rem;text-align:center;color:var(--ink-3);font-size:.85rem}
 footer .brand{display:inline-flex;align-items:center;gap:.7rem;font-family:var(--display);letter-spacing:.2em;text-transform:uppercase;font-size:.78rem;color:var(--ink-2);min-height:44px}
@@ -291,7 +314,21 @@ footer a{color:var(--ink-2);display:inline-block;padding:.6rem 0}
   </div>
 </section>
 
-<div class="emberline" aria-hidden="true"><canvas class="fband"></canvas><div class="core"></div></div>
+<section class="social">
+  <canvas class="fband" aria-hidden="true"></canvas>
+  <div class="wrap">
+    <p class="eyebrow">Stay close</p>
+    <h2 class="shine">Follow the forge</h2>
+    <p>Drops, restocks and the opening date land here first.</p>
+    <div class="socials">
+      <a href="#" data-soon onclick="event.preventDefault();document.getElementById('soonNote').hidden=false" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 22v-8h2.7l.4-3.1h-3.1V8.9c0-.9.3-1.5 1.6-1.5h1.6V4.6c-.3 0-1.2-.1-2.3-.1-2.3 0-3.9 1.4-3.9 4v2.4H7.8V14h2.7v8h3z"/></svg>Facebook</a>
+      <a href="#" data-soon onclick="event.preventDefault();document.getElementById('soonNote').hidden=false" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.2c3.2 0 3.6 0 4.9.1 1.2.1 1.8.2 2.2.4.6.2 1 .5 1.4.9.4.4.7.8.9 1.4.2.4.4 1 .4 2.2.1 1.3.1 1.7.1 4.9s0 3.6-.1 4.9c-.1 1.2-.2 1.8-.4 2.2-.2.6-.5 1-.9 1.4-.4.4-.8.7-1.4.9-.4.2-1 .4-2.2.4-1.3.1-1.7.1-4.9.1s-3.6 0-4.9-.1c-1.2-.1-1.8-.2-2.2-.4-.6-.2-1-.5-1.4-.9-.4-.4-.7-.8-.9-1.4-.2-.4-.4-1-.4-2.2C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.9c.1-1.2.2-1.8.4-2.2.2-.6.5-1 .9-1.4.4-.4.8-.7 1.4-.9.4-.2 1-.4 2.2-.4C8.4 2.2 8.8 2.2 12 2.2zm0 1.8c-3.1 0-3.5 0-4.8.1-.9 0-1.4.2-1.7.3-.4.2-.7.4-1 .7-.3.3-.5.6-.7 1-.1.3-.3.8-.3 1.7-.1 1.3-.1 1.7-.1 4.8s0 3.5.1 4.8c0 .9.2 1.4.3 1.7.2.4.4.7.7 1 .3.3.6.5 1 .7.3.1.8.3 1.7.3 1.3.1 1.7.1 4.8.1s3.5 0 4.8-.1c.9 0 1.4-.2 1.7-.3.4-.2.7-.4 1-.7.3-.3.5-.6.7-1 .1-.3.3-.8.3-1.7.1-1.3.1-1.7.1-4.8s0-3.5-.1-4.8c0-.9-.2-1.4-.3-1.7-.2-.4-.4-.7-.7-1-.3-.3-.6-.5-1-.7-.3-.1-.8-.3-1.7-.3-1.3-.1-1.7-.1-4.8-.1zm0 3.1a4.9 4.9 0 1 1 0 9.8 4.9 4.9 0 0 1 0-9.8zm0 8.1a3.2 3.2 0 1 0 0-6.4 3.2 3.2 0 0 0 0 6.4zm6.3-8.3a1.15 1.15 0 1 1-2.3 0 1.15 1.15 0 0 1 2.3 0z"/></svg>Instagram</a>
+      <a href="#" data-soon onclick="event.preventDefault();document.getElementById('soonNote').hidden=false" aria-label="X"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.2 3h3.3l-7.2 8.2L21.8 21h-6.6l-5.2-6.6L4.1 21H.8l7.7-8.8L.4 3H7l4.7 6.1L17.2 3zm-1.2 16h1.8L7.8 4.8H5.9L16 19z"/></svg>X</a>
+    </div>
+    <p id="soonNote" class="said" hidden>Accounts go live with the shop - the email list gets the links first.</p>
+  </div>
+</section>
+
 <footer>
   <div class="wrap">
     <span class="brand"><img src="img/sword.png" alt="" width="72" height="458">Darksteel Forge Gaming</span>
@@ -504,6 +541,7 @@ fetch("cards.json").then(r => r.json()).then(async cards => {
   const FS = `precision mediump float; varying vec2 uv; uniform float t; uniform vec2 res;
   vec2 hash2(vec2 p){ p=vec2(dot(p,vec2(127.1,311.7)),dot(p,vec2(269.5,183.3)));
     return -1.0+2.0*fract(sin(p)*43758.5453123); }
+  float hash1(vec2 p){ return fract(sin(dot(p,vec2(41.3,289.1)))*43758.5453); }
   float gnoise(vec2 p){ vec2 i=floor(p),f=fract(p); vec2 u=f*f*(3.0-2.0*f);
     return mix(mix(dot(hash2(i),f),dot(hash2(i+vec2(1,0)),f-vec2(1,0)),u.x),
                mix(dot(hash2(i+vec2(0,1)),f-vec2(0,1)),dot(hash2(i+vec2(1,1)),f-vec2(1,1)),u.x),u.y); }
@@ -511,27 +549,40 @@ fetch("cards.json").then(r => r.json()).then(async cards => {
   float fbm(vec2 p){ float v=0.0,a=0.5; for(int i=0;i<4;i++){ v+=a*gnoise(p); p=M*p; a*=0.5; } return v; }
   void main(){
     vec2 q = uv;
-    float y = q.y;                                  // 0 at the seam, 1 at the top of the strip
+    float y = q.y;
     float ar = res.x / max(res.y, 1.0);
-    vec2 p = vec2(q.x * ar * 2.2, q.y * 2.6 - t * 1.25);
-    vec2 w = vec2(fbm(p * 1.9), fbm(p * 1.9 + vec2(4.3, 1.7)));
-    float n = fbm(p * 2.4 + (0.4 + 1.5 * y) * w);
-    n = n * 0.5 + 0.5;
-    float fuel = (1.0 - smoothstep(0.02, 0.62, y));   // a shallow band, not a burning wall
-    float heat = fuel * (0.22 + 1.45 * n);
-    heat -= smoothstep(0.16, 0.85, y) * 1.05 * (1.0 - n);  // the tips tear into separate tongues
-    heat *= 0.35 + 0.65 * smoothstep(0.0, 0.16, min(q.x, 1.0 - q.x)) ;   // dies out toward the screen edges
-    heat *= smoothstep(0.0, 0.06, y);
-    heat = clamp(heat, 0.0, 1.5);
+    float x = q.x * ar;                                   // square units, so tongues are not stretched
+    // 1. the bed of coals decides where the fire is TALL and where it gaps - this is what was missing
+    float bed = fbm(vec2(x * 1.25 - t * 0.11, 11.3)) * 0.5 + 0.5;
+    bed = smoothstep(0.18, 0.86, bed);
+    float lick = mix(0.16, 0.78, bed);                    // local flame height
+    // 2. rising, domain-warped noise for the body of each tongue
+    vec2 p = vec2(x * 2.3, q.y * 2.0 - t * 1.5);
+    vec2 w = vec2(fbm(p * 1.7), fbm(p * 1.7 + vec2(3.1, 7.7)));
+    float n = fbm(p * 2.6 + (0.35 + 1.8 * y) * w) * 0.5 + 0.5;
+    float h = y / max(lick, 0.001);                       // height measured against this spot's flame
+    float body = (1.0 - smoothstep(0.0, 1.0, h)) * (0.22 + 1.45 * n);
+    body -= smoothstep(0.25, 1.0, h) * 1.2 * (1.0 - n);   // tips break into separate licks
+    body *= smoothstep(0.0, 0.05, y);                     // soft at the seam, no hard cut
+    body *= 0.40 + 0.60 * smoothstep(0.0, 0.14, min(q.x, 1.0 - q.x));   // dies out at the screen edges
+    float heat = clamp(body, 0.0, 1.5);
+    // 3. embers breaking off the tips
+    vec2 cell = floor(vec2(x * 26.0, 1.0));
+    float sp = hash1(cell);
+    float sy = fract(sp * 7.3 + t * (0.22 + sp * 0.35));
+    float sx = x * 26.0 - cell.x - 0.5 + sin((t + sp * 9.0) * 1.7) * 0.22;
+    float spark = smoothstep(0.16, 0.0, abs(sx)) * smoothstep(0.02, 0.0, abs(q.y - sy * 0.95))
+                  * step(0.55, sp) * (1.0 - sy) * bed;
     vec3 col = vec3(0.0);
-    col += vec3(0.42,0.05,0.01) * smoothstep(0.05,0.32,heat);
-    col += vec3(0.92,0.24,0.02) * smoothstep(0.20,0.56,heat);
-    col += vec3(1.00,0.58,0.07) * smoothstep(0.44,0.84,heat);
-    col += vec3(1.00,0.90,0.52) * smoothstep(0.76,1.10,heat);
-    float a = smoothstep(0.16,0.52,heat) * 0.88;
-    gl_FragColor = vec4(col*a, a);
+    col += vec3(0.45,0.06,0.01) * smoothstep(0.04,0.30,heat);
+    col += vec3(0.95,0.26,0.02) * smoothstep(0.18,0.55,heat);
+    col += vec3(1.00,0.62,0.10) * smoothstep(0.42,0.82,heat);
+    col += vec3(1.00,0.92,0.60) * smoothstep(0.74,1.08,heat);
+    col += vec3(1.00,0.80,0.45) * spark * 2.2;
+    float a = smoothstep(0.18,0.56,heat) * 0.86 + spark * 1.6;
+    gl_FragColor = vec4(col*a, clamp(a,0.0,1.0));
   }`;
-  document.querySelectorAll(".emberline .fband").forEach(cv => {
+  document.querySelectorAll(".fband").forEach(cv => {
     const gl = cv.getContext("webgl", { alpha: true, premultipliedAlpha: true, antialias: false });
     if (!gl) { cv.remove(); return; }
     const sh = (ty, src) => { const o = gl.createShader(ty); gl.shaderSource(o, src); gl.compileShader(o);
