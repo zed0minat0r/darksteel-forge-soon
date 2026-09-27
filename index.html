@@ -175,7 +175,7 @@ form.notify input:focus{border-color:var(--ember)}
    Built the way procedural fire is done without WebGL: a band of stacked radial-gradient "tongues"
    driven through an SVG feTurbulence + feDisplacementMap filter, so the edge writhes instead of sliding.
    The turbulence seed animates, which is what stops it looking like a looping texture. */
-.emberline{position:relative;height:64px;margin:-18px 0 -14px;pointer-events:none;overflow:hidden;z-index:3}
+.emberline{position:relative;height:58px;margin:-14px 0 -12px;pointer-events:none;overflow:hidden;z-index:3}
 .emberline canvas{position:absolute;left:0;bottom:0;width:100%;height:100%;display:block;mix-blend-mode:screen}
 .emberline .core{position:absolute;left:0;right:0;bottom:0;height:18px;z-index:2;
   background:radial-gradient(58% 130% at 50% 100%,rgba(255,150,50,.5),rgba(255,90,20,.14) 58%,transparent 82%);
@@ -552,13 +552,14 @@ fetch("cards.json").then(r => r.json()).then(async cards => {
 
   /* one tongue: a tapered blade of flame that leans and breathes on its own clock */
   float tongue(vec2 q, float id, float cell){
-    float s1 = hash1(id), s2 = hash1(id + 17.3), s3 = hash1(id + 41.7);
-    float breathe = 0.55 + 0.45 * sin(t * (1.1 + s1 * 1.5) + s2 * 6.28);
-    float h = cell * (1.5 + 2.6 * s3) * breathe;             // its height, in uv units
+    float s1 = hash1(id), s2 = hash1(id + 17.3), s3 = hash1(id + 41.7), s4 = hash1(id + 73.1);
+    if (s4 < 0.34) return 0.0;                               // gaps: not every slot carries a flame
+    float breathe = 0.5 + 0.5 * sin(t * (1.0 + s1 * 1.7) + s2 * 6.28);
+    float h = cell * (0.9 + 3.4 * s3 * s3) * breathe;        // a few tall licks, many short ones
     if (q.y > h) return 0.0;
     float k = q.y / max(h, 0.0001);                          // 0 at the base, 1 at the tip
     float lean = (s2 - 0.5) * 0.9 * cell * k * k;            // tips drift sideways
-    float cx = (id + 0.5) * cell + lean + sin(t * (0.8 + s1) + s3 * 6.28) * 0.12 * cell * k;
+    float cx = (id + 0.32 + 0.36 * s4) * cell + lean + sin(t * (0.8 + s1) + s3 * 6.28) * 0.14 * cell * k;
     float w = cell * (0.46 + 0.30 * s1) * pow(1.0 - k, 0.72); // tapers to a point
     float d = abs(q.x - cx) / max(w, 0.0001);
     return (1.0 - smoothstep(0.05, 1.0, d)) * (1.0 - k * k * 0.8);
@@ -568,14 +569,18 @@ fetch("cards.json").then(r => r.json()).then(async cards => {
     vec2 q = uv;
     float ar = res.x / max(res.y, 1.0);
     vec2 P = vec2(q.x * ar, q.y);                            // square units
-    float cell = 0.42;                                       // tongue spacing
+    float cell = 0.30;                                       // tongue spacing
     // warp the whole field with rising noise so the licks writhe instead of standing still
     float warp = fbm(vec2(P.x * 3.0, P.y * 2.4 - t * 1.9));
     P.x += warp * 0.26 * pow(q.y, 0.75);
     P.y += fbm(vec2(P.x * 2.4 + 9.0, P.y * 1.8 - t * 1.6)) * 0.10 * q.y;
     float id = floor(P.x / cell);
     float f = 0.0;
-    for (int i = -1; i <= 1; i++) f = max(f, tongue(P, id + float(i), cell));
+    for (int i = -2; i <= 2; i++) f = max(f, tongue(P, id + float(i), cell));
+    // the bed: a low, continuous run of fire the tongues grow out of
+    float bedH = 0.16 + 0.10 * (fbm(vec2(P.x * 1.7 - t * 0.5, 5.2)) * 0.5 + 0.5);
+    float bed = (1.0 - smoothstep(0.0, bedH, q.y)) * (0.75 + 0.55 * fbm(vec2(P.x * 5.0, q.y * 7.0 - t * 3.0)));
+    f = max(f, bed);
     // texture inside the flame, and bite chunks out of the tips
     float n = fbm(vec2(P.x * 7.5, P.y * 6.0 - t * 3.6)) * 0.5 + 0.5;
     f *= 0.40 + 1.05 * n;
@@ -589,6 +594,7 @@ fetch("cards.json").then(r => r.json()).then(async cards => {
     col += vec3(1.00,0.64,0.12) * smoothstep(0.40,0.78,heat);
     col += vec3(1.00,0.93,0.66) * smoothstep(0.70,1.02,heat);
     float a = smoothstep(0.13,0.42,heat) * 0.94;
+    a += smoothstep(0.55, 0.0, q.y) * 0.05;                   // faint heat haze off the bed
     gl_FragColor = vec4(col*a, a);
   }`;
   document.querySelectorAll(".fband").forEach(cv => {
