@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Darksteel Forge Gaming - Coming Soon</title>
+<link rel="icon" href="img/favicon.png">
+<meta name="description" content="Darksteel Forge Gaming is under construction. Magic, Pokemon, One Piece and Riftbound singles, sealed and chase cards - opening soon.">
+<meta name="robots" content="noindex">
+<link rel="preload" as="image" href="img/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#070809;--ink:#eceef1;--ink-2:#a9b0b8;--ink-3:#6b737c;
+  --ember:#ff6a1a;--ember-2:#ffb347;
+  --line:rgba(255,255,255,.08);--line-2:rgba(255,255,255,.14);
+  --display:'Cinzel',Georgia,serif;--ui:'Manrope',system-ui,sans-serif;--tap:48px;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 var(--ui);overflow-x:hidden;
+  background-image:radial-gradient(70% 50% at 50% 12%,rgba(255,106,26,.10),transparent 70%)}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;cursor:pointer}
+h1,h2{margin:0;font-weight:600}
+.wrap{width:min(1100px,calc(100% - 2.5rem));margin-inline:auto}
+.eyebrow{font:600 .74rem/1 var(--ui);letter-spacing:.32em;text-transform:uppercase;color:var(--ember-2)}
+.metal{font-family:var(--display);font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  background-image:linear-gradient(180deg,#f4f6f8 0%,#c9ced4 30%,#7f878f 50%,#d5d9de 62%,#8a929a 80%,#eef0f2 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent}
+/* ============================================================ THE LOGO (client artwork) + LIVE FIRE
+   logo.png is the client's FLAME-FREE logo (they sent it 2026-09-23), cut off its marble background. All the
+   fire on the page is live: a WebGL shader burning on the blade, plus rising embers. The live fire is a WebGL
+   shader (see the fire() block below) burning BEHIND the blade, with a faint copy in front for licks over
+   the steel; a canvas adds rising embers and the glow behind the blade breathes. */
+.mark{position:relative;display:block;width:100%;isolation:isolate;left:-7.4%}   /* the sword sits at 64.8% of the artwork, so the lit mass reads right of centre - nudge the whole mark to balance it optically (uses `left`, not `transform`: the splash intro animates transform) */
+.mark img{display:block;width:100%;height:auto}
+.mark .base{position:relative;z-index:1;filter:brightness(1.85) contrast(1.02) saturate(1.04) drop-shadow(0 18px 40px rgba(0,0,0,.75))}
+/* the engraved runes: a pre-baked glow layer (light bleeding out of the grooves) that only animates
+   opacity, plus a masked hot copy so a band of heat travels along the engraving. No runtime blur or
+   drop-shadow filters - those are what made it muddy and expensive. */
+.mark .rglow{position:absolute;inset:0;z-index:2;mix-blend-mode:screen;pointer-events:none;opacity:.5;
+  animation:runepulse 3.8s ease-in-out infinite;will-change:opacity}
+@keyframes runepulse{0%,100%{opacity:.34}50%{opacity:.78}}
+.mark .rhot{position:absolute;inset:0;z-index:3;mix-blend-mode:screen;pointer-events:none;opacity:.9;
+  -webkit-mask-image:linear-gradient(100deg,transparent 40%,#000 48%,#000 52%,transparent 60%);mask-image:linear-gradient(100deg,transparent 40%,#000 48%,#000 52%,transparent 60%);
+  -webkit-mask-size:300% 100%;mask-size:300% 100%;animation:runesweep 6s cubic-bezier(.45,0,.55,1) infinite;will-change:mask-position}
+@keyframes runesweep{0%{-webkit-mask-position:190% 0;mask-position:190% 0}60%,100%{-webkit-mask-position:-100% 0;mask-position:-100% 0}}
+@media (prefers-reduced-motion:reduce){.mark .rglow,.mark .rhot{animation:none}.mark .rhot{display:none}}
+.mark .back{position:absolute;inset:-14% -10%;z-index:-1;pointer-events:none;background:radial-gradient(46% 38% at 50% 52%,rgba(175,195,220,.16),transparent 72%)}
+.mark .glow{position:absolute;left:64.8%;top:-6%;width:38%;height:112%;transform:translateX(-50%);z-index:1;pointer-events:none;
+  background:radial-gradient(48% 40% at 50% 46%,rgba(255,150,60,.5),rgba(255,90,20,.18) 45%,transparent 72%);filter:blur(12px);animation:glowbreath 2.6s ease-in-out infinite alternate}
+@keyframes glowbreath{0%{opacity:.75;transform:translateX(-50%) scale(.97)}100%{opacity:1;transform:translateX(-50%) scale(1.06)}}
+.mark .emb{position:absolute;inset:-12% -6% 0 -6%;width:112%;height:112%;z-index:5;pointer-events:none}
+.mark .fx{position:absolute;left:64.8%;bottom:6%;width:44%;height:118%;transform:translateX(-50%);z-index:0;pointer-events:none;mix-blend-mode:screen}
+.mark .fx2{position:absolute;left:64.8%;bottom:6%;width:29%;height:114%;transform:translateX(-50%);z-index:3;pointer-events:none;mix-blend-mode:screen;opacity:.5}
+@media (prefers-reduced-motion:reduce){.mark .glow{animation:none}.mark .fx,.mark .emb{display:none}}
+
+
+/* ============================================================ STAGE */
+.stage{min-height:100svh;display:grid;place-items:center;text-align:center;padding:4.5rem 0 3rem;position:relative;overflow:hidden}
+.stage canvas.bgfx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.stage .wrap{position:relative;z-index:1}
+.lockup{position:relative;width:min(560px,86vw);margin:0 auto}
+/* the tape: two strips crossing the mark */
+.tape{position:absolute;left:50%;top:50%;width:150%;transform:translate(-50%,-50%) rotate(-11deg);z-index:6;pointer-events:none;
+  background:repeating-linear-gradient(45deg,#f5b301 0 22px,#111 22px 44px);
+  border-top:2px solid rgba(0,0,0,.55);border-bottom:2px solid rgba(0,0,0,.55);
+  box-shadow:0 12px 34px rgba(0,0,0,.6);opacity:.94}
+.tape span{display:block;text-align:center;font-family:var(--ui);font-weight:800;letter-spacing:.34em;text-transform:uppercase;
+  font-size:clamp(.72rem,2.1vw,1.05rem);color:#111;background:#f5b301;margin:7px 0;padding:.42rem 0;white-space:nowrap;overflow:hidden}
+.tape.two{transform:translate(-50%,-50%) rotate(9deg);top:62%;opacity:.5}
+.tape.two span{visibility:hidden}
+@media (max-width:759px){.tape{width:190%}}
+h1.soon{font-family:var(--display);font-weight:700;text-transform:uppercase;letter-spacing:.14em;
+  font-size:clamp(2.1rem,9vw,4.6rem);line-height:1;margin:2.4rem 0 .5rem}
+h1.soon .molten{background-image:linear-gradient(100deg,#8a2f06 0%,#ff6a1a 22%,#ffc06a 42%,#fff3d8 50%,#ffc06a 58%,#ff6a1a 78%,#8a2f06 100%);
+  background-size:280% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:molten 5.4s linear infinite;filter:drop-shadow(0 0 18px rgba(255,106,26,.3))}
+@keyframes molten{from{background-position:150% 0}to{background-position:-150% 0}}
+.sub{color:var(--ink-2);max-width:46ch;margin:1.1rem auto 0;font-size:clamp(1rem,2.1vw,1.12rem)}
+.games{display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap;margin:1.8rem auto 0}
+.games span{border:1px solid var(--line);border-radius:999px;padding:.55rem 1rem;font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-2);display:inline-flex;align-items:center;gap:.5rem;min-height:40px}
+.games i{width:7px;height:7px;border-radius:50%;background:var(--ember);box-shadow:0 0 8px var(--ember)}
+.games .magic i{background:#6fb3ff;box-shadow:0 0 8px #6fb3ff}
+.games .onepiece i{background:#e8413c;box-shadow:0 0 8px #e8413c}
+.games .riftbound i{background:#b07cff;box-shadow:0 0 8px #b07cff}
+form.notify{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap;max-width:520px;margin:2.2rem auto 0}
+form.notify input{flex:1 1 240px;min-height:var(--tap);background:#111317;border:1px solid var(--line);color:var(--ink);padding:0 1.1rem;font:inherit;outline:0;border-radius:3px}
+form.notify input:focus{border-color:var(--ember)}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:var(--tap);padding:0 1.5rem;border:1px solid transparent;
+  background:linear-gradient(180deg,#ff8a3d,#ff5a12);color:#1a0a02;font-size:.74rem;letter-spacing:.26em;text-transform:uppercase;font-weight:700;
+  box-shadow:0 10px 30px rgba(255,106,26,.28);transition:background .3s,transform .3s}
+.btn:hover{background:linear-gradient(180deg,#ffa05c,#ff6a1a);transform:translateY(-1px)}
+.said{color:var(--ink-3);font-size:.8rem;margin-top:.9rem;min-height:1.2em}
+/* ============================================================ CARD MARQUEE */
+.strip{padding:1rem 0 4.5rem;overflow:hidden}
+.strip h2{text-align:center;font-family:var(--display);font-size:clamp(1rem,2.6vw,1.3rem);letter-spacing:.2em;text-transform:uppercase;color:var(--ink-2);font-weight:500;margin-bottom:1.4rem}
+.lane{display:flex;gap:1rem;width:max-content;animation:slide 46s linear infinite}
+.lane:hover{animation-play-state:paused}
+@keyframes slide{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.lane figure{margin:0;width:118px;flex:0 0 auto}
+.lane img{width:100%;aspect-ratio:63/88;object-fit:cover;border-radius:7px;box-shadow:0 12px 26px rgba(0,0,0,.6);transition:transform .35s}
+.lane figure:hover img{transform:translateY(-6px)}
+.lane figcaption{margin-top:.5rem;font-size:.7rem;line-height:1.3;color:var(--ink-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fade{position:relative}
+.fade::before,.fade::after{content:"";position:absolute;top:0;bottom:0;width:90px;z-index:2;pointer-events:none}
+.fade::before{left:0;background:linear-gradient(90deg,var(--bg),transparent)}
+.fade::after{right:0;background:linear-gradient(270deg,var(--bg),transparent)}
+@media (prefers-reduced-motion:reduce){.lane{animation:none}h1.soon .molten{animation:none}}
+footer{border-top:1px solid var(--line);padding:2.2rem 0 3rem;text-align:center;color:var(--ink-3);font-size:.85rem}
+footer .brand{display:inline-flex;align-items:center;gap:.7rem;font-family:var(--display);letter-spacing:.2em;text-transform:uppercase;font-size:.78rem;color:var(--ink-2);min-height:44px}
+footer .brand img{height:34px;width:auto}
+footer a{color:var(--ink-2);display:inline-block;padding:.6rem 0}
+</style>
+</head>
+<body>
+
+<section class="stage">
+  <canvas class="bgfx" id="bgfx" aria-hidden="true"></canvas>
+  <div class="wrap">
+    <div class="lockup">
+      <span class="mark forge-mark">
+        <span class="back"></span><span class="glow"></span>
+        <img class="rglow" src="img/runeglow.png" alt="" aria-hidden="true">
+        <img class="rhot" src="img/runehot.png" alt="" aria-hidden="true">
+        <img class="base" src="img/logo.png" alt="Darksteel Forge Gaming" width="700" height="547" fetchpriority="high">
+        <canvas class="fx"></canvas><canvas class="fx2"></canvas><canvas class="emb"></canvas>
+      </span>
+      <div class="tape two"><span>Under construction</span></div>
+      <div class="tape"><span>Under construction &nbsp;·&nbsp; Under construction &nbsp;·&nbsp; Under construction</span></div>
+    </div>
+
+    <h1 class="soon metal"><span class="molten">Coming</span> Soon</h1>
+    <p class="eyebrow">Forge your game night</p>
+    <p class="sub">We are building the shop. Singles, sealed and the chase cards that decide the table - hand-checked and priced to market the day they land.</p>
+
+    <div class="games">
+      <span class="magic"><i></i>Magic</span>
+      <span class="pokemon"><i></i>Pokemon</span>
+      <span class="onepiece"><i></i>One Piece</span>
+      <span class="riftbound"><i></i>Riftbound</span>
+    </div>
+
+    <form class="notify" id="notify">
+      <input type="email" required placeholder="Email me when it opens" aria-label="Email address">
+      <button class="btn" type="submit">Notify me</button>
+    </form>
+    <p class="said" id="said"></p>
+  </div>
+</section>
+
+<section class="strip">
+  <h2>A look at what is coming</h2>
+  <div class="fade"><div class="lane" id="lane"></div></div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span class="brand"><img src="img/sword.png" alt="" width="72" height="458">Darksteel Forge Gaming</span>
+    <p>Magic · Pokemon · One Piece · Riftbound</p>
+    <p><a href="mailto:hello@darksteelforge.gg">hello@darksteelforge.gg</a></p>
+    <p>© <span id="yr"></span> Darksteel Forge Gaming. Card images and names are property of their respective owners.</p>
+  </div>
+</footer>
+
+<script>
+const $ = s => document.querySelector(s);
+$("#yr").textContent = new Date().getFullYear();
+
+const EMBER_SPRITE = (() => {
+  const c = document.createElement("canvas"); c.width = c.height = 32; const x = c.getContext("2d");
+  const g = x.createRadialGradient(16, 16, 0, 16, 16, 16);
+  g.addColorStop(0, "rgba(255,246,220,1)"); g.addColorStop(.18, "rgba(255,170,70,.85)"); g.addColorStop(.45, "rgba(255,110,30,.22)"); g.addColorStop(1, "rgba(255,90,20,0)");
+  x.fillStyle = g; x.fillRect(0, 0, 32, 32); return c;
+})();
+/* ============================================================ embers */
+function embers(canvas, count, opts = {}) {
+  // full-screen ember fields: 1x pixel ratio (they were 1170x3336 on a phone), 30fps, sprite-drawn
+  const ctx = canvas.getContext("2d", { alpha: true }); let W, H, P = [], run = true, last = 0;
+  const devicePixelRatio = 1;
+  const size = () => { W = canvas.width = canvas.offsetWidth; H = canvas.height = canvas.offsetHeight; };
+  size(); addEventListener("resize", size);
+  const mk = () => ({ x: Math.random() * W, y: H + Math.random() * H * .3, r: (Math.random() * 1.6 + .5) * devicePixelRatio, v: (Math.random() * .5 + .25) * devicePixelRatio * (opts.speed || 1), d: Math.random() * 6.28, a: Math.random() * .6 + .3, hue: Math.random() < .8 ? 22 : 40 });
+  for (let i = 0; i < count; i++) { const p = mk(); p.y = Math.random() * H; P.push(p); }
+  ctx.globalCompositeOperation = "lighter";
+  (function tick(now) {
+    if (!run) return; requestAnimationFrame(tick);
+    if (document.hidden || now - last < 32) return; last = now;
+    ctx.clearRect(0, 0, W, H);
+    for (const p of P) {
+      p.y -= p.v; p.x += Math.sin(p.d += .02) * .3; p.a -= .0012;
+      if (p.y < -10 || p.a <= 0) Object.assign(p, mk());
+      ctx.globalAlpha = Math.max(0, p.a) * 0.55;
+      const r = p.r * 2.1;
+      ctx.drawImage(EMBER_SPRITE, p.x - r, p.y - r, r * 2, r * 2);
+    }
+    ctx.globalAlpha = 1;
+  })(0);
+  return () => { run = false; };
+}
+
+
+
+
+embers(document.getElementById("bgfx"), 40, { speed: .55 });
+
+/* ============================================================ REAL FIRE (WebGL)
+   A fragment shader over the blade: fbm noise scrolling upward, domain-warped, shaped into a flame
+   column and coloured through a blackbody ramp (white core -> yellow -> orange -> red -> smoke).
+   This is the live fire; the painted flames in the artwork sit under it as the base glow. */
+(function fire() {
+  const VS = "attribute vec2 p;varying vec2 uv;void main(){uv=p*.5+.5;gl_Position=vec4(p,0.,1.);}";
+  const FS = `precision highp float; varying vec2 uv; uniform float t; uniform vec2 res; uniform float seed; uniform float flick;
+  /* Built from the standard procedural-fire recipe: gradient-noise fbm, DOMAIN WARPING (Quilez's q/r
+     pattern) so the tongues curl instead of sliding, turbulence that grows with height, fuel burning off
+     with height, and a blackbody ramp (deep red -> orange -> yellow -> white core) on an additive blend. */
+  vec2 hash2(vec2 p){ p = vec2(dot(p,vec2(127.1,311.7)), dot(p,vec2(269.5,183.3)));
+    return -1.0 + 2.0*fract(sin(p)*43758.5453123); }
+  float gnoise(vec2 p){                       // gradient noise - smoother than value noise, no blockiness
+    vec2 i = floor(p), f = fract(p);
+    vec2 u = f*f*(3.0-2.0*f);
+    return mix(mix(dot(hash2(i+vec2(0,0)), f-vec2(0,0)), dot(hash2(i+vec2(1,0)), f-vec2(1,0)), u.x),
+               mix(dot(hash2(i+vec2(0,1)), f-vec2(0,1)), dot(hash2(i+vec2(1,1)), f-vec2(1,1)), u.x), u.y);
+  }
+  const mat2 M = mat2(1.6, 1.2, -1.2, 1.6);   // rotate each octave so the layers do not line up
+  float fbm4(vec2 p){ float v=0.0, a=0.5; for (int i=0;i<5;i++){ v += a*gnoise(p); p = M*p; a *= 0.5; } return v; }
+  float fbm2(vec2 p){ float v=0.0, a=0.5; for (int i=0;i<2;i++){ v += a*gnoise(p); p = M*p; a *= 0.5; } return v; }
+  void main(){
+    vec2 q = uv;
+    float y = q.y;                            // 0 at the wick, 1 at the tip
+    vec2 p = vec2((q.x-0.5)*3.2, q.y*2.4 - t*1.15) + vec2(seed*7.3, seed*3.1);   // tighter structures = visible tongues
+    // --- domain warp: sample fbm twice and use it to displace the lookup. this is what makes fire curl
+    float turb = 0.35 + 1.25*y;               // laminar at the base, chaotic at the top
+    vec2 w1 = vec2(fbm2(p*2.1), fbm2(p*2.1 + vec2(5.2,1.3)));   // the warp field only needs low frequencies
+    float n  = fbm4(p*2.2 + turb*1.6*w1);
+    n = n*0.5 + 0.5;
+    // --- flame body: a column of fuel that narrows and is eaten away with height, pushed by the warp
+    float sway = sin(t*1.3 + y*4.0 + seed*6.0)*0.045*y + (w1.x)*0.16*y;
+    float halfw = mix(0.15, 0.40, pow(y, 0.62));   // hugs the blade at the tip, billows as it rises ('half' is reserved in GLSL ES)
+    float d = abs(q.x - (0.5 + sway)) / halfw;
+    float col_shape = 1.0 - smoothstep(0.10, 1.05, d);
+    float fuel = smoothstep(0.0, 0.14, y) * (1.0 - smoothstep(0.70, 1.15, y));   // lit along the blade, burnt out above the tip
+    float flicker = flick;                                      // whole-flame breathing (computed once on the CPU)
+    float heat = col_shape * fuel * flicker * (0.55 + 1.30*n);
+    heat -= smoothstep(0.30, 1.0, y) * 0.85 * (1.0 - n);        // the top tears into separate tongues
+    heat = clamp(heat, 0.0, 1.6);
+    // --- blackbody ramp: cool smoke-red at the edges through orange and yellow to a white core
+    vec3 col = vec3(0.0);
+    col += vec3(0.42, 0.045, 0.010) * smoothstep(0.06, 0.34, heat);
+    col += vec3(0.90, 0.22,  0.015) * smoothstep(0.22, 0.58, heat);
+    col += vec3(1.00, 0.56,  0.060) * smoothstep(0.46, 0.86, heat);
+    col += vec3(1.00, 0.88,  0.45 ) * smoothstep(0.78, 1.12, heat);
+    col += vec3(1.00, 0.98,  0.92 ) * smoothstep(1.02, 1.40, heat) * 0.8;
+    float a = smoothstep(0.30, 0.46, heat);   // a tight edge is what reads as a flame tongue rather than a glow
+    a *= smoothstep(0.0, 0.14, y);                              // no hard edge at the bottom
+    gl_FragColor = vec4(col*a, a);
+  }`;
+  document.querySelectorAll(".mark .fx, .mark .fx2").forEach(cv => {
+    const gl = cv.getContext("webgl", { alpha: true, premultipliedAlpha: true, antialias: false });
+    if (!gl) { cv.remove(); return; }
+    const sh = (type, src) => { const o = gl.createShader(type); gl.shaderSource(o, src); gl.compileShader(o); if (!gl.getShaderParameter(o, gl.COMPILE_STATUS)) console.error("fire shader:", gl.getShaderInfoLog(o)); return o; };
+    const pr = gl.createProgram(); gl.attachShader(pr, sh(gl.VERTEX_SHADER, VS)); gl.attachShader(pr, sh(gl.FRAGMENT_SHADER, FS)); gl.linkProgram(pr);
+    if (!gl.getProgramParameter(pr, gl.LINK_STATUS)) { cv.remove(); return; }
+    gl.useProgram(pr);
+    const buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 3,-1, -1,3]), gl.STATIC_DRAW);
+    const loc = gl.getAttribLocation(pr, "p"); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+    const uT = gl.getUniformLocation(pr, "t"), uR = gl.getUniformLocation(pr, "res"), uS = gl.getUniformLocation(pr, "seed"), uF = gl.getUniformLocation(pr, "flick");
+    const seed = Math.random();
+    gl.enable(gl.BLEND); gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+    let run = true, W = 0, H = 0;
+    const size = () => { const r = cv.getBoundingClientRect(); const d = Math.min(devicePixelRatio, 2.5);   // the flame canvas is small, so it gets the real pixel ratio
+      W = cv.width = Math.max(2, Math.round(r.width * d)); H = cv.height = Math.max(2, Math.round(r.height * d)); gl.viewport(0, 0, W, H); };
+    new IntersectionObserver(e => { run = e[0].isIntersecting; }, { threshold: 0 }).observe(cv.parentElement);
+    addEventListener("resize", size); size();
+    run = true;                                              // draw from the first frame; the observer only ever turns it off
+    const t0 = performance.now();
+    let last = 0;
+    (function draw(now) {
+      requestAnimationFrame(draw); if (!run || !W || document.hidden) return;
+      if (now - last < 15) return; last = now;                 // 60fps: at 40 the licks stepped
+      gl.uniform1f(uT, (now - t0) / 1000); gl.uniform2f(uR, W, H); gl.uniform1f(uS, seed);
+      gl.uniform1f(uF, 0.88 + 0.22 * (0.5 + 0.5 * Math.sin(now / 430 + seed * 19) * Math.sin(now / 191 + seed * 7)));
+      gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT); gl.drawArrays(gl.TRIANGLES, 0, 3);
+    })(t0);
+  });
+})();
+
+/* embers rising off the burning blade, one canvas per logo.
+   Drawn as a pre-rendered glow sprite (shadowBlur per particle is the single most expensive thing you can
+   do in canvas2d), at 1x pixel ratio and 30fps - none of which is visible on a soft ember. */
+
+document.querySelectorAll(".mark .emb").forEach(cv => {
+  const ctx = cv.getContext("2d", { alpha: true }); const host = cv.parentElement; let W = 0, H = 0, P = [], run = true, last = 0;
+  const size = () => { const r = cv.getBoundingClientRect(); W = cv.width = Math.max(1, Math.round(r.width)); H = cv.height = Math.max(1, Math.round(r.height)); };
+  const mk = () => ({ x: W * (.63 + (Math.random() - .5) * .10), y: H * (.30 + Math.random() * .58), r: Math.random() * 5 + 2.5,
+                      vy: .35 + Math.random() * 1.1, vx: (Math.random() - .5) * .35, a: .5 + Math.random() * .5, d: Math.random() * 6.28 });
+  new IntersectionObserver(es => { run = es[0].isIntersecting; }, { threshold: 0 }).observe(host);
+  addEventListener("resize", size); size();
+  for (let i = 0; i < 16; i++) P.push(mk());
+  ctx.globalCompositeOperation = "lighter";
+  (function tick(now) {
+    requestAnimationFrame(tick); if (!run || !W || document.hidden) return;
+    if (now - last < 32) return; last = now;
+    ctx.clearRect(0, 0, W, H);
+    for (const p of P) {
+      p.y -= p.vy; p.x += p.vx + Math.sin(p.d += .06) * .4; p.a -= .008; p.r *= .997;
+      if (p.a <= 0 || p.y < -8) Object.assign(p, mk());
+      ctx.globalAlpha = Math.max(0, p.a);
+      ctx.drawImage(EMBER_SPRITE, p.x - p.r, p.y - p.r, p.r * 2, p.r * 2);
+    }
+    ctx.globalAlpha = 1;
+  })(0);
+});
+
+/* the marquee: one lane of cards, duplicated so the loop is seamless */
+fetch("cards.json").then(r => r.json()).then(cards => {
+  const lane = $("#lane");
+  const draw = c => {
+    const f = document.createElement("figure");
+    f.innerHTML = `<img src="${c.img}" alt="${c.name}" loading="lazy" decoding="async"><figcaption>${c.name}</figcaption>`;
+    lane.appendChild(f);
+  };
+  cards.forEach(draw); cards.forEach(draw);          // the second pass is what makes -50% loop cleanly
+}).catch(() => { $("#lane").innerHTML = ""; });
+
+$("#notify").addEventListener("submit", e => {
+  e.preventDefault();
+  e.target.querySelector("input").value = "";
+  $("#said").textContent = "You are on the list. We will email you the day the doors open.";
+});
+</script>
+</body>
+</html>
