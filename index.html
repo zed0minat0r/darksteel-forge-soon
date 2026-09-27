@@ -64,16 +64,13 @@ h1,h2{margin:0;font-weight:600}
 .stage canvas.bgfx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 .stage .wrap{position:relative;z-index:1}
 .lockup{position:relative;width:min(560px,86vw);margin:0 auto}
-/* the tape: two strips crossing the mark */
-.tape{position:absolute;left:50%;top:50%;width:150%;transform:translate(-50%,-50%) rotate(-11deg);z-index:6;pointer-events:none;
+/* the tape is its own banner under the mark - never across the logo */
+.tape{position:relative;width:min(760px,100%);margin:2.2rem auto 0;transform:rotate(-1.4deg);
   background:repeating-linear-gradient(45deg,#f5b301 0 22px,#111 22px 44px);
   border-top:2px solid rgba(0,0,0,.55);border-bottom:2px solid rgba(0,0,0,.55);
-  box-shadow:0 12px 34px rgba(0,0,0,.6);opacity:.94}
-.tape span{display:block;text-align:center;font-family:var(--ui);font-weight:800;letter-spacing:.34em;text-transform:uppercase;
-  font-size:clamp(.72rem,2.1vw,1.05rem);color:#111;background:#f5b301;margin:7px 0;padding:.42rem 0;white-space:nowrap;overflow:hidden}
-.tape.two{transform:translate(-50%,-50%) rotate(9deg);top:62%;opacity:.5}
-.tape.two span{visibility:hidden}
-@media (max-width:759px){.tape{width:190%}}
+  box-shadow:0 14px 34px rgba(0,0,0,.55);overflow:hidden}
+.tape span{display:block;text-align:center;font-family:var(--ui);font-weight:800;letter-spacing:.3em;text-transform:uppercase;
+  font-size:clamp(.7rem,2.4vw,1rem);color:#111;background:#f5b301;margin:7px 0;padding:.5rem .6rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 h1.soon{font-family:var(--display);font-weight:700;text-transform:uppercase;letter-spacing:.14em;
   font-size:clamp(2.1rem,9vw,4.6rem);line-height:1;margin:2.4rem 0 .5rem}
 h1.soon .molten{background-image:linear-gradient(100deg,#8a2f06 0%,#ff6a1a 22%,#ffc06a 42%,#fff3d8 50%,#ffc06a 58%,#ff6a1a 78%,#8a2f06 100%);
@@ -129,8 +126,7 @@ footer a{color:var(--ink-2);display:inline-block;padding:.6rem 0}
         <img class="base" src="img/logo.png" alt="Darksteel Forge Gaming" width="700" height="547" fetchpriority="high">
         <canvas class="fx"></canvas><canvas class="fx2"></canvas><canvas class="emb"></canvas>
       </span>
-      <div class="tape two"><span>Under construction</span></div>
-      <div class="tape"><span>Under construction &nbsp;·&nbsp; Under construction &nbsp;·&nbsp; Under construction</span></div>
+      <div class="tape"><span>Under construction</span></div>
     </div>
 
     <h1 class="soon metal"><span class="molten">Coming</span> Soon</h1>
