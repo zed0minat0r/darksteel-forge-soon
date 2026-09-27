@@ -60,7 +60,7 @@ h1,h2{margin:0;font-weight:600}
 
 
 /* ============================================================ STAGE */
-.stage{min-height:100svh;display:grid;place-items:center;text-align:center;padding:4.5rem 0 3.4rem;position:relative;overflow:hidden}
+.stage{min-height:100svh;display:grid;place-items:center;text-align:center;padding:4.5rem 0 clamp(4rem,10vw,6rem);position:relative;overflow:hidden}
 .stage canvas.bgfx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 .stage .wrap{position:relative;z-index:1}
 .lockup{position:relative;width:min(470px,76vw);margin:0 auto}
@@ -112,7 +112,7 @@ form.notify input:focus{border-color:var(--ember)}
 .btn:hover{background:linear-gradient(180deg,#ffa05c,#ff6a1a);transform:translateY(-1px)}
 .said{color:var(--ink-3);font-size:.8rem;margin-top:.9rem;min-height:1.2em}
 /* ============================================================ CARD MARQUEE */
-.strip{--pad:1rem;padding:0 0 3.4rem;overflow:visible}
+.strip{padding-bottom:clamp(3rem,8vw,4.5rem);overflow:hidden}
 .strip .head{text-align:center;margin-bottom:2rem}
 .strip h2{font-family:var(--display);font-size:clamp(1.25rem,3.4vw,1.9rem);letter-spacing:.14em;text-transform:uppercase;margin-top:.6rem}
 .strip .head p{color:var(--ink-2);margin:.7rem auto 0;max-width:46ch}
@@ -137,7 +137,7 @@ form.notify input:focus{border-color:var(--ember)}
 
 /* ============================================================ ROADMAP
    A forge line: the ember rail fills as you scroll, each stop lights up in turn. */
-.road{--pad:1rem;padding:0 0 4rem;position:relative;overflow:visible}
+.road{padding-bottom:clamp(3.5rem,9vw,5rem);position:relative;overflow:hidden}
 .road .head{text-align:center;margin-bottom:2.8rem}
 .road h2{font-family:var(--display);font-size:clamp(1.4rem,4vw,2.3rem);letter-spacing:.14em;text-transform:uppercase;margin-top:.6rem}
 .road .head p{color:var(--ink-2);margin:.8rem auto 0;max-width:48ch}
@@ -194,16 +194,18 @@ form.notify input:focus{border-color:var(--ember)}
 
 /* ============================================================ SOCIAL BANNER
    A lit bar above the footer: the same flame band burning under three forged buttons. */
-/* ============================================================ MOLTEN TEAR
-   Each section is a sheet of steel torn from the one above it: the top edge is a ragged tear, its lip
-   glows white-hot and cools to iron as the section settles, and molten drips hang from the tear line.
-   The silhouette is irregular, which is what stops it reading as a drawn divider. */
-.sheet{position:relative;z-index:1;margin-top:-22px;padding-top:calc(var(--pad, 3.2rem) + 34px);
-  background:linear-gradient(180deg,#0a0b0d 0%,var(--bg) 46%)}
-.sheet .tear{position:absolute;left:0;right:0;top:-26px;height:104px;pointer-events:none;z-index:2}
-.sheet .tear canvas{width:100%;height:100%;display:block}
-@media (prefers-reduced-motion:reduce){.sheet .tear{opacity:.6}}
-.social{--pad:1rem;position:relative;padding:0 0 3.4rem;text-align:center;overflow:hidden;
+/* ============================================================ SECTION SEPARATION
+   Copied from how the dark sites that look expensive actually do it (Linear / Vercel / Stripe): no
+   ornament. A 1px hairline at ~8% white that fades to nothing at both ends, generous space, and a soft
+   radial glow behind each section's heading so the eye has somewhere to land. */
+.sheet{position:relative;padding-top:clamp(4rem,11vw,7rem)}
+.sheet::before{content:"";position:absolute;left:0;right:0;top:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.085) 12%,rgba(255,255,255,.085) 88%,transparent)}
+.sheet::after{content:"";position:absolute;left:50%;top:0;width:min(760px,116%);height:340px;
+  transform:translateX(-50%);pointer-events:none;z-index:0;
+  background:radial-gradient(52% 58% at 50% 0%,rgba(255,106,26,.10),rgba(255,106,26,.03) 45%,transparent 72%)}
+.sheet > *{position:relative;z-index:1}
+.social{position:relative;padding-bottom:clamp(3rem,8vw,4rem);text-align:center;overflow:hidden;
   background:radial-gradient(70% 120% at 50% 118%,rgba(255,106,26,.16),transparent 72%)}
 .social canvas{position:absolute;left:0;bottom:0;width:100%;height:86px;mix-blend-mode:screen;pointer-events:none}
 .social .wrap{position:relative;z-index:1}
@@ -224,7 +226,7 @@ form.notify input:focus{border-color:var(--ember)}
 .socials a:hover svg{color:#ffb347}
 @media(max-width:420px){.socials a{padding:0 1rem;font-size:.66rem;letter-spacing:.18em}}
 
-footer{padding:2.2rem 0 3rem;text-align:center;color:var(--ink-3);font-size:.85rem}
+footer{padding:clamp(3rem,7vw,4rem) 0 3rem;border-top:1px solid rgba(255,255,255,.06);text-align:center;color:var(--ink-3);font-size:.85rem}
 footer .brand{display:inline-flex;align-items:center;gap:.7rem;font-family:var(--display);letter-spacing:.2em;text-transform:uppercase;font-size:.78rem;color:var(--ink-2);min-height:44px}
 footer .brand img{height:34px;width:auto}
 footer a{color:var(--ink-2);display:inline-block;padding:.6rem 0}
@@ -266,7 +268,7 @@ footer a{color:var(--ink-2);display:inline-block;padding:.6rem 0}
   </div>
 </section>
 
-<section class="strip sheet"><div class="tear" aria-hidden="true"><canvas></canvas></div>
+<section class="strip sheet">
   <div class="wrap head">
     <p class="eyebrow">The stock</p>
     <h2 class="shine">A look at what is coming</h2>
@@ -278,7 +280,7 @@ footer a{color:var(--ink-2);display:inline-block;padding:.6rem 0}
   </div>
 </section>
 
-<section class="road sheet" id="road"><div class="tear" aria-hidden="true"><canvas></canvas></div>
+<section class="road sheet" id="road">
   <div class="wrap">
     <div class="head">
       <p class="eyebrow">The build</p>
@@ -323,7 +325,7 @@ footer a{color:var(--ink-2);display:inline-block;padding:.6rem 0}
   </div>
 </section>
 
-<section class="social sheet"><div class="tear" aria-hidden="true"><canvas></canvas></div>
+<section class="social sheet">
   <canvas class="fband" aria-hidden="true"></canvas>
   <div class="wrap">
     <p class="eyebrow">Stay close</p>
@@ -540,103 +542,6 @@ fetch("cards.json").then(r => r.json()).then(async cards => {
   addEventListener("resize", paint);
 })();
 
-
-/* ============================================================ MOLTEN TEAR
-   One canvas per section. The tear line is a fixed jagged path (so the sheet keeps its identity), the
-   lip's temperature is pure scroll position, and drips hang and stretch from the hottest stretches. */
-(() => {
-  const sheets = [...document.querySelectorAll(".sheet")];
-  if (!sheets.length) return;
-  const DPR = () => Math.min(devicePixelRatio, 2);
-
-  const build = (sheet, seed) => {
-    const cv = sheet.querySelector(".tear canvas"), x = cv.getContext("2d");
-    let W = 0, H = 0, pts = [], drips = [];
-    const rnd = (n) => { const v = Math.sin(seed * 12.9898 + n * 78.233) * 43758.5453; return v - Math.floor(v); };
-    const size = () => {
-      const r = cv.getBoundingClientRect(); const d = DPR();
-      W = cv.width = Math.max(2, Math.round(r.width * d)); H = cv.height = Math.max(2, Math.round(r.height * d));
-      // the tear: a jagged run of points across the width, teeth of varying depth
-      pts = []; const n = Math.max(22, Math.round(W / (14 * d)));
-      let run = H * 0.34;
-      for (let i = 0; i <= n; i++) {
-        const u = i / n;
-        run += (rnd(i) - 0.5) * H * 0.30;                        // a torn edge wanders, it does not undulate
-        run = Math.max(H * 0.10, Math.min(H * 0.62, run));
-        const tooth = rnd(i + 40) > 0.76 ? H * 0.22 * rnd(i + 3) : 0;   // the odd deep bite
-        pts.push({ x: u * W + (rnd(i + 70) - 0.5) * 9 * d, y: run + tooth });
-      }
-      // drips hang from a few of the lowest teeth
-      drips = pts.map((p, i) => ({ p, len: rnd(i + 90) > 0.72 ? (10 + 34 * rnd(i + 7)) * d : 0, w: (2 + 3 * rnd(i + 13)) * d }))
-                 .filter(d2 => d2.len > 0);
-    };
-    size(); addEventListener("resize", size);
-
-    return (heat, t) => {
-      if (!W) return;
-      const d = DPR();
-      x.clearRect(0, 0, W, H);
-      // the sheet's body, filled below the tear line
-      x.beginPath(); x.moveTo(0, H); x.lineTo(0, pts[0].y);
-      for (const pt of pts) x.lineTo(pt.x, pt.y);
-      x.lineTo(W, pts[pts.length - 1].y); x.lineTo(W, H); x.closePath();
-      const body = x.createLinearGradient(0, H * 0.1, 0, H);
-      body.addColorStop(0, "#1a1e23"); body.addColorStop(.22, "#101317"); body.addColorStop(1, "#070809");
-      x.fillStyle = body; x.fill();
-
-      // drips of molten metal hanging off the tear
-      for (const dr of drips) {
-        const sag = dr.len * (0.55 + 0.45 * heat) * (0.9 + 0.1 * Math.sin(t * 1.6 + dr.p.x));
-        const g = x.createLinearGradient(0, dr.p.y, 0, dr.p.y + sag);
-        g.addColorStop(0, `rgba(255,${Math.round(150 + 90 * heat)},${Math.round(60 + 120 * heat)},${0.35 + 0.65 * heat})`);
-        g.addColorStop(1, "rgba(255,90,20,0)");
-        x.fillStyle = g;
-        x.beginPath(); x.moveTo(dr.p.x - dr.w, dr.p.y);
-        x.quadraticCurveTo(dr.p.x, dr.p.y + sag * 1.15, dr.p.x + dr.w, dr.p.y);
-        x.closePath(); x.fill();
-      }
-
-      // the lip: cold iron underneath, molten while the section is arriving
-      x.beginPath(); x.moveTo(0, pts[0].y);
-      for (const pt of pts) x.lineTo(pt.x, pt.y);
-      x.lineTo(W, pts[pts.length - 1].y);
-      x.lineWidth = 2.2 * d; x.strokeStyle = "rgba(190,198,206,.22)"; x.stroke();
-      if (heat > 0.01) {
-        x.save();
-        x.shadowColor = `rgba(255,120,30,${heat})`; x.shadowBlur = 26 * d * heat;
-        x.strokeStyle = `rgba(255,${Math.round(150 + 90 * heat)},${Math.round(60 + 140 * heat)},${heat})`;
-        x.lineWidth = 3.4 * d * (0.5 + heat); x.stroke();
-        x.shadowBlur = 10 * d * heat; x.strokeStyle = `rgba(255,246,226,${heat * 0.9})`;
-        x.lineWidth = 1.2 * d; x.stroke();
-        x.restore();
-        // sparks lifting off the hot lip
-        for (let i = 0; i < 26; i++) {
-          const u = (i + 0.5) / 26, px = u * W;
-          const life = (t * (0.5 + ((i * 37) % 10) / 12) + i * 0.17) % 1;
-          const py = pts[Math.min(pts.length - 1, Math.round(u * (pts.length - 1)))].y - life * 52 * d;
-          x.globalAlpha = (1 - life) * heat * 0.85;
-          x.fillStyle = i % 3 ? "#ffc97a" : "#fff3d6";
-          x.beginPath(); x.arc(px + Math.sin(t * 2 + i) * 7 * d, py, (1.6 - life) * d, 0, 6.283); x.fill();
-        }
-        x.globalAlpha = 1;
-      }
-    };
-  };
-
-  const draws = sheets.map((s2, i) => ({ el: s2, draw: build(s2, i * 7.3 + 1.7), heat: 0 }));
-  let t0 = performance.now();
-  (function loop(now) {
-    requestAnimationFrame(loop);
-    const t = (now - t0) / 1000, vh = innerHeight;
-    for (const d of draws) {
-      const top = d.el.getBoundingClientRect().top;
-      const k = 1 - Math.min(1, Math.max(0, (vh * 0.82 - top) / (vh * 0.42)));
-      const target = (top > vh + 60 || top < -d.el.offsetHeight) ? 0 : Math.pow(Math.max(0, Math.min(1, k)), 0.8);
-      d.heat += (target - d.heat) * 0.18;
-      if (d.heat > 0.004 || target > 0) d.draw(d.heat, t);
-    }
-  })(t0);
-})();
 
 $("#notify").addEventListener("submit", e => {
   e.preventDefault();
