@@ -175,11 +175,11 @@ form.notify input:focus{border-color:var(--ember)}
    Built the way procedural fire is done without WebGL: a band of stacked radial-gradient "tongues"
    driven through an SVG feTurbulence + feDisplacementMap filter, so the edge writhes instead of sliding.
    The turbulence seed animates, which is what stops it looking like a looping texture. */
-.emberline{position:relative;height:46px;margin:-6px 0 -6px;pointer-events:none;overflow:hidden;z-index:3}
+.emberline{position:relative;height:64px;margin:-18px 0 -14px;pointer-events:none;overflow:hidden;z-index:3}
 .emberline canvas{position:absolute;left:0;bottom:0;width:100%;height:100%;display:block;mix-blend-mode:screen}
-.emberline .core{position:absolute;left:0;right:0;bottom:24px;height:16px;z-index:0;
-  background:radial-gradient(52% 150% at 50% 50%,rgba(255,130,40,.30),rgba(255,90,20,.08) 60%,transparent 84%);
-  filter:blur(7px)}
+.emberline .core{position:absolute;left:0;right:0;bottom:0;height:18px;z-index:2;
+  background:radial-gradient(58% 130% at 50% 100%,rgba(255,150,50,.5),rgba(255,90,20,.14) 58%,transparent 82%);
+  filter:blur(5px)}
 /* ============================================================ SECTION TITLES
    Bigger, with a silver sheen travelling across the steel. */
 .strip h2,.road h2,.social h2{font-family:var(--display);font-weight:900;font-size:clamp(1.85rem,7vw,3.1rem);letter-spacing:.1em;line-height:1.05}
@@ -541,9 +541,6 @@ fetch("cards.json").then(r => r.json()).then(async cards => {
 (function fireBands() {
   const VS = "attribute vec2 p;varying vec2 uv;void main(){uv=p*.5+.5;gl_Position=vec4(p,0.,1.);}";
   const FS = `precision mediump float; varying vec2 uv; uniform float t; uniform vec2 res;
-  /* A MOLTEN SEAM, not a row of flames: a strip of steel straight out of the forge. A white-hot core
-     that varies in temperature along its length, orange bleed either side, a slow heat shimmer, and
-     the odd spark lifting off. Reads like the brand instead of like clip-art fire. */
   float hash1(float n){ return fract(sin(n*127.1)*43758.5453); }
   vec2 hash2(vec2 p){ p=vec2(dot(p,vec2(127.1,311.7)),dot(p,vec2(269.5,183.3)));
     return -1.0+2.0*fract(sin(p)*43758.5453123); }
@@ -553,42 +550,46 @@ fetch("cards.json").then(r => r.json()).then(async cards => {
   const mat2 M = mat2(1.6,1.2,-1.2,1.6);
   float fbm(vec2 p){ float v=0.0,a=0.5; for(int i=0;i<3;i++){ v+=a*gnoise(p); p=M*p; a*=0.5; } return v; }
 
+  /* one tongue: a tapered blade of flame that leans and breathes on its own clock */
+  float tongue(vec2 q, float id, float cell){
+    float s1 = hash1(id), s2 = hash1(id + 17.3), s3 = hash1(id + 41.7);
+    float breathe = 0.55 + 0.45 * sin(t * (1.1 + s1 * 1.5) + s2 * 6.28);
+    float h = cell * (1.5 + 2.6 * s3) * breathe;             // its height, in uv units
+    if (q.y > h) return 0.0;
+    float k = q.y / max(h, 0.0001);                          // 0 at the base, 1 at the tip
+    float lean = (s2 - 0.5) * 0.9 * cell * k * k;            // tips drift sideways
+    float cx = (id + 0.5) * cell + lean + sin(t * (0.8 + s1) + s3 * 6.28) * 0.12 * cell * k;
+    float w = cell * (0.46 + 0.30 * s1) * pow(1.0 - k, 0.72); // tapers to a point
+    float d = abs(q.x - cx) / max(w, 0.0001);
+    return (1.0 - smoothstep(0.05, 1.0, d)) * (1.0 - k * k * 0.8);
+  }
+
   void main(){
     vec2 q = uv;
     float ar = res.x / max(res.y, 1.0);
-    float x = q.x * ar;
-    float seam = 0.30;                                   // where the metal sits in the strip
-
-    // temperature along the bar: some stretches are white hot, others have cooled to deep orange
-    float heat = fbm(vec2(x * 0.9 - t * 0.22, 3.7)) * 0.5 + 0.5;
-    heat = 0.25 + 0.75 * smoothstep(0.15, 0.9, heat);
-    // the bar itself wanders a hair, like hot metal settling
-    float wob = fbm(vec2(x * 1.6 - t * 0.5, 9.1)) * 0.012;
-    float d = abs(q.y - seam - wob);
-
-    float core = smoothstep(0.030 * heat + 0.006, 0.0, d);          // white centre
-    float glow = smoothstep(0.20 * heat + 0.03, 0.0, d);            // orange bleed
-    float shimmer = 0.85 + 0.3 * fbm(vec2(x * 3.0, q.y * 6.0 - t * 2.2));
-
-    // sparks lifting off the hottest stretches
-    float cell = floor(x * 9.0);
-    float sd = hash1(cell);
-    float life = fract(sd * 3.1 + t * (0.20 + sd * 0.25));
-    float sx = fract(x * 9.0) - 0.5 + sin(t * 1.6 + sd * 6.28) * 0.28 * life;
-    float sy = seam + life * 0.62;
-    float spark = smoothstep(0.045, 0.0, abs(sx) * 0.9) * smoothstep(0.02, 0.0, abs(q.y - sy))
-                  * (1.0 - life) * step(0.62, sd) * heat;
-
+    vec2 P = vec2(q.x * ar, q.y);                            // square units
+    float cell = 0.42;                                       // tongue spacing
+    // warp the whole field with rising noise so the licks writhe instead of standing still
+    float warp = fbm(vec2(P.x * 3.0, P.y * 2.4 - t * 1.9));
+    P.x += warp * 0.26 * pow(q.y, 0.75);
+    P.y += fbm(vec2(P.x * 2.4 + 9.0, P.y * 1.8 - t * 1.6)) * 0.10 * q.y;
+    float id = floor(P.x / cell);
+    float f = 0.0;
+    for (int i = -1; i <= 1; i++) f = max(f, tongue(P, id + float(i), cell));
+    // texture inside the flame, and bite chunks out of the tips
+    float n = fbm(vec2(P.x * 7.5, P.y * 6.0 - t * 3.6)) * 0.5 + 0.5;
+    f *= 0.40 + 1.05 * n;
+    f -= smoothstep(0.22, 1.0, q.y / 0.8) * 0.85 * (1.0 - n);   // tips tear into wisps
+    f *= smoothstep(0.0, 0.035, q.y);                        // soft at the seam
+    f *= 0.35 + 0.65 * smoothstep(0.0, 0.10, min(q.x, 1.0 - q.x));
+    float heat = clamp(f, 0.0, 1.4);
     vec3 col = vec3(0.0);
-    col += vec3(0.55, 0.08, 0.01) * glow * 0.55;
-    col += vec3(1.00, 0.34, 0.03) * glow * glow * 1.05;
-    col += vec3(1.00, 0.72, 0.28) * core * 1.15;
-    col += vec3(1.00, 0.96, 0.86) * pow(core, 2.4) * heat;
-    col += vec3(1.00, 0.82, 0.45) * spark * 2.0;
-    col *= shimmer;
-    float a = clamp(glow * 0.75 + core * 0.95 + spark * 1.4, 0.0, 1.0);
-    a *= 0.35 + 0.65 * smoothstep(0.0, 0.09, min(q.x, 1.0 - q.x));  // fades out at the screen edges
-    gl_FragColor = vec4(col * a, a);
+    col += vec3(0.48,0.06,0.01) * smoothstep(0.05,0.28,heat);
+    col += vec3(0.98,0.28,0.02) * smoothstep(0.18,0.52,heat);
+    col += vec3(1.00,0.64,0.12) * smoothstep(0.40,0.78,heat);
+    col += vec3(1.00,0.93,0.66) * smoothstep(0.70,1.02,heat);
+    float a = smoothstep(0.13,0.42,heat) * 0.94;
+    gl_FragColor = vec4(col*a, a);
   }`;
   document.querySelectorAll(".fband").forEach(cv => {
     const gl = cv.getContext("webgl", { alpha: true, premultipliedAlpha: true, antialias: false });
