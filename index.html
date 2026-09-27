@@ -60,7 +60,7 @@ h1,h2{margin:0;font-weight:600}
 
 
 /* ============================================================ STAGE */
-.stage{min-height:100svh;display:grid;place-items:center;text-align:center;padding:4.5rem 0 3rem;position:relative;overflow:hidden}
+.stage{min-height:100svh;display:grid;place-items:center;text-align:center;padding:4.5rem 0 1.6rem;position:relative;overflow:hidden}
 .stage canvas.bgfx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 .stage .wrap{position:relative;z-index:1}
 .lockup{position:relative;width:min(470px,76vw);margin:0 auto}
@@ -112,7 +112,7 @@ form.notify input:focus{border-color:var(--ember)}
 .btn:hover{background:linear-gradient(180deg,#ffa05c,#ff6a1a);transform:translateY(-1px)}
 .said{color:var(--ink-3);font-size:.8rem;margin-top:.9rem;min-height:1.2em}
 /* ============================================================ CARD MARQUEE */
-.strip{padding:3rem 0 4rem;overflow:hidden}
+.strip{padding:2rem 0 3.4rem;overflow:hidden}
 .strip .head{text-align:center;margin-bottom:2rem}
 .strip h2{font-family:var(--display);font-size:clamp(1.25rem,3.4vw,1.9rem);letter-spacing:.14em;text-transform:uppercase;margin-top:.6rem}
 .strip .head p{color:var(--ink-2);margin:.7rem auto 0;max-width:46ch}
@@ -137,7 +137,7 @@ form.notify input:focus{border-color:var(--ember)}
 
 /* ============================================================ ROADMAP
    A forge line: the ember rail fills as you scroll, each stop lights up in turn. */
-.road{padding:3rem 0 5rem;position:relative;overflow:hidden}
+.road{padding:2rem 0 4rem;position:relative;overflow:hidden}
 .road .head{text-align:center;margin-bottom:2.8rem}
 .road h2{font-family:var(--display);font-size:clamp(1.4rem,4vw,2.3rem);letter-spacing:.14em;text-transform:uppercase;margin-top:.6rem}
 .road .head p{color:var(--ink-2);margin:.8rem auto 0;max-width:48ch}
@@ -175,7 +175,7 @@ form.notify input:focus{border-color:var(--ember)}
    Built the way procedural fire is done without WebGL: a band of stacked radial-gradient "tongues"
    driven through an SVG feTurbulence + feDisplacementMap filter, so the edge writhes instead of sliding.
    The turbulence seed animates, which is what stops it looking like a looping texture. */
-.emberline{position:relative;height:78px;margin:0;pointer-events:none;overflow:hidden}
+.emberline{position:relative;height:64px;margin:-18px 0 -14px;pointer-events:none;overflow:hidden;z-index:3}
 .emberline canvas{position:absolute;left:0;bottom:0;width:100%;height:100%;display:block;mix-blend-mode:screen}
 .emberline .core{position:absolute;left:0;right:0;bottom:0;height:18px;z-index:2;
   background:radial-gradient(58% 130% at 50% 100%,rgba(255,150,50,.5),rgba(255,90,20,.14) 58%,transparent 82%);
@@ -194,7 +194,7 @@ form.notify input:focus{border-color:var(--ember)}
 
 /* ============================================================ SOCIAL BANNER
    A lit bar above the footer: the same flame band burning under three forged buttons. */
-.social{position:relative;padding:3.2rem 0 3.4rem;text-align:center;overflow:hidden;
+.social{position:relative;padding:2.2rem 0 3.4rem;text-align:center;overflow:hidden;
   background:radial-gradient(70% 120% at 50% 118%,rgba(255,106,26,.16),transparent 72%)}
 .social canvas{position:absolute;left:0;bottom:0;width:100%;height:86px;mix-blend-mode:screen;pointer-events:none}
 .social .wrap{position:relative;z-index:1}
@@ -541,48 +541,55 @@ fetch("cards.json").then(r => r.json()).then(async cards => {
 (function fireBands() {
   const VS = "attribute vec2 p;varying vec2 uv;void main(){uv=p*.5+.5;gl_Position=vec4(p,0.,1.);}";
   const FS = `precision mediump float; varying vec2 uv; uniform float t; uniform vec2 res;
+  float hash1(float n){ return fract(sin(n*127.1)*43758.5453); }
   vec2 hash2(vec2 p){ p=vec2(dot(p,vec2(127.1,311.7)),dot(p,vec2(269.5,183.3)));
     return -1.0+2.0*fract(sin(p)*43758.5453123); }
-  float hash1(vec2 p){ return fract(sin(dot(p,vec2(41.3,289.1)))*43758.5453); }
   float gnoise(vec2 p){ vec2 i=floor(p),f=fract(p); vec2 u=f*f*(3.0-2.0*f);
     return mix(mix(dot(hash2(i),f),dot(hash2(i+vec2(1,0)),f-vec2(1,0)),u.x),
                mix(dot(hash2(i+vec2(0,1)),f-vec2(0,1)),dot(hash2(i+vec2(1,1)),f-vec2(1,1)),u.x),u.y); }
   const mat2 M = mat2(1.6,1.2,-1.2,1.6);
-  float fbm(vec2 p){ float v=0.0,a=0.5; for(int i=0;i<4;i++){ v+=a*gnoise(p); p=M*p; a*=0.5; } return v; }
+  float fbm(vec2 p){ float v=0.0,a=0.5; for(int i=0;i<3;i++){ v+=a*gnoise(p); p=M*p; a*=0.5; } return v; }
+
+  /* one tongue: a tapered blade of flame that leans and breathes on its own clock */
+  float tongue(vec2 q, float id, float cell){
+    float s1 = hash1(id), s2 = hash1(id + 17.3), s3 = hash1(id + 41.7);
+    float breathe = 0.55 + 0.45 * sin(t * (1.1 + s1 * 1.5) + s2 * 6.28);
+    float h = cell * (1.5 + 2.6 * s3) * breathe;             // its height, in uv units
+    if (q.y > h) return 0.0;
+    float k = q.y / max(h, 0.0001);                          // 0 at the base, 1 at the tip
+    float lean = (s2 - 0.5) * 0.9 * cell * k * k;            // tips drift sideways
+    float cx = (id + 0.5) * cell + lean + sin(t * (0.8 + s1) + s3 * 6.28) * 0.12 * cell * k;
+    float w = cell * (0.46 + 0.30 * s1) * pow(1.0 - k, 0.72); // tapers to a point
+    float d = abs(q.x - cx) / max(w, 0.0001);
+    return (1.0 - smoothstep(0.05, 1.0, d)) * (1.0 - k * k * 0.8);
+  }
+
   void main(){
     vec2 q = uv;
-    float y = q.y;
     float ar = res.x / max(res.y, 1.0);
-    float x = q.x * ar;                                   // square units, so tongues are not stretched
-    // 1. the bed of coals decides where the fire is TALL and where it gaps - this is what was missing
-    float bed = fbm(vec2(x * 1.25 - t * 0.11, 11.3)) * 0.5 + 0.5;
-    bed = smoothstep(0.18, 0.86, bed);
-    float lick = mix(0.16, 0.78, bed);                    // local flame height
-    // 2. rising, domain-warped noise for the body of each tongue
-    vec2 p = vec2(x * 2.3, q.y * 2.0 - t * 1.5);
-    vec2 w = vec2(fbm(p * 1.7), fbm(p * 1.7 + vec2(3.1, 7.7)));
-    float n = fbm(p * 2.6 + (0.35 + 1.8 * y) * w) * 0.5 + 0.5;
-    float h = y / max(lick, 0.001);                       // height measured against this spot's flame
-    float body = (1.0 - smoothstep(0.0, 1.0, h)) * (0.22 + 1.45 * n);
-    body -= smoothstep(0.25, 1.0, h) * 1.2 * (1.0 - n);   // tips break into separate licks
-    body *= smoothstep(0.0, 0.05, y);                     // soft at the seam, no hard cut
-    body *= 0.40 + 0.60 * smoothstep(0.0, 0.14, min(q.x, 1.0 - q.x));   // dies out at the screen edges
-    float heat = clamp(body, 0.0, 1.5);
-    // 3. embers breaking off the tips
-    vec2 cell = floor(vec2(x * 26.0, 1.0));
-    float sp = hash1(cell);
-    float sy = fract(sp * 7.3 + t * (0.22 + sp * 0.35));
-    float sx = x * 26.0 - cell.x - 0.5 + sin((t + sp * 9.0) * 1.7) * 0.22;
-    float spark = smoothstep(0.16, 0.0, abs(sx)) * smoothstep(0.02, 0.0, abs(q.y - sy * 0.95))
-                  * step(0.55, sp) * (1.0 - sy) * bed;
+    vec2 P = vec2(q.x * ar, q.y);                            // square units
+    float cell = 0.42;                                       // tongue spacing
+    // warp the whole field with rising noise so the licks writhe instead of standing still
+    float warp = fbm(vec2(P.x * 3.0, P.y * 2.4 - t * 1.9));
+    P.x += warp * 0.26 * pow(q.y, 0.75);
+    P.y += fbm(vec2(P.x * 2.4 + 9.0, P.y * 1.8 - t * 1.6)) * 0.10 * q.y;
+    float id = floor(P.x / cell);
+    float f = 0.0;
+    for (int i = -1; i <= 1; i++) f = max(f, tongue(P, id + float(i), cell));
+    // texture inside the flame, and bite chunks out of the tips
+    float n = fbm(vec2(P.x * 7.5, P.y * 6.0 - t * 3.6)) * 0.5 + 0.5;
+    f *= 0.40 + 1.05 * n;
+    f -= smoothstep(0.22, 1.0, q.y / 0.8) * 0.85 * (1.0 - n);   // tips tear into wisps
+    f *= smoothstep(0.0, 0.035, q.y);                        // soft at the seam
+    f *= 0.35 + 0.65 * smoothstep(0.0, 0.10, min(q.x, 1.0 - q.x));
+    float heat = clamp(f, 0.0, 1.4);
     vec3 col = vec3(0.0);
-    col += vec3(0.45,0.06,0.01) * smoothstep(0.04,0.30,heat);
-    col += vec3(0.95,0.26,0.02) * smoothstep(0.18,0.55,heat);
-    col += vec3(1.00,0.62,0.10) * smoothstep(0.42,0.82,heat);
-    col += vec3(1.00,0.92,0.60) * smoothstep(0.74,1.08,heat);
-    col += vec3(1.00,0.80,0.45) * spark * 2.2;
-    float a = smoothstep(0.18,0.56,heat) * 0.86 + spark * 1.6;
-    gl_FragColor = vec4(col*a, clamp(a,0.0,1.0));
+    col += vec3(0.48,0.06,0.01) * smoothstep(0.05,0.28,heat);
+    col += vec3(0.98,0.28,0.02) * smoothstep(0.18,0.52,heat);
+    col += vec3(1.00,0.64,0.12) * smoothstep(0.40,0.78,heat);
+    col += vec3(1.00,0.93,0.66) * smoothstep(0.70,1.02,heat);
+    float a = smoothstep(0.13,0.42,heat) * 0.94;
+    gl_FragColor = vec4(col*a, a);
   }`;
   document.querySelectorAll(".fband").forEach(cv => {
     const gl = cv.getContext("webgl", { alpha: true, premultipliedAlpha: true, antialias: false });
