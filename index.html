@@ -120,13 +120,16 @@ form.notify input:focus{border-color:var(--ember)}
 .fade::before,.fade::after{content:"";position:absolute;top:0;bottom:0;width:clamp(40px,12vw,160px);z-index:2;pointer-events:none}
 .fade::before{left:0;background:linear-gradient(90deg,var(--bg) 10%,transparent)}
 .fade::after{right:0;background:linear-gradient(270deg,var(--bg) 10%,transparent)}
-.lane{display:flex;gap:1.1rem;width:max-content;padding:.4rem 0;animation:slide 58s linear infinite}
-.lane.back{animation:slideBack 74s linear infinite;opacity:.55;margin-top:1.1rem}
+.fade{min-height:clamp(212px,48vw,268px)}
+.lane{display:flex;gap:1.1rem;width:max-content;padding:.4rem 0;opacity:0;transition:opacity .5s ease;animation:slide 58s linear infinite;animation-play-state:paused}
+.lane.ready{opacity:1;animation-play-state:running}
+.lane.back{animation:slideBack 74s linear infinite;animation-play-state:paused;margin-top:1.1rem}
+.lane.back.ready{opacity:.55}
 .lane:hover{animation-play-state:paused}
 @keyframes slide{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 @keyframes slideBack{from{transform:translateX(-50%)}to{transform:translateX(0)}}
 .lane figure{margin:0;width:clamp(132px,34vw,168px);flex:0 0 auto}
-.lane img{width:100%;aspect-ratio:63/88;object-fit:cover;border-radius:9px;box-shadow:0 16px 32px rgba(0,0,0,.65);
+.lane img{width:100%;aspect-ratio:63/88;object-fit:cover;border-radius:9px;background:#15181c;box-shadow:0 16px 32px rgba(0,0,0,.65);
   transition:transform .4s ease,box-shadow .4s ease}
 .lane figure:hover img{transform:translateY(-8px) scale(1.02);box-shadow:0 26px 46px rgba(0,0,0,.8)}
 .lane figcaption{margin-top:.55rem;font-size:.72rem;line-height:1.35;color:var(--ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -425,18 +428,25 @@ document.querySelectorAll(".mark .emb").forEach(cv => {
   })(0);
 });
 
-/* the marquee: two lanes drifting opposite ways, each duplicated so the loop is seamless */
-fetch("cards.json").then(r => r.json()).then(cards => {
+/* the marquee: two lanes drifting opposite ways, each duplicated so the loop is seamless.
+   The art is decoded BEFORE the lanes start moving - lazy-loading inside a 5000px-wide lane meant
+   cards scrolled in blank and popped (Matt 2026-09-27: "buggy and appeared late"). */
+fetch("cards.json").then(r => r.json()).then(async cards => {
+  const GAME = { magic: "Magic", pokemon: "Pokemon", onepiece: "One Piece", riftbound: "Riftbound" };
   const draw = (lane, c) => {
     const f = document.createElement("figure");
-    const game = { magic: "Magic", pokemon: "Pokemon", onepiece: "One Piece", riftbound: "Riftbound" }[c.game] || "";
-    f.innerHTML = `<img src="${c.img}" alt="${c.name}" loading="lazy" decoding="async"><figcaption>${c.name}<b>${game}</b></figcaption>`;
+    f.innerHTML = `<img src="${c.img}" alt="${c.name}" decoding="async" width="180" height="251"><figcaption>${c.name}<b>${GAME[c.game] || ""}</b></figcaption>`;
     lane.appendChild(f);
   };
   const a = cards.filter((_, i) => i % 2 === 0), b = cards.filter((_, i) => i % 2 === 1);
   const l1 = $("#lane"), l2 = $("#laneBack");
   [a, a].forEach(set => set.forEach(c => draw(l1, c)));
   [b, b].forEach(set => set.forEach(c => draw(l2, c)));
+  // every thumbnail is ~14 KB, so decode the whole set up front rather than streaming it mid-scroll
+  await Promise.all(cards.map(c => new Promise(res => {
+    const im = new Image(); im.onload = im.onerror = res; im.src = c.img;
+  })));
+  l1.classList.add("ready"); l2.classList.add("ready");
 }).catch(() => { $("#lane").innerHTML = ""; });
 
 /* the roadmap: light each stop in turn and run the ember rail up to the last lit one */
