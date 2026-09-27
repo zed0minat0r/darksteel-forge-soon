@@ -64,13 +64,32 @@ h1,h2{margin:0;font-weight:600}
 .stage canvas.bgfx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 .stage .wrap{position:relative;z-index:1}
 .lockup{position:relative;width:min(560px,86vw);margin:0 auto}
-/* the tape is its own banner under the mark - never across the logo */
-.tape{position:relative;width:min(760px,100%);margin:2.2rem auto 0;transform:rotate(-1.4deg);
-  background:repeating-linear-gradient(45deg,#f5b301 0 22px,#111 22px 44px);
-  border-top:2px solid rgba(0,0,0,.55);border-bottom:2px solid rgba(0,0,0,.55);
-  box-shadow:0 14px 34px rgba(0,0,0,.55);overflow:hidden}
-.tape span{display:block;text-align:center;font-family:var(--ui);font-weight:800;letter-spacing:.3em;text-transform:uppercase;
-  font-size:clamp(.7rem,2.4vw,1rem);color:#111;background:#f5b301;margin:7px 0;padding:.5rem .6rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stage .wrap{overflow:visible}
+/* CAUTION TAPE. Real barricade tape: a printed plastic band, black/yellow 45-degree stripe borders,
+   the message repeated along its length, glossy with wrinkles, strung at an angle and running off both
+   edges of the screen. It never covers the logo. */
+.tape{position:relative;left:50%;width:118vw;margin:3.4rem 0 0 -59vw;z-index:4;
+  transform:rotate(-3.2deg);filter:drop-shadow(0 16px 26px rgba(0,0,0,.65))}
+.tape .band{position:relative;overflow:hidden;background:#f2b705;
+  border-top:9px solid transparent;border-bottom:9px solid transparent;
+  border-image:repeating-linear-gradient(45deg,#111 0 12px,#f2b705 12px 24px) 9;
+  padding:.62rem 0}
+.tape .band::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(180deg,rgba(255,255,255,.55),rgba(255,255,255,.06) 34%,rgba(0,0,0,.10) 62%,rgba(0,0,0,.28));}
+/* the wrinkles: uneven vertical creases, which is what sells it as film rather than a painted bar */
+.tape .band::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;
+  background:
+    repeating-linear-gradient(97deg,rgba(0,0,0,.20) 0 1px,transparent 1px 38px),
+    repeating-linear-gradient(84deg,rgba(255,255,255,.35) 0 1px,transparent 1px 63px),
+    repeating-linear-gradient(92deg,rgba(0,0,0,.14) 0 2px,transparent 2px 109px)}
+.tape .run{display:flex;gap:2.2rem;white-space:nowrap;will-change:transform;animation:tapeRun 34s linear infinite}
+.tape .run span{font-family:var(--ui);font-weight:800;letter-spacing:.3em;text-transform:uppercase;color:#141414;
+  font-size:clamp(.78rem,2.3vw,1.05rem);text-shadow:0 1px 0 rgba(255,255,255,.45)}
+.tape .run span::after{content:"·";margin-left:2.2rem;opacity:.55}
+@keyframes tapeRun{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+/* a second run of tape, dimmer and crossing the other way, the way a site is actually taped off */
+.tape.two{margin-top:-1.6rem;transform:rotate(2.4deg);opacity:.55;z-index:3;filter:drop-shadow(0 12px 22px rgba(0,0,0,.6))}
+@media (prefers-reduced-motion:reduce){.tape .run{animation:none}}
 h1.soon{font-family:var(--display);font-weight:700;text-transform:uppercase;letter-spacing:.14em;
   font-size:clamp(2.1rem,9vw,4.6rem);line-height:1;margin:2.4rem 0 .5rem}
 h1.soon .molten{background-image:linear-gradient(100deg,#8a2f06 0%,#ff6a1a 22%,#ffc06a 42%,#fff3d8 50%,#ffc06a 58%,#ff6a1a 78%,#8a2f06 100%);
@@ -126,7 +145,8 @@ footer a{color:var(--ink-2);display:inline-block;padding:.6rem 0}
         <img class="base" src="img/logo.png" alt="Darksteel Forge Gaming" width="700" height="547" fetchpriority="high">
         <canvas class="fx"></canvas><canvas class="fx2"></canvas><canvas class="emb"></canvas>
       </span>
-      <div class="tape"><span>Under construction</span></div>
+      <div class="tape"><div class="band"><div class="run"><span>Under construction</span><span>Under construction</span><span>Under construction</span><span>Under construction</span><span>Under construction</span><span>Under construction</span><span>Under construction</span><span>Under construction</span><span>Under construction</span><span>Under construction</span><span>Under construction</span><span>Under construction</span><span>Under construction</span><span>Under construction</span></div></div></div>
+      <div class="tape two" aria-hidden="true"><div class="band"><div class="run"><span>Under construction</span><span>Under construction</span><span>Under construction</span><span>Under construction</span><span>Under construction</span><span>Under construction</span><span>Under construction</span><span>Under construction</span><span>Under construction</span><span>Under construction</span><span>Under construction</span><span>Under construction</span><span>Under construction</span><span>Under construction</span></div></div></div>
     </div>
 
     <h1 class="soon metal"><span class="molten">Coming</span> Soon</h1>
