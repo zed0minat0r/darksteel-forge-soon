@@ -35,7 +35,7 @@ h1,h2{margin:0;font-weight:600}
    fire on the page is live: a WebGL shader burning on the blade, plus rising embers. The live fire is a WebGL
    shader (see the fire() block below) burning BEHIND the blade, with a faint copy in front for licks over
    the steel; a canvas adds rising embers and the glow behind the blade breathes. */
-.mark{position:relative;display:block;width:100%;isolation:isolate;left:-7.4%}   /* the sword sits at 64.8% of the artwork, so the lit mass reads right of centre - nudge the whole mark to balance it optically (uses `left`, not `transform`: the splash intro animates transform) */
+.mark{position:relative;display:block;width:100%;isolation:isolate;left:-5.51%}   /* the sword sits at 64.8% of the artwork, so the lit mass reads right of centre - nudge the whole mark to balance it optically (uses `left`, not `transform`: the splash intro animates transform) */
 .mark img{display:block;width:100%;height:auto}
 .mark .base{position:relative;z-index:1;filter:brightness(1.85) contrast(1.02) saturate(1.04) drop-shadow(0 18px 40px rgba(0,0,0,.75))}
 /* the engraved runes: a pre-baked glow layer (light bleeding out of the grooves) that only animates
@@ -63,7 +63,7 @@ h1,h2{margin:0;font-weight:600}
 .stage{min-height:100svh;display:grid;place-items:center;text-align:center;padding:4.5rem 0 3rem;position:relative;overflow:hidden}
 .stage canvas.bgfx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 .stage .wrap{position:relative;z-index:1}
-.lockup{position:relative;width:min(560px,86vw);margin:0 auto}
+.lockup{position:relative;width:min(470px,76vw);margin:0 auto}
 .stage .wrap{overflow:visible}
 /* CAUTION TAPE. Real barricade tape: a printed plastic band, black/yellow 45-degree stripe borders,
    the message repeated along its length, glossy with wrinkles, strung at an angle and running off both
@@ -112,7 +112,7 @@ form.notify input:focus{border-color:var(--ember)}
 .btn:hover{background:linear-gradient(180deg,#ffa05c,#ff6a1a);transform:translateY(-1px)}
 .said{color:var(--ink-3);font-size:.8rem;margin-top:.9rem;min-height:1.2em}
 /* ============================================================ CARD MARQUEE */
-.strip{padding:4.5rem 0 4rem;overflow:hidden;border-top:1px solid var(--line)}
+.strip{padding:3rem 0 4rem;overflow:hidden}
 .strip .head{text-align:center;margin-bottom:2rem}
 .strip h2{font-family:var(--display);font-size:clamp(1.25rem,3.4vw,1.9rem);letter-spacing:.14em;text-transform:uppercase;margin-top:.6rem}
 .strip .head p{color:var(--ink-2);margin:.7rem auto 0;max-width:46ch}
@@ -124,7 +124,7 @@ form.notify input:focus{border-color:var(--ember)}
 .lane{display:flex;gap:1.1rem;width:max-content;padding:.4rem 0;opacity:0;transition:opacity .5s ease;animation:slide 58s linear infinite;animation-play-state:paused}
 .lane.ready{opacity:1;animation-play-state:running}
 .lane.back{animation:slideBack 74s linear infinite;animation-play-state:paused;margin-top:1.1rem}
-.lane.back.ready{opacity:.88}
+.lane.back.ready{opacity:.88;animation-play-state:running}
 .lane:hover{animation-play-state:paused}
 @keyframes slide{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 @keyframes slideBack{from{transform:translateX(-50%)}to{transform:translateX(0)}}
@@ -137,7 +137,7 @@ form.notify input:focus{border-color:var(--ember)}
 
 /* ============================================================ ROADMAP
    A forge line: the ember rail fills as you scroll, each stop lights up in turn. */
-.road{padding:4.5rem 0 5rem;border-top:1px solid var(--line);position:relative;overflow:hidden}
+.road{padding:3rem 0 5rem;position:relative;overflow:hidden}
 .road .head{text-align:center;margin-bottom:2.8rem}
 .road h2{font-family:var(--display);font-size:clamp(1.4rem,4vw,2.3rem);letter-spacing:.14em;text-transform:uppercase;margin-top:.6rem}
 .road .head p{color:var(--ink-2);margin:.8rem auto 0;max-width:48ch}
@@ -170,7 +170,27 @@ form.notify input:focus{border-color:var(--ember)}
   .stop.now .dot::after{inset:-6px}
 }
 @media (prefers-reduced-motion:reduce){.lane,.lane.back{animation:none}.stop.now .dot::after{animation:none}}
-footer{border-top:1px solid var(--line);padding:2.2rem 0 3rem;text-align:center;color:var(--ink-3);font-size:.85rem}
+
+/* ============================================================ LIVE FIRE SECTION BORDERS
+   Built the way procedural fire is done without WebGL: a band of stacked radial-gradient "tongues"
+   driven through an SVG feTurbulence + feDisplacementMap filter, so the edge writhes instead of sliding.
+   The turbulence seed animates, which is what stops it looking like a looping texture. */
+.emberline{position:relative;height:62px;margin:0;pointer-events:none;overflow:hidden}
+.emberline canvas{position:absolute;left:0;bottom:0;width:100%;height:100%;display:block;mix-blend-mode:screen}
+.emberline .core{position:absolute;left:-4%;right:-4%;bottom:10px;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,130,35,.6) 10%,#ffe6bd 50%,rgba(255,130,35,.6) 90%,transparent);
+  box-shadow:0 0 12px rgba(255,120,30,.6),0 0 34px rgba(255,90,20,.32)}
+/* ============================================================ SECTION TITLES
+   Bigger, with a silver sheen travelling across the steel. */
+.strip h2,.road h2{font-size:clamp(1.7rem,6.4vw,2.9rem);letter-spacing:.14em}
+.shine{position:relative;display:inline-block;
+  background-image:linear-gradient(110deg,#8f979f 0%,#cfd4d9 28%,#ffffff 46%,#f2f5f8 52%,#cfd4d9 64%,#7f878f 88%,#aab1b8 100%);
+  background-size:280% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:sheen 6s linear infinite;filter:drop-shadow(0 2px 0 rgba(0,0,0,.55)) drop-shadow(0 10px 26px rgba(0,0,0,.5))}
+@keyframes sheen{from{background-position:160% 0}to{background-position:-160% 0}}
+@media (prefers-reduced-motion:reduce){.shine{animation:none}}
+
+footer{padding:2.2rem 0 3rem;text-align:center;color:var(--ink-3);font-size:.85rem}
 footer .brand{display:inline-flex;align-items:center;gap:.7rem;font-family:var(--display);letter-spacing:.2em;text-transform:uppercase;font-size:.78rem;color:var(--ink-2);min-height:44px}
 footer .brand img{height:34px;width:auto}
 footer a{color:var(--ink-2);display:inline-block;padding:.6rem 0}
@@ -212,10 +232,11 @@ footer a{color:var(--ink-2);display:inline-block;padding:.6rem 0}
   </div>
 </section>
 
+<div class="emberline" aria-hidden="true"><canvas class="fband"></canvas><div class="core"></div></div>
 <section class="strip">
   <div class="wrap head">
     <p class="eyebrow">The stock</p>
-    <h2 class="metal">A look at what is coming</h2>
+    <h2 class="shine">A look at what is coming</h2>
     <p>A slice of the opening inventory. Singles across all four games, priced to market the day they land.</p>
   </div>
   <div class="fade">
@@ -224,11 +245,12 @@ footer a{color:var(--ink-2);display:inline-block;padding:.6rem 0}
   </div>
 </section>
 
+<div class="emberline" aria-hidden="true"><canvas class="fband"></canvas><div class="core"></div></div>
 <section class="road" id="road">
   <div class="wrap">
     <div class="head">
       <p class="eyebrow">The build</p>
-      <h2 class="metal">Roadmap</h2>
+      <h2 class="shine">Roadmap</h2>
       <p>Where we are, and what happens next. The line fills as each stage is finished.</p>
     </div>
     <div class="rail" id="rail">
@@ -269,6 +291,7 @@ footer a{color:var(--ink-2);display:inline-block;padding:.6rem 0}
   </div>
 </section>
 
+<div class="emberline" aria-hidden="true"><canvas class="fband"></canvas><div class="core"></div></div>
 <footer>
   <div class="wrap">
     <span class="brand"><img src="img/sword.png" alt="" width="72" height="458">Darksteel Forge Gaming</span>
@@ -469,6 +492,71 @@ fetch("cards.json").then(r => r.json()).then(async cards => {
   }, { threshold: .35 });
   stops.forEach(s => io.observe(s));
   addEventListener("resize", paint);
+})();
+
+
+/* ============================================================ FIRE BORDERS
+   A wall of fire along each section seam. Same procedural recipe as the blade (gradient-noise fbm with
+   domain warping, blackbody ramp) but the fuel runs the full width, so tongues rise all along the line
+   instead of one column. Drawn small (1x, 30fps) because it is a 74px strip. */
+(function fireBands() {
+  const VS = "attribute vec2 p;varying vec2 uv;void main(){uv=p*.5+.5;gl_Position=vec4(p,0.,1.);}";
+  const FS = `precision mediump float; varying vec2 uv; uniform float t; uniform vec2 res;
+  vec2 hash2(vec2 p){ p=vec2(dot(p,vec2(127.1,311.7)),dot(p,vec2(269.5,183.3)));
+    return -1.0+2.0*fract(sin(p)*43758.5453123); }
+  float gnoise(vec2 p){ vec2 i=floor(p),f=fract(p); vec2 u=f*f*(3.0-2.0*f);
+    return mix(mix(dot(hash2(i),f),dot(hash2(i+vec2(1,0)),f-vec2(1,0)),u.x),
+               mix(dot(hash2(i+vec2(0,1)),f-vec2(0,1)),dot(hash2(i+vec2(1,1)),f-vec2(1,1)),u.x),u.y); }
+  const mat2 M = mat2(1.6,1.2,-1.2,1.6);
+  float fbm(vec2 p){ float v=0.0,a=0.5; for(int i=0;i<4;i++){ v+=a*gnoise(p); p=M*p; a*=0.5; } return v; }
+  void main(){
+    vec2 q = uv;
+    float y = q.y;                                  // 0 at the seam, 1 at the top of the strip
+    float ar = res.x / max(res.y, 1.0);
+    vec2 p = vec2(q.x * ar * 2.2, q.y * 2.6 - t * 1.25);
+    vec2 w = vec2(fbm(p * 1.9), fbm(p * 1.9 + vec2(4.3, 1.7)));
+    float n = fbm(p * 2.4 + (0.4 + 1.5 * y) * w);
+    n = n * 0.5 + 0.5;
+    float fuel = (1.0 - smoothstep(0.02, 0.62, y));   // a shallow band, not a burning wall
+    float heat = fuel * (0.22 + 1.45 * n);
+    heat -= smoothstep(0.16, 0.85, y) * 1.05 * (1.0 - n);  // the tips tear into separate tongues
+    heat *= 0.35 + 0.65 * smoothstep(0.0, 0.16, min(q.x, 1.0 - q.x)) ;   // dies out toward the screen edges
+    heat *= smoothstep(0.0, 0.06, y);
+    heat = clamp(heat, 0.0, 1.5);
+    vec3 col = vec3(0.0);
+    col += vec3(0.42,0.05,0.01) * smoothstep(0.05,0.32,heat);
+    col += vec3(0.92,0.24,0.02) * smoothstep(0.20,0.56,heat);
+    col += vec3(1.00,0.58,0.07) * smoothstep(0.44,0.84,heat);
+    col += vec3(1.00,0.90,0.52) * smoothstep(0.76,1.10,heat);
+    float a = smoothstep(0.16,0.52,heat) * 0.88;
+    gl_FragColor = vec4(col*a, a);
+  }`;
+  document.querySelectorAll(".emberline .fband").forEach(cv => {
+    const gl = cv.getContext("webgl", { alpha: true, premultipliedAlpha: true, antialias: false });
+    if (!gl) { cv.remove(); return; }
+    const sh = (ty, src) => { const o = gl.createShader(ty); gl.shaderSource(o, src); gl.compileShader(o);
+      if (!gl.getShaderParameter(o, gl.COMPILE_STATUS)) console.error("fire band:", gl.getShaderInfoLog(o)); return o; };
+    const pr = gl.createProgram(); gl.attachShader(pr, sh(gl.VERTEX_SHADER, VS)); gl.attachShader(pr, sh(gl.FRAGMENT_SHADER, FS)); gl.linkProgram(pr);
+    if (!gl.getProgramParameter(pr, gl.LINK_STATUS)) { cv.remove(); return; }
+    gl.useProgram(pr);
+    const buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 3,-1, -1,3]), gl.STATIC_DRAW);
+    const loc = gl.getAttribLocation(pr, "p"); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+    const uT = gl.getUniformLocation(pr, "t"), uR = gl.getUniformLocation(pr, "res");
+    gl.enable(gl.BLEND); gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+    let run = false, W = 0, H = 0, last = 0;
+    const size = () => { const r = cv.getBoundingClientRect(); const d = Math.min(devicePixelRatio, 1.5);
+      W = cv.width = Math.max(2, Math.round(r.width * d)); H = cv.height = Math.max(2, Math.round(r.height * d)); gl.viewport(0, 0, W, H); };
+    new IntersectionObserver(e => { run = e[0].isIntersecting; }, { threshold: 0 }).observe(cv.parentElement);
+    addEventListener("resize", size); size();
+    const t0 = performance.now();
+    (function draw(now) {
+      requestAnimationFrame(draw); if (!run || !W || document.hidden) return;
+      if (now - last < 30) return; last = now;                  // 33fps is plenty for a seam
+      gl.uniform1f(uT, (now - t0) / 1000); gl.uniform2f(uR, W, H);
+      gl.clearColor(0,0,0,0); gl.clear(gl.COLOR_BUFFER_BIT); gl.drawArrays(gl.TRIANGLES, 0, 3);
+    })(t0);
+  });
 })();
 
 $("#notify").addEventListener("submit", e => {
