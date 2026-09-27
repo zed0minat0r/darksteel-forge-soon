@@ -205,8 +205,24 @@ form.notify input:focus{border-color:var(--ember)}
   transform:translateX(-50%);pointer-events:none;z-index:0;
   background:radial-gradient(52% 58% at 50% 0%,rgba(255,106,26,.10),rgba(255,106,26,.03) 45%,transparent 72%)}
 .sheet > *{position:relative;z-index:1}
+/* the social heading runs hot: red-orange with an ember glow, pulsing very slightly */
+.ember{display:inline-block;font-weight:900;
+  background-image:linear-gradient(180deg,#ffd9a8 0%,#ff9a3c 28%,#ff5a12 58%,#c9300a 86%,#8f1f05 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 0 14px rgba(255,90,20,.55)) drop-shadow(0 0 34px rgba(255,50,8,.35)) drop-shadow(0 2px 0 rgba(0,0,0,.6));
+  animation:emberPulse 3.4s ease-in-out infinite}
+@keyframes emberPulse{0%,100%{filter:drop-shadow(0 0 12px rgba(255,90,20,.45)) drop-shadow(0 0 28px rgba(255,50,8,.28)) drop-shadow(0 2px 0 rgba(0,0,0,.6)) brightness(1)}
+  50%{filter:drop-shadow(0 0 20px rgba(255,120,40,.85)) drop-shadow(0 0 48px rgba(255,60,10,.5)) drop-shadow(0 2px 0 rgba(0,0,0,.6)) brightness(1.18)}}
+@media (prefers-reduced-motion:reduce){.ember,.social::before{animation:none}}
+
 .social{position:relative;padding-bottom:clamp(3rem,8vw,4rem);text-align:center;overflow:hidden;
-  background:radial-gradient(70% 120% at 50% 118%,rgba(255,106,26,.16),transparent 72%)}
+  background:
+    radial-gradient(58% 90% at 50% 112%,rgba(255,64,12,.34),rgba(200,30,6,.10) 48%,transparent 74%),
+    radial-gradient(90% 60% at 50% 128%,rgba(255,30,0,.18),transparent 70%)}
+.social::before{content:"";position:absolute;left:50%;bottom:-70px;width:min(900px,130%);height:230px;transform:translateX(-50%);
+  pointer-events:none;background:radial-gradient(50% 60% at 50% 100%,rgba(255,110,30,.42),rgba(255,50,8,.12) 52%,transparent 78%);
+  filter:blur(12px);animation:emberBreathe 4.6s ease-in-out infinite alternate}
+@keyframes emberBreathe{0%{opacity:.72;transform:translateX(-50%) scaleY(.94)}100%{opacity:1;transform:translateX(-50%) scaleY(1.06)}}
 .social canvas{position:absolute;left:0;bottom:0;width:100%;height:86px;mix-blend-mode:screen;pointer-events:none}
 .social .wrap{position:relative;z-index:1}
 .social p{color:var(--ink-2);margin:.7rem auto 1.7rem;max-width:40ch}
@@ -219,8 +235,8 @@ form.notify input:focus{border-color:var(--ember)}
   font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;font-weight:700;
   box-shadow:0 10px 26px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.12);
   transition:transform .3s,border-color .3s,box-shadow .3s,background .3s}
-.socials a:hover{transform:translateY(-3px);border-color:rgba(255,150,60,.6);
-  background:linear-gradient(180deg,rgba(255,140,50,.20),rgba(255,90,20,.08));
+.socials a:hover{transform:translateY(-3px);border-color:rgba(255,90,25,.75);
+  background:linear-gradient(180deg,rgba(255,80,20,.26),rgba(200,30,5,.10));
   box-shadow:0 14px 34px rgba(255,106,26,.28),0 0 0 1px rgba(255,150,60,.25),inset 0 1px 0 rgba(255,255,255,.18)}
 .socials svg{width:20px;height:20px;fill:currentColor;flex:0 0 auto}
 .socials a:hover svg{color:#ffb347}
@@ -329,7 +345,7 @@ footer a{color:var(--ink-2);display:inline-block;padding:.6rem 0}
   <canvas class="fband" aria-hidden="true"></canvas>
   <div class="wrap">
     <p class="eyebrow">Stay close</p>
-    <h2 class="shine">Follow the forge</h2>
+    <h2 class="ember">Follow the forge</h2>
     <p>Drops, restocks and the opening date land here first.</p>
     <div class="socials">
       <a href="#" data-soon onclick="event.preventDefault();document.getElementById('soonNote').hidden=false" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 22v-8h2.7l.4-3.1h-3.1V8.9c0-.9.3-1.5 1.6-1.5h1.6V4.6c-.3 0-1.2-.1-2.3-.1-2.3 0-3.9 1.4-3.9 4v2.4H7.8V14h2.7v8h3z"/></svg>Facebook</a>
