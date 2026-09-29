@@ -187,10 +187,38 @@ form.notify input:focus{border-color:var(--ember)}
 /* the close button is focused programmatically when the viewer opens, and Chrome
    draws its default blue ring for that - swap it for the site's ember */
 .viewer :focus-visible,.viewer :focus{outline:2px solid var(--ember);outline-offset:2px}
-.vnav{display:flex;gap:.6rem;margin-top:1.1rem}
-.vnav button{min-height:var(--tap);padding:0 1.1rem;border:1px solid var(--line-2);border-radius:10px;background:rgba(255,255,255,.04)}
-.vnav button:hover{background:rgba(255,255,255,.09)}
+/* Stepping arrows, one each side, same treatment as the display-case arrows on
+   the full site - a bordered circle with a chevron. They live in .viewer rather
+   than .vpanel so they sit clear of the card and the spec list instead of on top
+   of either, and they carry z-index for the reason .vclose does: .vart and
+   .vside both make stacking contexts and would otherwise swallow the tap. */
+/* --arr-y is set from the card art's own centre when the viewer opens, so the
+   arrows line up with the card in both layouts. Centring them on the viewport
+   works on desktop, where the art fills the panel's height, but on a phone the
+   panel stacks and the middle of the screen is the middle of the SPEC LIST -
+   the arrows sat on top of the card name. */
+.varr{position:absolute;top:var(--arr-y,50%);transform:translateY(-50%);z-index:3;
+  width:var(--tap);height:var(--tap);border-radius:50%;border:1px solid var(--line-2);
+  background:rgba(14,16,19,.72);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
+  color:var(--ink-2);display:grid;place-items:center;transition:color .25s ease,border-color .25s ease,background .25s ease}
+.varr svg{width:18px;height:18px}
+.varr.prev{left:clamp(.35rem,2vw,1.6rem)}
+.varr.next{right:clamp(.35rem,2vw,1.6rem)}
+@media (hover:hover) and (pointer:fine){
+  .varr:hover{color:var(--ink);border-color:rgba(255,255,255,.34);background:rgba(22,25,30,.9)}
+}
+.varr:active{transform:translateY(-50%) scale(.94)}
 @media (max-width:720px){.vpanel{grid-template-columns:1fr}.vpanel img{max-width:62%;margin:0 auto}}
+
+/* Phone spacing for the top of the hero. The desktop rhythm reads as scrunched
+   at 390px: 42px from the mark down to the tape, then only 8px between COMING
+   SOON and "Forge your game night". `.tape.two` keeps its negative margin-top
+   because two classes beat one, so the second band still overlaps the first. */
+@media (max-width:720px){
+  .tape{margin-top:5.2rem}
+  h1.soon{margin:3.4rem 0 1.6rem}
+  .sub{margin-top:1.35rem}
+}
 
 /* ============================================================ ROADMAP
    A forge line: the ember rail fills as you scroll, each stop lights up in turn. */
@@ -703,6 +731,15 @@ marqueeReady.then(() => fetch("cards.json").then(r => r.json())).then(async card
     return play(art, f, ms, ease);
   };
 
+  // Line the arrows up with the middle of the card art. .vart is the wrapper and
+  // is never animated, unlike the image inside it, so it is safe to measure at
+  // any point in the flight.
+  const placeArrows = () => {
+    const r = $(".vart").getBoundingClientRect();
+    if (r.height) V.style.setProperty("--arr-y", Math.round(r.top + r.height / 2) + "px");
+  };
+  addEventListener("resize", () => { if (V.hasAttribute("open")) placeArrows(); });
+
   const open = i => {
     stop();
     lastFocus = document.activeElement;
@@ -719,6 +756,7 @@ marqueeReady.then(() => fetch("cards.json").then(r => r.json())).then(async card
     flyFrom(from, 720, EASE_OUT);
     play(side, [{ opacity: 0, transform: "translateY(26px)" }, { opacity: 1, transform: "none" }], 560, EASE_OUT, 140);
     stagger(220);
+    placeArrows();
     $("#vClose").focus({ preventScroll: true });
   };
 
@@ -818,12 +856,10 @@ $("#notify").addEventListener("submit", e => {
       <div class="vset" id="vSet"></div>
       <dl class="vspecs" id="vSpecs"></dl>
       <p class="vtext" id="vText"></p>
-      <div class="vnav">
-        <button type="button" id="vPrev">&larr; Previous</button>
-        <button type="button" id="vNext">Next &rarr;</button>
-      </div>
     </div>
   </div>
+  <button class="varr prev" id="vPrev" type="button" aria-label="Previous card"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m15 5-7 7 7 7"/></svg></button>
+  <button class="varr next" id="vNext" type="button" aria-label="Next card"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg></button>
 </div>
 </body>
 </html>
