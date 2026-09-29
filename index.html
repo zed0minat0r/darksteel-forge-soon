@@ -219,7 +219,12 @@ form.notify input:focus{border-color:var(--ember)}
    three.js is fetched on FIRST USE only. It is ~600 KB and most visitors will
    never open this level; loading it up front would undo the work that got the
    logo down to 1.4s. */
-.card3d{position:fixed;inset:0;z-index:70;display:none;background:#050607}
+.card3d{position:fixed;inset:0;z-index:70;display:none}
+/* The backdrop is its OWN layer. It used to be a background on .card3d, and the
+   open fade ran on .card3d itself - which faded the flying card too, so the
+   first 300ms of a 700ms flight was invisible and the card appeared to be
+   already at its destination. Matt: "the image is already where it's moving to". */
+.card3d .sbg{position:absolute;inset:0;background:#050607}
 .card3d[open]{display:block}
 .card3d canvas{display:block;width:100%;height:100%}
 .card3d .shost{position:absolute;inset:0}
@@ -709,6 +714,7 @@ marqueeReady.then(() => fetch("cards.json").then(r => r.json())).then(async card
     $("#vSpecs").innerHTML = rows.filter(([, v]) => v != null && v !== "")
       .map(([k, v]) => `<div><dt>${LABEL[k]}</dt><dd>${esc(v)}</dd></div>`).join("");
     $("#vText").textContent = d.text || "";
+    prepGhost(c);
   };
   /* ---- motion ----
      The card does not cut to the viewer, it flies there: measure where the
@@ -1020,6 +1026,17 @@ marqueeReady.then(() => fetch("cards.json").then(r => r.json())).then(async card
     return { left: (innerWidth - gw) / 2, top: (vh - gh) / 2, width: gw, height: gh };
   };
 
+  // Prepared while the viewer is open, so clicking into level 3 has nothing left
+  // to decode. A fresh <img> still costs a decode before it will paint, even
+  // when the bytes are cached, and that decode was landing inside the flight.
+  let readyGhost = null;
+  const prepGhost = (c) => {
+    const g = document.createElement("img");
+    g.className = "sghost"; g.src = c.img; g.alt = ""; g.style.opacity = "0";
+    readyGhost = g;
+    if (g.decode) g.decode().catch(() => {});
+  };
+
   const openStage = async () => {
     const c = cards[at];
     const from = art.getBoundingClientRect();
@@ -1032,16 +1049,17 @@ marqueeReady.then(() => fetch("cards.json").then(r => r.json())).then(async card
     play(panel, [{ opacity: 1, transform: "none" }, { opacity: 0, transform: "scale(1.06)" }], 480, EASE_OUT);
     play(bg, [{ opacity: 1 }, { opacity: 0 }], 520, "linear");
 
-    const ghost = document.createElement("img");
-    ghost.className = "sghost"; ghost.src = c.img; ghost.alt = "";
+    const ghost = (readyGhost && readyGhost.src.endsWith(c.img)) ? readyGhost : (prepGhost(c), readyGhost);
+    readyGhost = null;
     const to = ghostTo();
-    Object.assign(ghost.style, { left: to.left + "px", top: to.top + "px", width: to.width + "px", height: to.height + "px" });
+    Object.assign(ghost.style, { left: to.left + "px", top: to.top + "px", width: to.width + "px", height: to.height + "px", opacity: "1" });
     S.appendChild(ghost);
+    // The card flies at full opacity from the first frame; only the backdrop fades.
     const flight = slow.matches ? null : ghost.animate([
       { transform: `translate(${from.left - to.left}px,${from.top - to.top}px) scale(${from.width / to.width},${from.height / to.height})` },
       { transform: "none" },
-    ], { duration: 700, easing: EASE_OUT, fill: "both" });
-    play(S, [{ opacity: 0 }, { opacity: 1 }], 300, "linear");
+    ], { duration: 640, easing: EASE_OUT, fill: "both" });
+    play($("#sBg"), [{ opacity: 0 }, { opacity: 1 }], 300, "linear");
 
     try {
       const THREE = await loadThree();
@@ -1083,10 +1101,11 @@ marqueeReady.then(() => fetch("cards.json").then(r => r.json())).then(async card
                  { transform: `translate(${back.left - to.left}px,${back.top - to.top}px) scale(${back.width / to.width},${back.height / to.height})` }],
                 { duration: 560, easing: EASE_OUT, fill: "both" });
     }
-    play(S, [{ opacity: 1 }, { opacity: 0 }], 460, EASE_IN, 120).onfinish = () => {
-      S.removeAttribute("open"); S.style.opacity = ""; g.remove();
+    play($("#sBg"), [{ opacity: 1 }, { opacity: 0 }], 440, EASE_IN, 140).onfinish = () => {
+      S.removeAttribute("open"); $("#sBg").style.opacity = ""; g.remove();
       if (gl && gl.hideCanvas) gl.hideCanvas(false);
     };
+    play(g, [{ opacity: 1 }, { opacity: 1 }, { opacity: 0 }], 560, "linear");
     // and level 2 comes back up underneath as it goes
     play(bg, [{ opacity: 0 }, { opacity: 1 }], 380, "linear");
     play(panel, [{ opacity: 0, transform: "scale(1.06)" }, { opacity: 1, transform: "none" }], 460, EASE_OUT);
@@ -1158,6 +1177,7 @@ $("#notify").addEventListener("submit", e => {
 </div>
 
 <div class="card3d" id="card3d" role="dialog" aria-modal="true" aria-label="Card in 3D">
+  <div class="sbg" id="sBg"></div>
   <div class="shost" id="sHost"></div>
   <div class="sload" id="sLoad">Loading the display</div>
   <div class="sname" id="sName"></div>
