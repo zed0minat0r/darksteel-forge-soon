@@ -128,8 +128,10 @@ def main():
     for r in uniq:
         f = os.path.join(OUT, slug(r) + EXT)
         if os.path.exists(f) and os.path.getsize(f) > 4000:
-            cards.append({"name": r["name"], "set": r["set"],
-                          "game": r["game"], "img": f"img/c/{slug(r)}{EXT}"})
+            cards.append({"name": r["name"], "set": r["set"], "game": r["game"],
+                          "number": (r.get("number") or "").strip() or None,
+                          "img": f"img/c/{slug(r)}{EXT}",
+                          **({"detail": r["detail"]} if r.get("detail") else {})})
     json.dump(cards, open(os.path.join(ROOT, "cards.json"), "w"), indent=1)
     print(f"baked {len(cards)} cards, {total/1e6:.2f} MB total, "
           f"avg {total/max(len(cards),1)/1000:.0f} KB")

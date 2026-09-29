@@ -3,564 +3,1416 @@
   "name": "Bayou",
   "set": "Revised",
   "game": "magic",
-  "img": "img/c/magic-56355ff3-2232-4a11-b868-aec9a50b9ee5.webp"
+  "number": null,
+  "img": "img/c/magic-56355ff3-2232-4a11-b868-aec9a50b9ee5.webp",
+  "detail": {
+   "rarity": "Rare",
+   "artist": "Jesper Myrfors",
+   "released": "1994",
+   "type": "Land \u2014 Swamp Forest",
+   "text": "({T}: Add {B} or {G}.)",
+   "number": "283"
+  }
  },
  {
   "name": "Mewtwo VSTAR",
   "set": "Crown Zenith: Galarian Gallery",
   "game": "pokemon",
-  "img": "img/c/pokemon-swsh12-5gg-gg44.webp"
+  "number": "GG44/GG70",
+  "img": "img/c/pokemon-swsh12-5gg-gg44.webp",
+  "detail": {
+   "rarity": "Ultra Rare",
+   "artist": "GOSSAN",
+   "type": "Pokemon",
+   "hp": 280,
+   "text": "Psy Purge; Star Raid"
+  }
  },
  {
   "name": "Luffy-Tarou (SP)",
   "set": "A Fist of Divine Speed",
   "game": "onepiece",
-  "img": "img/c/onepiece-st18-005.webp"
+  "number": "ST18-005",
+  "img": "img/c/onepiece-st18-005.webp",
+  "detail": {
+   "rarity": "SR",
+   "type": "CHARACTER",
+   "color": "Purple",
+   "cost": "7",
+   "power": "8000",
+   "trait": "Straw Hat Crew",
+   "text": "[On Play] DON!! \u22121 (You may return the specified number of DON!! cards from your field to your DON!! deck.): Play up to 1 purple {Straw Hat Crew} type Character card with a cost of 5 or less from your hand."
+  }
  },
  {
   "name": "Nasus - Curator of the Sands (Overnumbered)",
   "set": "Vendetta",
   "game": "riftbound",
-  "img": "img/c/riftbound-ven-192.webp"
+  "number": "192/166",
+  "img": "img/c/riftbound-ven-192.webp",
+  "detail": {
+   "rarity": "Showcase",
+   "type": "Legend",
+   "color": "Calm, Mind",
+   "trait": "Nasus",
+   "text": "When you play a unit, gear, or activated ability with Energy cost or more, you may exhaust me to ready up to 2 runes."
+  }
  },
  {
   "name": "Underground Sea",
   "set": "Revised",
   "game": "magic",
-  "img": "img/c/magic-1f35877c-e66c-4ef0-842a-f68cd233ae4b.webp"
+  "number": null,
+  "img": "img/c/magic-1f35877c-e66c-4ef0-842a-f68cd233ae4b.webp",
+  "detail": {
+   "rarity": "Rare",
+   "artist": "Rob Alexander",
+   "released": "1994",
+   "type": "Land \u2014 Island Swamp",
+   "text": "({T}: Add {U} or {B}.)",
+   "number": "290"
+  }
  },
  {
   "name": "Charizard ex (JP)",
   "set": "Shiny Treasure ex",
   "game": "pokemon",
-  "img": "img/c/pokemon-sv4a-349.webp"
+  "number": "349/190",
+  "img": "img/c/pokemon-sv4a-349.webp",
+  "detail": {
+   "artist": "AKIRA EGAWA",
+   "type": "Pokemon",
+   "hp": 330,
+   "text": "\u30d0\u30fc\u30cb\u30f3\u30b0\u30c0\u30fc\u30af"
+  }
  },
  {
   "name": "Shanks (OP13-028) (SP)",
   "set": "The World's Strongest Warriors",
   "game": "onepiece",
-  "img": "img/c/onepiece-op13-028.webp"
+  "number": "OP13-028",
+  "img": "img/c/onepiece-op13-028.webp",
+  "detail": {
+   "rarity": "SR",
+   "type": "CHARACTER",
+   "color": "Green",
+   "cost": "10",
+   "power": "12000",
+   "trait": "FILM/The Four Emperors/Red-Haired Pirates",
+   "text": "[On Play] Set all of your DON!! cards as active. Then, you cannot play cards from your hand during this turn."
+  }
  },
  {
   "name": "Gangplank, Naval (Overnumbered)",
   "set": "Vendetta",
   "game": "riftbound",
-  "img": "img/c/riftbound-ven-181.webp"
+  "number": "181/166",
+  "img": "img/c/riftbound-ven-181.webp",
+  "detail": {
+   "rarity": "Showcase",
+   "type": "Unit",
+   "color": "Body",
+   "cost": "6",
+   "might": "6",
+   "trait": "Gangplank",
+   "text": "[Empower] [Empowered][&gt;] If a spell or ability that chooses me would stun me, give me -, or return me to hand, give me +3 instead."
+  }
  },
  {
   "name": "Plateau",
   "set": "Revised",
   "game": "magic",
-  "img": "img/c/magic-c6ae9cff-8646-4069-8761-df734e067beb.webp"
+  "number": null,
+  "img": "img/c/magic-c6ae9cff-8646-4069-8761-df734e067beb.webp",
+  "detail": {
+   "rarity": "Rare",
+   "artist": "Cornelius Brudi",
+   "released": "1994",
+   "type": "Land \u2014 Mountain Plains",
+   "text": "({T}: Add {R} or {W}.)",
+   "number": "284"
+  }
  },
  {
   "name": "Lucario EX (107 Full Art)",
   "set": "Furious Fists",
   "game": "pokemon",
-  "img": "img/c/pokemon-xy3-107.webp"
+  "number": "107",
+  "img": "img/c/pokemon-xy3-107.webp",
+  "detail": {
+   "rarity": "Ultra Rare",
+   "artist": "Ryo Ueda",
+   "type": "Pokemon",
+   "hp": 180,
+   "text": "Missile Jab; Corkscrew Smash; Somersault Kick"
+  }
  },
  {
   "name": "Gol.D.Roger (P-107) (SP)",
   "set": "The World's Strongest Warriors",
   "game": "onepiece",
-  "img": "img/c/onepiece-p-107.webp"
+  "number": "P-107",
+  "img": "img/c/onepiece-p-107.webp",
+  "detail": {
+   "rarity": "P",
+   "type": "CHARACTER",
+   "color": "Purple",
+   "cost": "8",
+   "power": "10000",
+   "trait": "King of the Pirates/Roger Pirates",
+   "text": "[On Play] If either you or your opponent has 10 DON!! cards on the field, your Leader gains +2000 power until the end of your opponent's next End Phase."
+  }
  },
  {
   "name": "Aphelios - Exalted (Overnumbered)",
   "set": "Spiritforged",
   "game": "riftbound",
-  "img": "img/c/riftbound-sfd-049.webp"
+  "number": "224/221",
+  "img": "img/c/riftbound-sfd-049.webp",
+  "detail": {
+   "rarity": "Rare",
+   "type": "Unit",
+   "color": "Calm",
+   "cost": "4",
+   "might": "4",
+   "trait": "Aphelios, Mount Targon",
+   "text": "When you attach an Equipment to me, choose one that hasn't been chosen this turn \u2014 Ready 2 runes. Channel 1 rune exhausted. Buff a friendly unit."
+  }
  },
  {
   "name": "Volcanic Island",
   "set": "Revised",
   "game": "magic",
-  "img": "img/c/magic-b12e5430-0e80-47dd-80ac-85728b656a24.webp"
+  "number": null,
+  "img": "img/c/magic-b12e5430-0e80-47dd-80ac-85728b656a24.webp",
+  "detail": {
+   "rarity": "Rare",
+   "artist": "Brian Sn\u00f5ddy",
+   "released": "1994",
+   "type": "Land \u2014 Island Mountain",
+   "text": "({T}: Add {U} or {R}.)",
+   "number": "291"
+  }
  },
  {
   "name": "Mega Darkrai ex",
   "set": "Pitch Black",
   "game": "pokemon",
-  "img": "img/c/pokemon-me05-116.webp"
+  "number": "116/084",
+  "img": "img/c/pokemon-me05-116.webp",
+  "detail": {
+   "rarity": "Special illustration rare",
+   "artist": "AKIRA EGAWA",
+   "type": "Pokemon",
+   "hp": 280,
+   "text": "Dusk Raid; Abyss Eye"
+  }
  },
  {
   "name": "Kouzuki Oden (ST32-002) (SP)",
   "set": "The World's Strongest Warriors",
   "game": "onepiece",
-  "img": "img/c/onepiece-st32-002.webp"
+  "number": "ST32-002",
+  "img": "img/c/onepiece-st32-002.webp",
+  "detail": {
+   "rarity": "SR",
+   "type": "CHARACTER",
+   "color": "Green",
+   "cost": "5",
+   "power": "6000",
+   "counter": "1000",
+   "trait": "Land of Wano/Kouzuki Clan",
+   "text": "[On Play] Draw 1 card and up to 1 of your opponent's Characters with a base cost of 6 or less cannot be rested until the end of your opponent's next End Phase."
+  }
  },
  {
   "name": "Arise!",
   "set": "Spiritforged",
   "game": "riftbound",
-  "img": "img/c/riftbound-sfd-198.webp"
+  "number": "198/221",
+  "img": "img/c/riftbound-sfd-198.webp",
+  "detail": {
+   "rarity": "Epic",
+   "type": "Spell",
+   "color": "Calm, Order",
+   "cost": "6",
+   "trait": "Azir",
+   "text": "Play a 2 Sand Soldier unit token for each Equipment you control. Then ready two of them."
+  }
  },
  {
   "name": "Tundra",
   "set": "Revised",
   "game": "magic",
-  "img": "img/c/magic-9c9d5f72-e199-4d5b-ae7e-cc5b9bdfae99.webp"
+  "number": null,
+  "img": "img/c/magic-9c9d5f72-e199-4d5b-ae7e-cc5b9bdfae99.webp",
+  "detail": {
+   "rarity": "Rare",
+   "artist": "Jesper Myrfors",
+   "released": "1994",
+   "type": "Land \u2014 Plains Island",
+   "text": "({T}: Add {W} or {U}.)",
+   "number": "289"
+  }
  },
  {
   "name": "Gardevoir & Sylveon GX (204) (Full Art)",
   "set": "Unbroken Bonds",
   "game": "pokemon",
-  "img": "img/c/pokemon-sm10-204.webp"
+  "number": "204",
+  "img": "img/c/pokemon-sm10-204.webp",
+  "detail": {
+   "rarity": "Ultra Rare",
+   "artist": "5ban Graphics",
+   "type": "Pokemon",
+   "hp": 260,
+   "text": "Fairy Song; Kaleidostorm; Magical Miracle GX"
+  }
  },
  {
   "name": "Edward.Newgate (SP)",
   "set": "Kingdoms of Intrigue",
   "game": "onepiece",
-  "img": "img/c/onepiece-op02-004.webp"
+  "number": "OP02-004",
+  "img": "img/c/onepiece-op02-004.webp",
+  "detail": {
+   "rarity": "SR",
+   "type": "CHARACTER",
+   "color": "Red",
+   "cost": "9",
+   "power": "10000",
+   "trait": "The Four Emperors/Whitebeard Pirates",
+   "text": "[On Play] Up to 1 of your Leader gains +2000 power until the start of your next turn. Then, you cannot add Life cards to your hand using your own effects during this turn.<br>[DON!! x2] [When Attacking] K.O. up to 1 of y"
+  }
  },
  {
   "name": "Seal of Rage",
   "set": "Origins",
   "game": "riftbound",
-  "img": "img/c/riftbound-ogn-040.webp"
+  "number": "040/298",
+  "img": "img/c/riftbound-ogn-040.webp",
+  "detail": {
+   "rarity": "Epic",
+   "type": "Gear",
+   "color": "Fury",
+   "text": ": [Reaction] \u2014 [Add] . (Abilities that add resources can't be reacted to.)"
+  }
  },
  {
   "name": "Scrubland",
   "set": "Revised",
   "game": "magic",
-  "img": "img/c/magic-472034a2-0ba9-4876-ab7a-aa7013d603bb.webp"
+  "number": null,
+  "img": "img/c/magic-472034a2-0ba9-4876-ab7a-aa7013d603bb.webp",
+  "detail": {
+   "rarity": "Rare",
+   "artist": "Jesper Myrfors",
+   "released": "1994",
+   "type": "Land \u2014 Plains Swamp",
+   "text": "({T}: Add {W} or {B}.)",
+   "number": "286"
+  }
  },
  {
   "name": "Meowth ex",
   "set": "Perfect Order",
   "game": "pokemon",
-  "img": "img/c/pokemon-me03-121.webp"
+  "number": "121/088",
+  "img": "img/c/pokemon-me03-121.webp",
+  "detail": {
+   "rarity": "Special illustration rare",
+   "artist": "Natsumi Yoshida",
+   "type": "Pokemon",
+   "hp": 170,
+   "text": "Tuck Tail"
+  }
  },
  {
   "name": "Monkey.D.Luffy (Magazine Promo) (JP)",
   "set": "One Piece Promos",
   "game": "onepiece",
-  "img": "img/c/onepiece-st21-014.webp"
+  "number": "ST21-014",
+  "img": "img/c/onepiece-st21-014.webp",
+  "detail": {
+   "rarity": "SR",
+   "type": "CHARACTER",
+   "color": "Red",
+   "cost": "5",
+   "power": "6000",
+   "trait": "The Four Emperors/Straw Hat Crew",
+   "text": "[Rush] (This card can attack on the turn in which it is played.)<br>[When Attacking] Give up to 1 rested DON!! card to your Leader or 1 of your Characters."
+  }
  },
  {
   "name": "Thousand-Tailed Watcher",
   "set": "Origins",
   "game": "riftbound",
-  "img": "img/c/riftbound-ogn-116.webp"
+  "number": "116/298",
+  "img": "img/c/riftbound-ogn-116.webp",
+  "detail": {
+   "rarity": "Rare",
+   "type": "Unit",
+   "color": "Mind",
+   "cost": "7",
+   "might": "7",
+   "trait": "Ionia",
+   "text": "[Accelerate] (You may pay as an additional cost to have me enter ready.) When you play me, give enemy units -3 this turn, to a minimum of 1 ."
+  }
  },
  {
   "name": "Tropical Island",
   "set": "Revised",
   "game": "magic",
-  "img": "img/c/magic-a0f5c6bc-65dc-42a1-a62d-a0b101310a1f.webp"
+  "number": null,
+  "img": "img/c/magic-a0f5c6bc-65dc-42a1-a62d-a0b101310a1f.webp",
+  "detail": {
+   "rarity": "Rare",
+   "artist": "Jesper Myrfors",
+   "released": "1994",
+   "type": "Land \u2014 Forest Island",
+   "text": "({T}: Add {G} or {U}.)",
+   "number": "288"
+  }
  },
  {
   "name": "Mega Feraligatr ex",
   "set": "Ascended Heroes",
   "game": "pokemon",
-  "img": "img/c/pokemon-me02-5-274.webp"
+  "number": "274/217",
+  "img": "img/c/pokemon-me02-5-274.webp",
+  "detail": {
+   "rarity": "Special illustration rare",
+   "artist": "Souichirou Gunjima",
+   "type": "Pokemon",
+   "hp": 370,
+   "text": "Mortal Crunch"
+  }
  },
  {
   "name": "Roronoa Zoro (Alternate Art)",
   "set": "Wings of the Captain",
   "game": "onepiece",
-  "img": "img/c/onepiece-op06-118.webp"
+  "number": "OP06-118",
+  "img": "img/c/onepiece-op06-118.webp",
+  "detail": {
+   "rarity": "SEC",
+   "type": "CHARACTER",
+   "color": "Green",
+   "cost": "9",
+   "power": "9000",
+   "trait": "Straw Hat Crew",
+   "text": "[When Attacking] [Once Per Turn] \u2780 (You may rest the specified number of DON!! cards in your cost area.): Set this Character as active.<br>[Activate: Main] [Once Per Turn] \u2781 (You may rest the specified number of DON!! ca"
+  }
  },
  {
   "name": "Pyke - Dockside Butcher (Alternate Art)",
   "set": "Unleashed",
   "game": "riftbound",
-  "img": "img/c/riftbound-unl-028a.webp"
+  "number": "028a/219",
+  "img": "img/c/riftbound-unl-028a.webp",
+  "detail": {
+   "rarity": "Showcase",
+   "type": "Unit",
+   "color": "Fury",
+   "cost": "3",
+   "might": "2",
+   "trait": "Pyke, Bilgewater",
+   "text": "[Hidden] [Ganking] You may pay as an additional cost to play me. When you play me, if you paid the additional cost, ready me and give me +2 this turn."
+  }
  },
  {
   "name": "Badlands",
   "set": "Revised",
   "game": "magic",
-  "img": "img/c/magic-56058359-3c0b-49db-a0ce-9ded4c3f4372.webp"
+  "number": null,
+  "img": "img/c/magic-56058359-3c0b-49db-a0ce-9ded4c3f4372.webp",
+  "detail": {
+   "rarity": "Rare",
+   "artist": "Rob Alexander",
+   "released": "1994",
+   "type": "Land \u2014 Swamp Mountain",
+   "text": "({T}: Add {B} or {R}.)",
+   "number": "282"
+  }
  },
  {
   "name": "Charizard (Prerelease)",
   "set": "Sun & Moon Promo",
   "game": "pokemon",
-  "img": "img/c/pokemon-smp-sm158.webp"
+  "number": "SM158",
+  "img": "img/c/pokemon-smp-sm158.webp",
+  "detail": {
+   "rarity": "Promo",
+   "artist": "Anesaki Dynamic",
+   "type": "Pokemon",
+   "hp": 150,
+   "text": "Continuous Blaze Ball"
+  }
  },
  {
   "name": "Jewelry Bonney (019) (Parallel)",
   "set": "500 Years in the Future",
   "game": "onepiece",
-  "img": "img/c/onepiece-op07-019.webp"
+  "number": "OP07-019",
+  "img": "img/c/onepiece-op07-019.webp",
+  "detail": {
+   "rarity": "L",
+   "type": "LEADER",
+   "color": "Green",
+   "power": "5000",
+   "trait": "Supernovas/Bonney Pirates",
+   "text": "[On Your Opponent's Attack] [Once Per Turn] \u2780 (You may rest the specified number of DON!! cards in your cost area.): Rest up to 1 of your opponent's Leader or Character cards."
+  }
  },
  {
   "name": "Savannah",
   "set": "Revised",
   "game": "magic",
-  "img": "img/c/magic-5ae71290-c133-406c-8b17-9ea22b437806.webp"
+  "number": null,
+  "img": "img/c/magic-5ae71290-c133-406c-8b17-9ea22b437806.webp",
+  "detail": {
+   "rarity": "Rare",
+   "artist": "Rob Alexander",
+   "released": "1994",
+   "type": "Land \u2014 Forest Plains",
+   "text": "({T}: Add {G} or {W}.)",
+   "number": "285"
+  }
  },
  {
   "name": "Zoroark",
   "set": "White Flare",
   "game": "pokemon",
-  "img": "img/c/pokemon-sv10-5w-143.webp"
+  "number": "143/086",
+  "img": "img/c/pokemon-sv10-5w-143.webp",
+  "detail": {
+   "rarity": "Illustration rare",
+   "artist": "Iwamoto05",
+   "type": "Pokemon",
+   "hp": 120,
+   "text": "Mind Jack; Foul Play"
+  }
  },
  {
   "name": "Edward.Newgate (040) (TR)",
   "set": "The World's Strongest Warriors",
   "game": "onepiece",
-  "img": "img/c/onepiece-op17-040.webp"
+  "number": "OP17-040",
+  "img": "img/c/onepiece-op17-040.webp",
+  "detail": {
+   "rarity": "R",
+   "type": "CHARACTER",
+   "color": "Blue",
+   "cost": "6",
+   "power": "8000",
+   "trait": "Rocks Pirates",
+   "text": "[On Play] Draw 1 card.<br>[Once Per Turn] When your Leader with a type including \"Rocks Pirates\" attacks or is attacked, you may trash 1 card from your hand to activate this effect. Your Leader gains +3000 power during t"
+  }
  },
  {
   "name": "Taiga",
   "set": "Revised",
   "game": "magic",
-  "img": "img/c/magic-54c5c65a-a444-4e0f-ae44-a3722cdd32a1.webp"
+  "number": null,
+  "img": "img/c/magic-54c5c65a-a444-4e0f-ae44-a3722cdd32a1.webp",
+  "detail": {
+   "rarity": "Rare",
+   "artist": "Rob Alexander",
+   "released": "1994",
+   "type": "Land \u2014 Mountain Forest",
+   "text": "({T}: Add {R} or {G}.)",
+   "number": "287"
+  }
  },
  {
   "name": "Jolteon",
   "set": "Jungle",
   "game": "pokemon",
-  "img": "img/c/pokemon-base2-4.webp"
+  "number": "4",
+  "img": "img/c/pokemon-base2-4.webp",
+  "detail": {
+   "rarity": "Rare",
+   "artist": "Kagemaru Himeno",
+   "type": "Pokemon",
+   "hp": 70,
+   "text": "Quick Attack; Pin Missile"
+  }
  },
  {
   "name": "Ground Death (Parallel) (JP)",
   "set": "The Azure Sea's Seven",
   "game": "onepiece",
-  "img": "img/c/onepiece-op14-096.webp"
+  "number": "OP14-096",
+  "img": "img/c/onepiece-op14-096.webp",
+  "detail": {
+   "rarity": "R",
+   "type": "EVENT",
+   "color": "Black",
+   "cost": "1",
+   "trait": "The Seven Warlords of the Sea/Baroque Works",
+   "text": "[Main] You may rest 2 of your DON!! cards: Negate the effect of up to 1 of your opponent's Characters with a cost of 5 or less during this turn.<br>[Counter] If you have 10 or more cards in your trash, up to 1 of your Le"
+  }
  },
  {
   "name": "Wheel of Fortune",
   "set": "Revised",
   "game": "magic",
-  "img": "img/c/magic-c14c07d4-6971-483a-add1-f3cdf18feae9.webp"
+  "number": null,
+  "img": "img/c/magic-c14c07d4-6971-483a-add1-f3cdf18feae9.webp",
+  "detail": {
+   "rarity": "Rare",
+   "artist": "Daniel Gelon",
+   "released": "1994",
+   "type": "Sorcery",
+   "cost": "{2}{R}",
+   "text": "Each player discards their hand, then draws seven cards.",
+   "number": "185"
+  }
  },
  {
   "name": "Mina (Full Art)",
   "set": "Lost Thunder",
   "game": "pokemon",
-  "img": "img/c/pokemon-sm8-211.webp"
+  "number": "211",
+  "img": "img/c/pokemon-sm8-211.webp",
+  "detail": {
+   "rarity": "Ultra Rare",
+   "artist": "You Iribi",
+   "type": "Trainer"
+  }
  },
  {
   "name": "Sugar (SP Ver.) (JP)",
   "set": "The Azure Sea's Seven",
   "game": "onepiece",
-  "img": "img/c/onepiece-op10-065.webp"
+  "number": "OP10-065",
+  "img": "img/c/onepiece-op10-065.webp",
+  "detail": {
+   "rarity": "R",
+   "type": "CHARACTER",
+   "color": "Purple",
+   "cost": "1",
+   "power": "1000",
+   "counter": "1000",
+   "trait": "Donquixote Pirates",
+   "text": "[Activate: Main] You may rest 1 of your DON!! cards and this Character: Look at 5 cards from the top of your deck; reveal up to 1 {Donquixote Pirates} type card and add it to your hand. Then, place the rest at the bottom"
+  }
  },
  {
   "name": "Mana Vault",
   "set": "Revised",
   "game": "magic",
-  "img": "img/c/magic-5cbc686e-a8ef-40de-b79a-803ef42f8384.webp"
+  "number": null,
+  "img": "img/c/magic-5cbc686e-a8ef-40de-b79a-803ef42f8384.webp",
+  "detail": {
+   "rarity": "Rare",
+   "artist": "Mark Tedin",
+   "released": "1994",
+   "type": "Artifact",
+   "cost": "{1}",
+   "text": "This artifact doesn't untap during your untap step.\nAt the beginning of your upkeep, you may pay {4}. If you do, untap this artifact.\nAt the beginning of your draw step, if this artifact is tapped, it deals 1 damage to y",
+   "number": "263"
+  }
  },
  {
   "name": "Marshadow & Machamp GX (Secret)",
   "set": "Unbroken Bonds",
   "game": "pokemon",
-  "img": "img/c/pokemon-sm10-221.webp"
+  "number": "221",
+  "img": "img/c/pokemon-sm10-221.webp",
+  "detail": {
+   "rarity": "Secret Rare",
+   "artist": "5ban Graphics",
+   "type": "Pokemon",
+   "hp": 270,
+   "text": "Revenge; Hundred-Blows Impact; Acme of Heroism GX"
+  }
  },
  {
   "name": "Trafalgar Law (Alternate Art)",
   "set": "The Azure Sea's Seven",
   "game": "onepiece",
-  "img": "img/c/onepiece-op14-001.webp"
+  "number": "OP14-001",
+  "img": "img/c/onepiece-op14-001.webp",
+  "detail": {
+   "rarity": "L",
+   "type": "LEADER",
+   "color": "Red",
+   "power": "5000",
+   "trait": "The Seven Warlords of the Sea/Supernovas/Heart Pirates",
+   "text": "[Activate: Main] [Once Per Turn] Select 2 of your {Supernovas} or {Heart Pirates} type Characters. Swap the base power of the selected Characters with each other during this turn."
+  }
  },
  {
   "name": "Demonic Tutor",
   "set": "Revised",
   "game": "magic",
-  "img": "img/c/magic-881e5922-b464-4a1a-b074-664bd6c0a7f6.webp"
+  "number": null,
+  "img": "img/c/magic-881e5922-b464-4a1a-b074-664bd6c0a7f6.webp",
+  "detail": {
+   "rarity": "Uncommon",
+   "artist": "Douglas Shuler",
+   "released": "1994",
+   "type": "Sorcery",
+   "cost": "{1}{B}",
+   "text": "Search your library for a card, put that card into your hand, then shuffle.",
+   "number": "105"
+  }
  },
  {
   "name": "Chansey",
   "set": "Base Set (Unlimited)",
   "game": "pokemon",
-  "img": "img/c/pokemon-base1-3.webp"
+  "number": "3",
+  "img": "img/c/pokemon-base1-3.webp",
+  "detail": {
+   "rarity": "Rare",
+   "artist": "Ken Sugimori",
+   "type": "Pokemon",
+   "hp": 120,
+   "text": "Scrunch; Double-edge"
+  }
  },
  {
   "name": "Nico Robin (055) (Alternate Art)",
   "set": "Extra Booster: One Piece Heroine's Edition",
   "game": "onepiece",
-  "img": "img/c/onepiece-eb03-055.webp"
+  "number": "EB03-055",
+  "img": "img/c/onepiece-eb03-055.webp",
+  "detail": {
+   "rarity": "SR",
+   "type": "CHARACTER",
+   "color": "Yellow",
+   "cost": "7",
+   "power": "8000",
+   "trait": "Straw Hat Crew",
+   "text": "[On Play] You may trash 1 card from the top of your Life cards: If your Leader has the {Straw Hat Crew} type, add up to 2 cards from the top of your deck to the top of your Life cards.<br>[Opponent's Turn] [On K.O.] You "
+  }
  },
  {
   "name": "Mox Amber",
   "set": "Dominaria",
   "game": "magic",
-  "img": "img/c/magic-66024e69-ad60-4c9a-a0ca-da138d33ad80.webp"
+  "number": null,
+  "img": "img/c/magic-66024e69-ad60-4c9a-a0ca-da138d33ad80.webp",
+  "detail": {
+   "rarity": "Mythic",
+   "artist": "Steven Belledin",
+   "released": "2018",
+   "type": "Legendary Artifact",
+   "cost": "{0}",
+   "text": "{T}: Add one mana of any color among legendary creatures and planeswalkers you control.",
+   "number": "224"
+  }
  },
  {
   "name": "Iron Crown ex",
   "set": "Temporal Forces",
   "game": "pokemon",
-  "img": "img/c/pokemon-sv05-206.webp"
+  "number": "206/162",
+  "img": "img/c/pokemon-sv05-206.webp",
+  "detail": {
+   "rarity": "Special illustration rare",
+   "artist": "nagimiso",
+   "type": "Pokemon",
+   "hp": 220,
+   "text": "Twin Shotels"
+  }
  },
  {
   "name": "King (Alternate Art)",
   "set": "The Azure Sea's Seven",
   "game": "onepiece",
-  "img": "img/c/onepiece-eb04-031.webp"
+  "number": "EB04-031",
+  "img": "img/c/onepiece-eb04-031.webp",
+  "detail": {
+   "rarity": "R",
+   "type": "CHARACTER",
+   "color": "Purple",
+   "cost": "6",
+   "power": "7000",
+   "trait": "Lunarian/Animal Kingdom Pirates",
+   "text": "If this Character would be K.O.'d, you may return 1 DON!! card from your field to your DON!! deck instead.<br>[Activate: Main] [Once Per Turn] If your Leader has the {Animal Kingdom Pirates} type and you have no other [K"
+  }
  },
  {
   "name": "Mox Amber (retro frame)",
   "set": "Brothers War",
   "game": "magic",
-  "img": "img/c/magic-a361c9eb-0a12-4f33-a11d-1d7a40801540.webp"
+  "number": null,
+  "img": "img/c/magic-a361c9eb-0a12-4f33-a11d-1d7a40801540.webp",
+  "detail": {
+   "rarity": "Mythic",
+   "artist": "Steven Belledin",
+   "released": "2022",
+   "type": "Legendary Artifact",
+   "cost": "{0}",
+   "text": "{T}: Add one mana of any color among legendary creatures and planeswalkers you control.",
+   "number": "98z"
+  }
  },
  {
   "name": "Eevee",
   "set": "WoTC Promo",
   "game": "pokemon",
-  "img": "img/c/pokemon-basep-11.webp"
+  "number": "11/53",
+  "img": "img/c/pokemon-basep-11.webp",
+  "detail": {
+   "rarity": "Common",
+   "artist": "Kagemaru Himeno",
+   "type": "Pokemon",
+   "hp": 30,
+   "text": "Bite"
+  }
  },
  {
   "name": "Donquixote Rosinante - OP12-108 (TR)",
   "set": "The Azure Sea's Seven",
   "game": "onepiece",
-  "img": "img/c/onepiece-op12-108.webp"
+  "number": "OP12-108",
+  "img": "img/c/onepiece-op12-108.webp",
+  "detail": {
+   "rarity": "R",
+   "type": "CHARACTER",
+   "color": "Yellow",
+   "cost": "1",
+   "power": "2000",
+   "counter": "1000",
+   "trait": "Navy/Donquixote Pirates",
+   "text": "[On Play] Look at 5 cards from the top of your deck; reveal up to 1 [Trafalgar Law] and add it to your hand. Then, place the rest at the bottom of your deck in any order."
+  }
  },
  {
   "name": "Storm of Saruman (Borderless Poster) (Serial Numbered)",
   "set": "Lord of the Rings",
   "game": "magic",
-  "img": "img/c/magic-8213e598-e594-4db1-aad5-836fa972df8f.webp"
+  "number": null,
+  "img": "img/c/magic-8213e598-e594-4db1-aad5-836fa972df8f.webp",
+  "detail": {
+   "rarity": "Mythic",
+   "artist": "Pedro Correa",
+   "released": "2023",
+   "type": "Enchantment",
+   "cost": "{4}{U}{U}",
+   "text": "Ward {3}\nWhenever you cast your second spell each turn, copy it, except the copy isn't legendary. You may choose new targets for the copy. (A copy of a permanent spell becomes a token.)",
+   "number": "733z"
+  }
  },
  {
   "name": "Marill",
   "set": "Paldea Evolved",
   "game": "pokemon",
-  "img": "img/c/pokemon-sv02-204.webp"
+  "number": "204/193",
+  "img": "img/c/pokemon-sv02-204.webp",
+  "detail": {
+   "rarity": "Illustration rare",
+   "artist": "Atsuya Uki",
+   "type": "Pokemon",
+   "hp": 70,
+   "text": "Bubble Drain"
+  }
  },
  {
   "name": "Kaido (058) (Alternate Art)",
   "set": "The World's Strongest Warriors",
   "game": "onepiece",
-  "img": "img/c/onepiece-op17-058.webp"
+  "number": "OP17-058",
+  "img": "img/c/onepiece-op17-058.webp",
+  "detail": {
+   "rarity": "L",
+   "type": "LEADER",
+   "color": "Purple",
+   "power": "5000",
+   "trait": "The Four Emperors/Animal Kingdom Pirates",
+   "text": "[When Attacking]/[On Your Opponent's Attack] [Once Per Turn] DON!! \u22121: Give up to 1 of your opponent's Characters \u22122000 power during this turn."
+  }
  },
  {
   "name": "Tom Bombadil (Borderless Poster)",
   "set": "Lord of the Rings",
   "game": "magic",
-  "img": "img/c/magic-c2b141f8-bc86-4fcc-b1e6-a1ed1ce36a7c.webp"
+  "number": null,
+  "img": "img/c/magic-c2b141f8-bc86-4fcc-b1e6-a1ed1ce36a7c.webp",
+  "detail": {
+   "rarity": "Mythic",
+   "artist": "Marko Manev",
+   "released": "2023",
+   "type": "Legendary Creature \u2014 God Bard",
+   "cost": "{W}{U}{B}{R}{G}",
+   "text": "As long as there are four or more lore counters among Sagas you control, Tom Bombadil has hexproof and indestructible.\nWhenever the final chapter ability of a Saga you control resolves, reveal cards from the top of your ",
+   "number": "823"
+  }
  },
  {
   "name": "Charizard GX",
   "set": "Sun & Moon Promo",
   "game": "pokemon",
-  "img": "img/c/pokemon-smp-sm60.webp"
+  "number": "SM60",
+  "img": "img/c/pokemon-smp-sm60.webp",
+  "detail": {
+   "rarity": "Promo",
+   "artist": "5ban Graphics",
+   "type": "Pokemon",
+   "hp": 250,
+   "text": "Wing Attack; Crimson Storm; Raging Out GX"
+  }
  },
  {
   "name": "Enel (OP15-058) (Alternate Art)",
   "set": "Adventure on Kami's Island",
   "game": "onepiece",
-  "img": "img/c/onepiece-op15-058.webp"
+  "number": "OP15-058",
+  "img": "img/c/onepiece-op15-058.webp",
+  "detail": {
+   "rarity": "L",
+   "type": "LEADER",
+   "color": "Purple",
+   "power": "5000",
+   "trait": "Sky Island",
+   "text": "Under the rules of this game, your DON!! deck consists of 6 cards.<br>[Activate: Main] [Once Per Turn] If it is your second turn or later, add up to 1 DON!! card from your DON!! deck and set it as active, and add up to 4"
+  }
  },
  {
   "name": "Mount Doom (Borderless Poster)",
   "set": "Lord of the Rings",
   "game": "magic",
-  "img": "img/c/magic-d7852b73-3c05-45a3-b0dc-206c87bef7a3.webp"
+  "number": null,
+  "img": "img/c/magic-d7852b73-3c05-45a3-b0dc-206c87bef7a3.webp",
+  "detail": {
+   "rarity": "Mythic",
+   "artist": "Logan Feliciano",
+   "released": "2023",
+   "type": "Legendary Land",
+   "text": "{T}, Pay 1 life: Add {B} or {R}.\n{1}{B}{R}, {T}: Mount Doom deals 1 damage to each opponent.\n{5}{B}{R}, {T}, Sacrifice Mount Doom and a legendary artifact: Choose up to two creatures, then destroy the rest. Activate only",
+   "number": "754"
+  }
  },
  {
   "name": "Skyla",
   "set": "BREAKpoint",
   "game": "pokemon",
-  "img": "img/c/pokemon-xy9-122.webp"
+  "number": "122",
+  "img": "img/c/pokemon-xy9-122.webp",
+  "detail": {
+   "rarity": "Ultra Rare",
+   "artist": "Megumi Mizutani",
+   "type": "Trainer"
+  }
  },
  {
   "name": "Nefeltari Vivi (Parallel) (JP)",
   "set": "Heroines Edition",
   "game": "onepiece",
-  "img": "img/c/onepiece-eb03-024.webp"
+  "number": "EB03-024",
+  "img": "img/c/onepiece-eb03-024.webp",
+  "detail": {
+   "rarity": "SR",
+   "type": "CHARACTER",
+   "color": "Blue",
+   "cost": "5",
+   "power": "4000",
+   "counter": "1000",
+   "trait": "Alabasta",
+   "text": "[Blocker]<br>[On Play] Play up to 1 {Alabasta} or {Straw Hat Crew} type Character card with a cost of 5 or less from your hand. Then, you cannot play any Character cards on your field during this turn."
+  }
  },
  {
   "name": "Gandalf the White (Borderless Poster)",
   "set": "Lord of the Rings",
   "game": "magic",
-  "img": "img/c/magic-0195ad80-a105-493f-b468-666899fe35dd.webp"
+  "number": null,
+  "img": "img/c/magic-0195ad80-a105-493f-b468-666899fe35dd.webp",
+  "detail": {
+   "rarity": "Mythic",
+   "artist": "Dominik Mayer",
+   "released": "2023",
+   "type": "Legendary Creature \u2014 Avatar Wizard",
+   "cost": "{3}{W}{W}",
+   "text": "Flash\nYou may cast legendary spells and artifact spells as though they had flash.\nIf a legendary permanent or an artifact entering or leaving the battlefield causes a triggered ability of a permanent you control to trigg",
+   "number": "797"
+  }
  },
  {
   "name": "Raichu",
   "set": "Base Set (Unlimited)",
   "game": "pokemon",
-  "img": "img/c/pokemon-base1-14.webp"
+  "number": "14",
+  "img": "img/c/pokemon-base1-14.webp",
+  "detail": {
+   "rarity": "Rare",
+   "artist": "Ken Sugimori",
+   "type": "Pokemon",
+   "hp": 80,
+   "text": "Agility; Thunder"
+  }
  },
  {
   "name": "Nefeltari Vivi (Alternate Art) (JP)",
   "set": "Kingdoms of Intrigue",
   "game": "onepiece",
-  "img": "img/c/onepiece-op04-118.webp"
+  "number": "OP04-118",
+  "img": "img/c/onepiece-op04-118.webp",
+  "detail": {
+   "rarity": "SEC",
+   "type": "CHARACTER",
+   "color": "Red",
+   "cost": "7",
+   "power": "4000",
+   "counter": "1000",
+   "trait": "Alabasta",
+   "text": "All of your red Characters with a cost of 3 or more other than this Character gain [Rush].<br>(This card can attack on the turn in which it is played.)"
+  }
  },
  {
   "name": "Last March of the Ents (Borderless Poster)",
   "set": "Lord of the Rings",
   "game": "magic",
-  "img": "img/c/magic-cebd776a-92ac-4a4c-a88f-335fbcb84c36.webp"
+  "number": null,
+  "img": "img/c/magic-cebd776a-92ac-4a4c-a88f-335fbcb84c36.webp",
+  "detail": {
+   "rarity": "Mythic",
+   "artist": "Ian Jepson",
+   "released": "2023",
+   "type": "Sorcery",
+   "cost": "{6}{G}{G}",
+   "text": "This spell can't be countered.\nDraw cards equal to the greatest toughness among creatures you control, then put any number of creature cards from your hand onto the battlefield.",
+   "number": "739z"
+  }
  },
  {
   "name": "Mega Zeraora ex",
   "set": "Pitch Black",
   "game": "pokemon",
-  "img": "img/c/pokemon-me05-114.webp"
+  "number": "114/084",
+  "img": "img/c/pokemon-me05-114.webp",
+  "detail": {
+   "rarity": "Special illustration rare",
+   "artist": "GIDORA",
+   "type": "Pokemon",
+   "hp": 270,
+   "text": "Thunderous Fist; Zepto Turn"
+  }
  },
  {
   "name": "Perona (Parallel) (JP)",
   "set": "The Azure Sea's Seven",
   "game": "onepiece",
-  "img": "img/c/onepiece-op14-033.webp"
+  "number": "OP14-033",
+  "img": "img/c/onepiece-op14-033.webp",
+  "detail": {
+   "rarity": "SR",
+   "type": "CHARACTER",
+   "color": "Green",
+   "cost": "5",
+   "power": "6000",
+   "counter": "1000",
+   "trait": "Muggy Kingdom/Thriller Bark Pirates",
+   "text": "[On Play] Up to 2 of your opponent's Characters with a cost of 5 or less cannot be rested until the end of your opponent's next End Phase.<br>[On K.O.] You may rest 1 of your cards: Play up to 1 green Character card with"
+  }
  },
  {
   "name": "Orcish Bowmasters (Showcase Scrolls)",
   "set": "Lord of the Rings",
   "game": "magic",
-  "img": "img/c/magic-7cb981e3-2db7-48c8-83fb-f36ac43689e1.webp"
+  "number": null,
+  "img": "img/c/magic-7cb981e3-2db7-48c8-83fb-f36ac43689e1.webp",
+  "detail": {
+   "rarity": "Rare",
+   "artist": "Maxim Kostin",
+   "released": "2023",
+   "type": "Creature \u2014 Orc Archer",
+   "cost": "{1}{B}",
+   "text": "Flash\nWhen this creature enters and whenever an opponent draws a card except the first one they draw in each of their draw steps, this creature deals 1 damage to any target. Then amass Orcs 1.",
+   "number": "554"
+  }
  },
  {
   "name": "Alolan Ninetales GX (Full Art)",
   "set": "Lost Thunder",
   "game": "pokemon",
-  "img": "img/c/pokemon-sm8-205.webp"
+  "number": "205",
+  "img": "img/c/pokemon-sm8-205.webp",
+  "detail": {
+   "rarity": "Ultra Rare",
+   "artist": "5ban Graphics",
+   "type": "Pokemon",
+   "hp": 200,
+   "text": "Snowy Wind; Sublimation GX"
+  }
  },
  {
   "name": "Marshall.D.Teach (119)",
   "set": "The Time of Battle",
   "game": "onepiece",
-  "img": "img/c/onepiece-op16-119.webp"
+  "number": "OP16-119",
+  "img": "img/c/onepiece-op16-119.webp",
+  "detail": {
+   "rarity": "SEC",
+   "type": "CHARACTER",
+   "color": "Yellow",
+   "cost": "8",
+   "power": "10000",
+   "trait": "The Seven Warlords of the Sea/Blackbeard Pirates",
+   "text": "[On Play] Look at 3 cards from the top of your deck; add up to 1 card to the top of your Life cards. Then, place the rest at the bottom of your deck in any order."
+  }
  },
  {
   "name": "Chrome Mox (Borderless)",
   "set": "Double Masters (2XM)",
   "game": "magic",
-  "img": "img/c/magic-0e94d334-e043-42f2-ba5c-be497d82f2c8.webp"
+  "number": "358",
+  "img": "img/c/magic-0e94d334-e043-42f2-ba5c-be497d82f2c8.webp",
+  "detail": {
+   "rarity": "Mythic",
+   "artist": "Franz Vohwinkel",
+   "released": "2020",
+   "type": "Artifact",
+   "cost": "{0}",
+   "text": "Imprint \u2014 When this artifact enters, you may exile a nonartifact, nonland card from your hand.\n{T}: Add one mana of any of the exiled card's colors.",
+   "number": "358"
+  }
  },
  {
   "name": "Ninetales",
   "set": "Obsidian Flames",
   "game": "pokemon",
-  "img": "img/c/pokemon-sv03-199.webp"
+  "number": "199/197",
+  "img": "img/c/pokemon-sv03-199.webp",
+  "detail": {
+   "rarity": "Illustration rare",
+   "artist": "SIE NANAHARA",
+   "type": "Pokemon",
+   "hp": 120,
+   "text": "Will-O-Wisp; Nine-Tailed Dance"
+  }
  },
  {
   "name": "Mamaragan",
   "set": "Adventure on Kami's Island",
   "game": "onepiece",
-  "img": "img/c/onepiece-op15-078.webp"
+  "number": "OP15-078",
+  "img": "img/c/onepiece-op15-078.webp",
+  "detail": {
+   "rarity": "SR",
+   "type": "EVENT",
+   "color": "Purple",
+   "trait": "Sky Island",
+   "text": "[Main] DON!! \u22122: Draw 1 card. Then, rest up to 1 of your opponent's Characters with 5000 power or less.<br>[Counter] Up to 1 of your Leader or Character cards gains +1000 power during this battle. Then, if you have 6 or "
+  }
  },
  {
   "name": "Chrome Mox",
   "set": "Double Masters (2XM)",
   "game": "magic",
-  "img": "img/c/magic-f340cbf7-5bbe-45b9-a4bf-d1caa500ff93.webp"
+  "number": "240",
+  "img": "img/c/magic-f340cbf7-5bbe-45b9-a4bf-d1caa500ff93.webp",
+  "detail": {
+   "rarity": "Mythic",
+   "artist": "Volkan Ba\u01f5a",
+   "released": "2020",
+   "type": "Artifact",
+   "cost": "{0}",
+   "text": "Imprint \u2014 When this artifact enters, you may exile a nonartifact, nonland card from your hand.\n{T}: Add one mana of any of the exiled card's colors.",
+   "number": "240"
+  }
  },
  {
   "name": "Vaporeon",
   "set": "Jungle",
   "game": "pokemon",
-  "img": "img/c/pokemon-base2-12.webp"
+  "number": "12",
+  "img": "img/c/pokemon-base2-12.webp",
+  "detail": {
+   "rarity": "Rare",
+   "artist": "Kagemaru Himeno",
+   "type": "Pokemon",
+   "hp": 80,
+   "text": "Quick Attack; Water Gun"
+  }
  },
  {
   "name": "O-Nami (Illustration Box Vol.1)",
   "set": "One Piece Promotion Cards",
   "game": "onepiece",
-  "img": "img/c/onepiece-op05-062.webp"
+  "number": "OP05-062",
+  "img": "img/c/onepiece-op05-062.webp",
+  "detail": {
+   "rarity": "UC",
+   "type": "CHARACTER",
+   "color": "Purple",
+   "cost": "1",
+   "power": "1000",
+   "counter": "1000",
+   "trait": "Straw Hat Crew",
+   "text": "If you have 10 DON!! cards on your field, this Character gains [Blocker].<br>(After your opponent declares an attack, you may rest this card to make it the new target of the attack.)"
+  }
  },
  {
   "name": "Chrome Mox",
   "set": "Secret Lair Countdown Kit (SLC)",
   "game": "magic",
-  "img": "img/c/magic-e0d88029-2569-461b-a57d-1af10673f4cf.webp"
+  "number": null,
+  "img": "img/c/magic-e0d88029-2569-461b-a57d-1af10673f4cf.webp",
+  "detail": {
+   "rarity": "Mythic",
+   "artist": "Dan Frazier",
+   "released": "2022",
+   "type": "Artifact",
+   "cost": "{0}",
+   "text": "Imprint \u2014 When this artifact enters, you may exile a nonartifact, nonland card from your hand.\n{T}: Add one mana of any of the exiled card's colors.",
+   "number": "2003"
+  }
  },
  {
   "name": "Ninetales",
   "set": "Base Set (Unlimited)",
   "game": "pokemon",
-  "img": "img/c/pokemon-base1-12.webp"
+  "number": "12",
+  "img": "img/c/pokemon-base1-12.webp",
+  "detail": {
+   "rarity": "Rare",
+   "artist": "Ken Sugimori",
+   "type": "Pokemon",
+   "hp": 80,
+   "text": "Lure; Fire Blast"
+  }
  },
  {
   "name": "Rocks.D.Xebec",
   "set": "The World's Strongest Warriors",
   "game": "onepiece",
-  "img": "img/c/onepiece-op17-118.webp"
+  "number": "OP17-118",
+  "img": "img/c/onepiece-op17-118.webp",
+  "detail": {
+   "rarity": "SEC",
+   "type": "CHARACTER",
+   "color": "Blue",
+   "cost": "10",
+   "power": "12000",
+   "trait": "Rocks Pirates",
+   "text": "If you only have Characters without a Counter, this card in your hand has a +2000 Counter.<br>[On Play] Draw 1 card and play up to 2 {Rocks Pirates} type cards with different card names and a total cost of 9 or less from"
+  }
  },
  {
   "name": "Mox Opal (Borderless)",
   "set": "Double Masters (2XM)",
   "game": "magic",
-  "img": "img/c/magic-547e3aa5-d88a-4418-ab9d-dd65385f031b.webp"
+  "number": "362",
+  "img": "img/c/magic-547e3aa5-d88a-4418-ab9d-dd65385f031b.webp",
+  "detail": {
+   "rarity": "Mythic",
+   "artist": "Martina Pilcerova",
+   "released": "2020",
+   "type": "Legendary Artifact",
+   "cost": "{0}",
+   "text": "Metalcraft \u2014 {T}: Add one mana of any color. Activate only if you control three or more artifacts.",
+   "number": "362"
+  }
  },
  {
   "name": "Mew",
   "set": "Evolutions",
   "game": "pokemon",
-  "img": "img/c/pokemon-xy12-53.webp"
+  "number": "53/108",
+  "img": "img/c/pokemon-xy12-53.webp",
+  "detail": {
+   "rarity": "Rare",
+   "artist": "Ken Sugimori",
+   "type": "Pokemon",
+   "hp": 40,
+   "text": "Psy Bolt"
+  }
  },
  {
   "name": "Edward.Newgate (Alternate Art)",
   "set": "The Time of Battle",
   "game": "onepiece",
-  "img": "img/c/onepiece-op16-003.webp"
+  "number": "OP16-003",
+  "img": "img/c/onepiece-op16-003.webp",
+  "detail": {
+   "rarity": "SR",
+   "type": "CHARACTER",
+   "color": "Red",
+   "cost": "8",
+   "power": "10000",
+   "trait": "The Four Emperors/Whitebeard Pirates",
+   "text": "[Your Turn] Your Leader gains [Double Attack] and +2000 power.<br>[On Play] You may reveal 2 Character cards with 8000 power from your hand: Give up to 1 of your opponent's Characters \u22126000 power during this turn."
+  }
  },
  {
   "name": "Mox Opal",
   "set": "Double Masters (2XM)",
   "game": "magic",
-  "img": "img/c/magic-56001a36-126b-4c08-af98-a6cc4d84210e.webp"
+  "number": "275",
+  "img": "img/c/magic-56001a36-126b-4c08-af98-a6cc4d84210e.webp",
+  "detail": {
+   "rarity": "Mythic",
+   "artist": "Volkan Ba\u01f5a",
+   "released": "2020",
+   "type": "Legendary Artifact",
+   "cost": "{0}",
+   "text": "Metalcraft \u2014 {T}: Add one mana of any color. Activate only if you control three or more artifacts.",
+   "number": "275"
+  }
  },
  {
   "name": "Jolteon",
   "set": "Jungle",
   "game": "pokemon",
-  "img": "img/c/pokemon-base2-20.webp"
+  "number": "20",
+  "img": "img/c/pokemon-base2-20.webp",
+  "detail": {
+   "rarity": "Rare",
+   "artist": "Kagemaru Himeno",
+   "type": "Pokemon",
+   "hp": 70,
+   "text": "Quick Attack; Pin Missile"
+  }
  },
  {
   "name": "Koala (parallel) (JP)",
   "set": "Legacy of the Master",
   "game": "onepiece",
-  "img": "img/c/onepiece-op12-081.webp"
+  "number": "OP12-081",
+  "img": "img/c/onepiece-op12-081.webp",
+  "detail": {
+   "rarity": "L",
+   "type": "LEADER",
+   "color": "Black/Yellow",
+   "power": "5000",
+   "trait": "Dressrosa/Revolutionary Army",
+   "text": "When this Leader attacks your opponent's Leader, if you have 2 or more Characters with a cost of 8 or more, draw 1 card.<br>[Once Per Turn] This effect can be activated when your opponent plays a Character with a base co"
+  }
  },
  {
   "name": "Serra's Sanctum",
   "set": "Urza's Saga",
   "game": "magic",
-  "img": "img/c/magic-f7a18130-dbaa-4657-a885-3a96a985935a.webp"
+  "number": null,
+  "img": "img/c/magic-f7a18130-dbaa-4657-a885-3a96a985935a.webp",
+  "detail": {
+   "rarity": "Rare",
+   "artist": "Ciruelo",
+   "released": "1998",
+   "type": "Legendary Land",
+   "text": "{T}: Add {W} for each enchantment you control.",
+   "number": "325"
+  }
  },
  {
   "name": "Darkness Energy (Secret)",
   "set": "Evolving Skies",
   "game": "pokemon",
-  "img": "img/c/pokemon-swsh7-236.webp"
+  "number": "236/203",
+  "img": "img/c/pokemon-swsh7-236.webp",
+  "detail": {
+   "rarity": "Secret Rare",
+   "type": "Energy"
+  }
  },
  {
   "name": "Moby Dick (Alternate Art)",
   "set": "The Time of Battle",
   "game": "onepiece",
-  "img": "img/c/onepiece-op16-021.webp"
+  "number": "OP16-021",
+  "img": "img/c/onepiece-op16-021.webp",
+  "detail": {
+   "rarity": "R",
+   "type": "STAGE",
+   "color": "Red",
+   "cost": "1",
+   "trait": "Whitebeard Pirates",
+   "text": "[On Play] If your Leader has the {Whitebeard Pirates} type, look at 3 cards from the top of your deck and add up to 1 card to your hand. Then, place the rest at the bottom of your deck in any order.<br>[Activate: Main] Y"
+  }
  },
  {
   "name": "The One Ring",
   "set": "Lord of the Rings",
   "game": "magic",
-  "img": "img/c/magic-6e817a37-235f-46fd-b857-9003b2264d10.webp"
+  "number": null,
+  "img": "img/c/magic-6e817a37-235f-46fd-b857-9003b2264d10.webp",
+  "detail": {
+   "rarity": "Mythic",
+   "artist": "Veli Nystr\u00f6m",
+   "released": "2023",
+   "type": "Legendary Artifact",
+   "cost": "{4}",
+   "text": "Indestructible\nWhen The One Ring enters, if you cast it, you gain protection from everything until your next turn.\nAt the beginning of your upkeep, you lose 1 life for each burden counter on The One Ring.\n{T}: Put a burd",
+   "number": "791"
+  }
  },
  {
   "name": "Blastoise GX",
   "set": "Unbroken Bonds",
   "game": "pokemon",
-  "img": "img/c/pokemon-sm10-35.webp"
+  "number": "35",
+  "img": "img/c/pokemon-sm10-35.webp",
+  "detail": {
+   "rarity": "Ultra Rare",
+   "artist": "sadaji",
+   "type": "Pokemon",
+   "hp": 240,
+   "text": "Rocket Splash; Giant Geyser GX"
+  }
  },
  {
   "name": "Replenish",
   "set": "Urza's Destiny",
   "game": "magic",
-  "img": "img/c/magic-7fd2fe13-bbc0-42b7-bc42-3b51910ce118.webp"
+  "number": null,
+  "img": "img/c/magic-7fd2fe13-bbc0-42b7-bc42-3b51910ce118.webp",
+  "detail": {
+   "rarity": "Rare",
+   "artist": "Jim Nelson",
+   "released": "1999",
+   "type": "Sorcery",
+   "cost": "{3}{W}",
+   "text": "Return all enchantment cards from your graveyard to the battlefield. (Auras with nothing to enchant remain in your graveyard.)",
+   "number": "15"
+  }
  },
  {
   "name": "Mew",
   "set": "Unbroken Bonds",
   "game": "pokemon",
-  "img": "img/c/pokemon-sm10-76.webp"
+  "number": "76",
+  "img": "img/c/pokemon-sm10-76.webp",
+  "detail": {
+   "rarity": "Rare",
+   "artist": "sui",
+   "type": "Pokemon",
+   "hp": 60,
+   "text": "Psypower"
+  }
  },
  {
   "name": "Volrath's Stronghold",
   "set": "Stronghold",
   "game": "magic",
-  "img": "img/c/magic-43bf015b-152e-4d67-b773-e75fb2487a32.webp"
+  "number": null,
+  "img": "img/c/magic-43bf015b-152e-4d67-b773-e75fb2487a32.webp",
+  "detail": {
+   "rarity": "Rare",
+   "artist": "Kev Walker",
+   "released": "1998",
+   "type": "Legendary Land",
+   "text": "{T}: Add {C}.\n{1}{B}, {T}: Put target creature card from your graveyard on top of your library.",
+   "number": "143"
+  }
  },
  {
   "name": "Gaea's Cradle",
   "set": "Urza's Saga",
   "game": "magic",
-  "img": "img/c/magic-25b0b816-0583-44aa-9dc5-f3ff48993a51.webp"
+  "number": null,
+  "img": "img/c/magic-25b0b816-0583-44aa-9dc5-f3ff48993a51.webp",
+  "detail": {
+   "rarity": "Rare",
+   "artist": "Mark Zug",
+   "released": "1998",
+   "type": "Legendary Land",
+   "text": "{T}: Add {G} for each creature you control.",
+   "number": "321"
+  }
  }
 ]

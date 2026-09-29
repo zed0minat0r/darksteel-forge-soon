@@ -140,14 +140,14 @@ def resolve_pokemon(row):
     cards = d.get("cards", [])
     for c in cards:
         if c["localId"].lower() == num.lower():
-            return dict(c, _set_id=set_id)
+            return dict(c, _set_id=set_id, _lang=lang)
     for c in cards:  # 010 vs 10
         if re.sub(r"^0+", "", c["localId"].lower()) == re.sub(r"^0+", "", num.lower()):
-            return dict(c, _set_id=set_id)
+            return dict(c, _set_id=set_id, _lang=lang)
     want_name = norm(base_name(row["name"]))
     for c in cards:
         if norm(c["name"]) == want_name:
-            return dict(c, _set_id=set_id)
+            return dict(c, _set_id=set_id, _lang=lang)
     return None
 
 
@@ -158,6 +158,20 @@ def url_ok(u):
             return r.status == 200 and r.headers.get("Content-Type", "").startswith("image/")
     except Exception:
         return False
+
+
+def pokemon_detail(c, set_id, lang):
+    """The set listing only carries id/name/image, so pull the card itself for
+    the things a viewer wants to show. Cached, so it is one request per card once."""
+    d = get(f"https://api.tcgdex.net/v2/{lang}/cards/{c['id']}") or {}
+    return {k: v for k, v in {
+        "rarity": d.get("rarity"),
+        "artist": d.get("illustrator"),
+        "released": (d.get("set") or {}).get("releaseDate", "")[:4] or None,
+        "type": d.get("category"),
+        "hp": d.get("hp"),
+        "text": "; ".join(a.get("name", "") for a in (d.get("attacks") or []))[:220] or None,
+    }.items() if v}
 
 
 def pokemon_image(c, set_id=None):
@@ -225,6 +239,46 @@ def resolve_riftbound(row):
     return cand[0] if cand else None
 
 
+def magic_detail(c):
+    return {k: v for k, v in {
+        "rarity": (c.get("rarity") or "").title() or None,
+        "artist": c.get("artist"),
+        "released": (c.get("released_at") or "")[:4] or None,
+        "type": c.get("type_line"),
+        "cost": c.get("mana_cost") or None,
+        "text": (c.get("oracle_text") or "")[:220] or None,
+        "number": c.get("collector_number"),
+    }.items() if v}
+
+
+def onepiece_detail(c):
+    return {k: v for k, v in {
+        "rarity": c.get("rarity"),
+        "type": c.get("cardType"),
+        "color": c.get("Color"),
+        "cost": c.get("Cost"),
+        "power": c.get("Power"),
+        "counter": c.get("Counter"),
+        "trait": c.get("Type"),
+        "text": (c.get("Effect") or "")[:220] or None,
+    }.items() if v}
+
+
+def riftbound_detail(c):
+    tags = c.get("tags")
+    return {k: v for k, v in {
+        "rarity": c.get("rarity"),
+        "type": ", ".join(c["type"]) if isinstance(c.get("type"), list) else c.get("type"),
+        "color": ", ".join(c["color"]) if isinstance(c.get("color"), list) else c.get("color"),
+        "cost": c.get("cost"),
+        "might": c.get("might"),
+        "trait": ", ".join(tags) if isinstance(tags, list) else tags,
+        # Riftbound effect text carries :rb_energy_7: style icon tokens
+        "text": re.sub(r"\s+", " ", re.sub(r":rb_[a-z0-9_]+:", "",
+                       re.sub(r"<[^>]+>", " ", c.get("effect") or ""))).strip()[:220] or None,
+    }.items() if v}
+
+
 def dotgg_image(c, game):
     return c.get("image") or f"https://static.dotgg.gg/{game}/card/{c['id']}.webp"
 
@@ -239,22 +293,26 @@ def main():
             if cat.startswith("magic"):
                 c = resolve_magic(row); img = magic_image(c) if c else None
                 game, cid = "magic", (c or {}).get("id")
+                det = magic_detail(c) if c else {}
             elif cat == "pokemon":
                 c = resolve_pokemon(row); img = pokemon_image(c, (c or {}).get("_set_id")) if c else None
                 game, cid = "pokemon", (c or {}).get("id")
+                det = pokemon_detail(c, c.get("_set_id"), c.get("_lang", "en")) if c else {}
             elif cat == "one piece":
                 c = resolve_onepiece(row); img = dotgg_image(c, "onepiece") if c else None
                 game, cid = "onepiece", (c or {}).get("id")
+                det = onepiece_detail(c) if c else {}
             elif cat == "riftbound":
                 c = resolve_riftbound(row); img = dotgg_image(c, "riftbound") if c else None
                 game, cid = "riftbound", (c or {}).get("id")
+                det = riftbound_detail(c) if c else {}
             else:
-                c, img, game, cid = None, None, cat, None
+                c, img, game, cid, det = None, None, cat, None, {}
         except Exception as e:
             print(f"  ! row {i} {row['name']}: {e}", file=sys.stderr)
-            c, img, game, cid = None, None, cat, None
+            c, img, game, cid, det = None, None, cat, None, {}
         rec = dict(row, game=game, card_id=cid, src=img,
-                   matched_name=(c or {}).get("name"))
+                   matched_name=(c or {}).get("name"), detail=det)
         out.append(rec)
         if not img:
             misses.append(rec)

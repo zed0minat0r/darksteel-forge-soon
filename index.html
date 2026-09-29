@@ -121,9 +121,9 @@ form.notify input:focus{border-color:var(--ember)}
 .fade::before{left:0;background:linear-gradient(90deg,var(--bg) 10%,transparent)}
 .fade::after{right:0;background:linear-gradient(270deg,var(--bg) 10%,transparent)}
 .fade{min-height:clamp(250px,58vw,318px)}
-.lane{display:flex;gap:1.1rem;width:max-content;padding:.4rem 0;opacity:0;transition:opacity .5s ease;animation:slide 58s linear infinite;animation-play-state:paused}
+.lane{display:flex;gap:1.1rem;width:max-content;padding:.4rem 0;opacity:0;transition:opacity .5s ease;animation:slide 82s linear infinite;animation-play-state:paused}
 .lane.ready{opacity:1;animation-play-state:running}
-.lane.back{animation:slideBack 74s linear infinite;animation-play-state:paused;margin-top:1.1rem}
+.lane.back{animation:slideBack 104s linear infinite;animation-play-state:paused;margin-top:1.1rem}
 .lane.back.ready{opacity:.88;animation-play-state:running}
 .lane:hover{animation-play-state:paused}
 @keyframes slide{from{transform:translateX(0)}to{transform:translateX(-50%)}}
@@ -134,6 +134,40 @@ form.notify input:focus{border-color:var(--ember)}
 .lane figure:hover img{transform:translateY(-8px) scale(1.02);box-shadow:0 26px 46px rgba(0,0,0,.8)}
 .lane figcaption{margin-top:.55rem;font-size:.72rem;line-height:1.35;color:var(--ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .lane figcaption b{display:block;color:var(--ink-3);font-weight:500;font-size:.66rem;letter-spacing:.14em;text-transform:uppercase}
+
+/* ============================================================ CARD VIEWER
+   Click a card in the lanes and it opens here. Same anatomy as the display-case
+   sheet on the full site - game badge, name, set, a spec list, the rules text -
+   minus the price and condition picker, which this site has no business
+   quoting before the shop is open. */
+.lane figure button{background:none;border:0;padding:0;margin:0;display:block;width:100%;text-align:left;cursor:zoom-in}
+.viewer{position:fixed;inset:0;z-index:60;display:none;place-items:center;padding:clamp(.8rem,3vw,2rem)}
+.viewer[open]{display:grid}
+.viewer::before{content:"";position:absolute;inset:0;background:rgba(3,4,5,.82);backdrop-filter:blur(7px)}
+.vpanel{position:relative;width:min(940px,100%);max-height:92vh;overflow:auto;display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:clamp(1rem,3vw,2rem);
+  background:linear-gradient(180deg,#131519,#0c0e10);border:1px solid var(--line-2);border-radius:16px;
+  padding:clamp(1rem,3vw,1.9rem);box-shadow:0 40px 90px rgba(0,0,0,.75)}
+.vpanel img{width:100%;border-radius:11px;background:#15181c;box-shadow:0 20px 44px rgba(0,0,0,.7)}
+.vgame{display:inline-flex;align-items:center;gap:.5rem;font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-3)}
+.vgame i{width:7px;height:7px;border-radius:2px;background:var(--ember)}
+.vname{font-family:var(--display);font-size:clamp(1.3rem,3.2vw,1.9rem);line-height:1.15;margin:.5rem 0 .2rem}
+.vset{color:var(--ink-2);font-size:.92rem;margin-bottom:1rem}
+.vspecs{margin:0 0 1rem;border-top:1px solid var(--line)}
+.vspecs>div{display:flex;justify-content:space-between;gap:1rem;padding:.5rem 0;border-bottom:1px solid var(--line)}
+.vspecs dt{color:var(--ink-3);font-size:.7rem;letter-spacing:.18em;text-transform:uppercase}
+.vspecs dd{margin:0;text-align:right;font-size:.9rem}
+.vtext{color:var(--ink-2);font-size:.9rem;line-height:1.6;white-space:pre-wrap}
+.vclose{position:absolute;top:.5rem;right:.5rem;width:var(--tap);height:var(--tap);border:0;border-radius:10px;
+  background:rgba(255,255,255,.06);display:grid;place-items:center;font-size:1.4rem;line-height:1}
+.vclose:hover{background:rgba(255,255,255,.12)}
+/* the close button is focused programmatically when the viewer opens, and Chrome
+   draws its default blue ring for that - swap it for the site's ember */
+.viewer :focus-visible,.viewer :focus{outline:2px solid var(--ember);outline-offset:2px}
+.vnav{display:flex;gap:.6rem;margin-top:1.1rem}
+.vnav button{min-height:var(--tap);padding:0 1.1rem;border:1px solid var(--line-2);border-radius:10px;background:rgba(255,255,255,.04)}
+.vnav button:hover{background:rgba(255,255,255,.09)}
+@media (max-width:720px){.vpanel{grid-template-columns:1fr}.vpanel img{max-width:62%;margin:0 auto}}
 
 /* ============================================================ ROADMAP
    A forge line: the ember rail fills as you scroll, each stop lights up in turn. */
@@ -520,9 +554,11 @@ document.querySelectorAll(".mark .emb").forEach(cv => {
    cards scrolled in blank and popped (Matt 2026-09-27: "buggy and appeared late"). */
 fetch("cards.json").then(r => r.json()).then(async cards => {
   const GAME = { magic: "Magic", pokemon: "Pokemon", onepiece: "One Piece", riftbound: "Riftbound" };
+  const esc = t => String(t).replace(/[&<>"]/g, m => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[m]));
   const draw = (lane, c) => {
     const f = document.createElement("figure");
-    f.innerHTML = `<img src="${c.img}" alt="${c.name}" decoding="async" width="600" height="838"><figcaption>${c.name}<b>${GAME[c.game] || ""}</b></figcaption>`;
+    const i = cards.indexOf(c);
+    f.innerHTML = `<button type="button" data-i="${i}" aria-label="View ${esc(c.name)}"><img src="${c.img}" alt="${esc(c.name)}" decoding="async" width="600" height="838"><figcaption>${esc(c.name)}<b>${GAME[c.game] || ""}</b></figcaption></button>`;
     lane.appendChild(f);
   };
   const a = cards.filter((_, i) => i % 2 === 0), b = cards.filter((_, i) => i % 2 === 1);
@@ -539,6 +575,55 @@ fetch("cards.json").then(r => r.json()).then(async cards => {
   await Promise.all(loading.slice(0, onScreen).map(im =>
     im.complete ? null : new Promise(res => { im.onload = im.onerror = res; })));
   l1.classList.add("ready"); l2.classList.add("ready");
+
+  /* ---- the viewer ---- */
+  const V = $("#viewer"), lanes = [l1, l2];
+  let at = 0, lastFocus = null;
+  const LABEL = {
+    number: "Number", rarity: "Rarity", artist: "Artist", released: "Released",
+    type: "Type", cost: "Cost", power: "Power", counter: "Counter",
+    might: "Might", color: "Colour", trait: "Traits", hp: "HP",
+  };
+  const show = i => {
+    const c = cards[(i + cards.length) % cards.length];
+    at = (i + cards.length) % cards.length;
+    const d = c.detail || {};
+    $("#vImg").src = c.img; $("#vImg").alt = c.name;
+    $("#vGame").textContent = GAME[c.game] || "";
+    $("#vName").textContent = c.name;
+    $("#vSet").textContent = c.set || "";
+    const num = c.number || d.number;
+    const rows = [["number", num], ...Object.keys(LABEL)
+      .filter(k => k !== "number" && d[k] != null && d[k] !== "")
+      .map(k => [k, d[k]])];
+    $("#vSpecs").innerHTML = rows.filter(([, v]) => v != null && v !== "")
+      .map(([k, v]) => `<div><dt>${LABEL[k]}</dt><dd>${esc(v)}</dd></div>`).join("");
+    $("#vText").textContent = d.text || "";
+  };
+  const open = i => {
+    lastFocus = document.activeElement;
+    show(i); V.setAttribute("open", "");
+    lanes.forEach(l => l.style.animationPlayState = "paused");
+    $("#vClose").focus();
+  };
+  const close = () => {
+    V.removeAttribute("open");
+    lanes.forEach(l => l.style.animationPlayState = "");
+    if (lastFocus) lastFocus.focus();
+  };
+  lanes.forEach(l => l.addEventListener("click", e => {
+    const b = e.target.closest("button[data-i]"); if (b) open(+b.dataset.i);
+  }));
+  $("#vClose").addEventListener("click", close);
+  $("#vPrev").addEventListener("click", () => show(at - 1));
+  $("#vNext").addEventListener("click", () => show(at + 1));
+  V.addEventListener("click", e => { if (e.target === V) close(); });
+  addEventListener("keydown", e => {
+    if (!V.hasAttribute("open")) return;
+    if (e.key === "Escape") close();
+    if (e.key === "ArrowLeft") show(at - 1);
+    if (e.key === "ArrowRight") show(at + 1);
+  });
 }).catch(() => { $("#lane").innerHTML = ""; });
 
 /* the roadmap: light each stop in turn and run the ember rail up to the last lit one */
@@ -570,5 +655,22 @@ $("#notify").addEventListener("submit", e => {
   $("#said").textContent = "You are on the list. We will email you the day the doors open.";
 });
 </script>
+<div class="viewer" id="viewer" role="dialog" aria-modal="true" aria-labelledby="vName">
+  <div class="vpanel">
+    <button class="vclose" id="vClose" type="button" aria-label="Close">&times;</button>
+    <div><img id="vImg" src="" alt=""></div>
+    <div>
+      <span class="vgame"><i></i><span id="vGame"></span></span>
+      <h3 class="vname" id="vName"></h3>
+      <div class="vset" id="vSet"></div>
+      <dl class="vspecs" id="vSpecs"></dl>
+      <p class="vtext" id="vText"></p>
+      <div class="vnav">
+        <button type="button" id="vPrev">&larr; Previous</button>
+        <button type="button" id="vNext">Next &rarr;</button>
+      </div>
+    </div>
+  </div>
+</div>
 </body>
 </html>
