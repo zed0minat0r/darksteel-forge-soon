@@ -219,26 +219,26 @@ form.notify input:focus{border-color:var(--ember)}
    three.js is fetched on FIRST USE only. It is ~600 KB and most visitors will
    never open this level; loading it up front would undo the work that got the
    logo down to 1.4s. */
-.stage{position:fixed;inset:0;z-index:70;display:none;background:#050607}
-.stage[open]{display:block}
-.stage canvas{display:block;width:100%;height:100%}
-.stage .shost{position:absolute;inset:0}
-.stage .sclose{position:absolute;top:clamp(.6rem,2vw,1.2rem);right:clamp(.6rem,2vw,1.2rem);z-index:3;
+.card3d{position:fixed;inset:0;z-index:70;display:none;background:#050607}
+.card3d[open]{display:block}
+.card3d canvas{display:block;width:100%;height:100%}
+.card3d .shost{position:absolute;inset:0}
+.card3d .sclose{position:absolute;top:clamp(.6rem,2vw,1.2rem);right:clamp(.6rem,2vw,1.2rem);z-index:3;
   width:var(--tap);height:var(--tap);border:1px solid var(--line-2);border-radius:50%;
   background:rgba(14,16,19,.72);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
   color:var(--ink-2);display:grid;place-items:center;font-size:1.3rem;line-height:1}
-.stage .shint{position:absolute;left:50%;bottom:clamp(1rem,4vh,2.2rem);transform:translateX(-50%);z-index:3;
+.card3d .shint{position:absolute;left:50%;bottom:clamp(1rem,4vh,2.2rem);transform:translateX(-50%);z-index:3;
   font-size:.66rem;letter-spacing:.26em;text-transform:uppercase;color:var(--ink-2);pointer-events:none;text-align:center;
   text-shadow:0 2px 8px rgba(0,0,0,.9)}   /* the floor is lit down there, so the hint needs help */
-.stage .sname{position:absolute;left:50%;top:clamp(1rem,4vh,2rem);transform:translateX(-50%);z-index:3;
+.card3d .sname{position:absolute;left:50%;top:clamp(1rem,4vh,2rem);transform:translateX(-50%);z-index:3;
   font-family:var(--display);font-size:clamp(1rem,3.4vw,1.5rem);letter-spacing:.04em;color:var(--ink);pointer-events:none;text-align:center;max-width:76vw;
   text-shadow:0 2px 10px rgba(0,0,0,.85),0 0 30px rgba(0,0,0,.6)}
-.stage .sload{position:absolute;inset:0;display:grid;place-items:center;z-index:2;
+.card3d .sload{position:absolute;inset:0;display:grid;place-items:center;z-index:2;
   font-size:.66rem;letter-spacing:.3em;text-transform:uppercase;color:var(--ink-3);transition:opacity .4s ease}
-.stage .sload.off{opacity:0;pointer-events:none}
+.card3d .sload.off{opacity:0;pointer-events:none}
 /* the still card that flies from the viewer into the stage while WebGL warms up */
-.stage .sghost{position:fixed;z-index:4;border-radius:9px;box-shadow:0 26px 60px rgba(0,0,0,.75);pointer-events:none;transform-origin:top left}
-@media (hover:hover) and (pointer:fine){ .stage .sclose:hover{color:var(--ink);border-color:rgba(255,255,255,.34)} }
+.card3d .sghost{position:fixed;z-index:4;border-radius:9px;box-shadow:0 26px 60px rgba(0,0,0,.75);pointer-events:none;transform-origin:top left}
+@media (hover:hover) and (pointer:fine){ .card3d .sclose:hover{color:var(--ink);border-color:rgba(255,255,255,.34)} }
 /* the viewer's card art is now itself a control */
 .vart{cursor:zoom-in}
 
@@ -791,6 +791,10 @@ marqueeReady.then(() => fetch("cards.json").then(r => r.json())).then(async card
     play(side, [{ opacity: 0, transform: "translateY(26px)" }, { opacity: 1, transform: "none" }], 560, EASE_OUT, 140);
     stagger(220);
     placeArrows();
+    // Start fetching three.js the moment someone is looking at a card. Most
+    // people who open level 2 are one tap from level 3, and waiting for ~600 KB
+    // at that point is what made the transition feel like a cut.
+    (window.requestIdleCallback || (f => setTimeout(f, 300)))(() => { loadThree().catch(() => {}); });
     $("#vClose").focus({ preventScroll: true });
   };
 
@@ -839,7 +843,7 @@ marqueeReady.then(() => fetch("cards.json").then(r => r.json())).then(async card
      The card as an object. Ported from the display case on the full site so a
      card reads the same on both. three.js is loaded the first time someone
      asks for it and never before. */
-  const S = $("#stage");
+  const S = $("#card3d");
   let three = null, gl = null;
 
   const loadThree = () => three || (three = new Promise((res, rej) => {
@@ -943,12 +947,27 @@ marqueeReady.then(() => fetch("cards.json").then(r => r.json())).then(async card
     el.addEventListener("mouseleave", () => { tiltX = 0; });
     addEventListener("resize", () => { if (!S.hasAttribute("open")) return; camera.position.z = camZ(); camera.aspect = W() / H(); camera.updateProjectionMatrix(); renderer.setSize(W(), H()); });
 
+    // Entry dolly. The still card is mid-flight at a known pixel height, so solve
+    // for the camera distance that makes the 3D card exactly that tall, start
+    // there, and ease out to the resting distance. The cross-fade then happens
+    // between two cards of identical size, which is what removes the pop - and
+    // the rotation is held at zero through the entry so the flat still and the
+    // flat 3D card line up before it starts turning.
+    let entry = 0, entryFrom = 0, spin = 0;
+    const distFor = px => (H() * h) / (2 * px * Math.tan((30 * Math.PI / 180) / 2));
     const t0 = performance.now(); let prev = t0;
     const loop = now => {
       raf = requestAnimationFrame(loop);
       if (!S.hasAttribute("open")) return;            // never render behind a closed stage
       const t = (now - t0) / 1000, dt = Math.min(.05, (now - prev) / 1000); prev = now;
-      if (!dragging) { userY += velY * (dt * 60); velY *= Math.pow(.95, dt * 60); autoT += .21 * dt; }
+      if (entry < 1) {
+        entry = Math.min(1, entry + dt / .85);
+        const e = 1 - Math.pow(1 - entry, 3);
+        camera.position.z = entryFrom + (camZ() - entryFrom) * e;
+        camera.lookAt(0, -.25, 0);
+        spin = e * e;                                  // rotation arrives late, after the size settles
+      } else spin = 1;
+      if (!dragging) { userY += velY * (dt * 60); velY *= Math.pow(.95, dt * 60); autoT += .21 * dt * spin; }
       const bob = Math.sin(t * .9) * .04;
       card.rotation.y = autoT + userY + (flipped ? Math.PI : 0);
       card.rotation.x += ((dragging ? userX : tiltX + userX * .5) - card.rotation.x) * .08;
@@ -969,7 +988,9 @@ marqueeReady.then(() => fetch("cards.json").then(r => r.json())).then(async card
         autoT = 0; userY = 0; userX = 0; velY = 0; flipped = false;
         renderer.render(scene, camera);
       },
-      resize() { camera.position.z = camZ(); camera.aspect = W() / H(); camera.updateProjectionMatrix(); renderer.setSize(W(), H()); },
+      resize() { camera.aspect = W() / H(); camera.updateProjectionMatrix(); renderer.setSize(W(), H()); },
+      // called with the on-screen height of the still card, in px
+      enter(px) { entryFrom = distFor(px); entry = 0; spin = 0; camera.position.z = entryFrom; camera.lookAt(0, -.25, 0); },
     };
   }
 
@@ -988,26 +1009,33 @@ marqueeReady.then(() => fetch("cards.json").then(r => r.json())).then(async card
     $("#sLoad").classList.remove("off");
     S.setAttribute("open", "");
 
+    // Level 2 recedes rather than being covered. Without this the panel is just
+    // gone the instant the stage opens, which is the cut Matt was seeing.
+    play(panel, [{ opacity: 1, transform: "none" }, { opacity: 0, transform: "scale(1.06)" }], 480, EASE_OUT);
+    play(bg, [{ opacity: 1 }, { opacity: 0 }], 520, "linear");
+
     const ghost = document.createElement("img");
     ghost.className = "sghost"; ghost.src = c.img; ghost.alt = "";
     const to = ghostTo();
     Object.assign(ghost.style, { left: to.left + "px", top: to.top + "px", width: to.width + "px", height: to.height + "px" });
     S.appendChild(ghost);
-    if (!slow.matches) {
-      ghost.animate([
-        { transform: `translate(${from.left - to.left}px,${from.top - to.top}px) scale(${from.width / to.width},${from.height / to.height})` },
-        { transform: "none" },
-      ], { duration: 620, easing: EASE_OUT, fill: "both" });
-    }
-    play(S, [{ opacity: 0 }, { opacity: 1 }], 320, "linear");
+    const flight = slow.matches ? null : ghost.animate([
+      { transform: `translate(${from.left - to.left}px,${from.top - to.top}px) scale(${from.width / to.width},${from.height / to.height})` },
+      { transform: "none" },
+    ], { duration: 700, easing: EASE_OUT, fill: "both" });
+    play(S, [{ opacity: 0 }, { opacity: 1 }], 300, "linear");
 
     try {
       const THREE = await loadThree();
       if (!gl) gl = buildStage(THREE);
       gl.resize();
       await gl.show(c);
+      // Let the still finish its flight first, so the hand-off happens between
+      // two cards that are the same size in the same place, not mid-move.
+      if (flight) { try { await flight.finished; } catch (e) {} }
+      gl.enter(to.height);
       $("#sLoad").classList.add("off");
-      ghost.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 420, easing: "linear", fill: "both" })
+      ghost.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 300, easing: "linear", fill: "both" })
         .onfinish = () => ghost.remove();
     } catch (e) {
       // WebGL or the CDN is unavailable: keep the still card rather than an empty stage
@@ -1018,15 +1046,27 @@ marqueeReady.then(() => fetch("cards.json").then(r => r.json())).then(async card
 
   const closeStage = () => {
     const back = art.getBoundingClientRect();
-    const g = S.querySelector(".sghost");
-    const done = play(S, [{ opacity: 1 }, { opacity: 0 }], 360, EASE_IN);
-    done.onfinish = () => { S.removeAttribute("open"); S.style.opacity = ""; if (g) g.remove(); };
-    if (g && back.width && !slow.matches) {
-      const to = ghostTo();
-      g.animate([{ transform: "none", opacity: 1 },
-                 { transform: `translate(${back.left - to.left}px,${back.top - to.top}px) scale(${back.width / to.width},${back.height / to.height})`, opacity: .9 }],
-                { duration: 360, easing: EASE_IN, fill: "both" });
+    const to = ghostTo();
+    // Bring the still back for the return trip, sized to where the 3D card is
+    // sitting, so leaving mirrors arriving instead of blinking out.
+    let g = S.querySelector(".sghost");
+    if (!g) {
+      g = document.createElement("img");
+      g.className = "sghost"; g.src = cards[at].img; g.alt = "";
+      Object.assign(g.style, { left: to.left + "px", top: to.top + "px", width: to.width + "px", height: to.height + "px" });
+      S.appendChild(g);
     }
+    if (back.width && !slow.matches) {
+      g.animate([{ transform: "none" },
+                 { transform: `translate(${back.left - to.left}px,${back.top - to.top}px) scale(${back.width / to.width},${back.height / to.height})` }],
+                { duration: 560, easing: EASE_OUT, fill: "both" });
+    }
+    play(S, [{ opacity: 1 }, { opacity: 0 }], 460, EASE_IN, 120).onfinish = () => {
+      S.removeAttribute("open"); S.style.opacity = ""; g.remove();
+    };
+    // and level 2 comes back up underneath as it goes
+    play(bg, [{ opacity: 0 }, { opacity: 1 }], 380, "linear");
+    play(panel, [{ opacity: 0, transform: "scale(1.06)" }, { opacity: 1, transform: "none" }], 460, EASE_OUT);
   };
 
   $(".vart").addEventListener("click", openStage);
@@ -1094,7 +1134,7 @@ $("#notify").addEventListener("submit", e => {
   <button class="varr next" id="vNext" type="button" aria-label="Next card"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg></button>
 </div>
 
-<div class="stage" id="stage" role="dialog" aria-modal="true" aria-label="Card in 3D">
+<div class="card3d" id="card3d" role="dialog" aria-modal="true" aria-label="Card in 3D">
   <div class="shost" id="sHost"></div>
   <div class="sload" id="sLoad">Loading the display</div>
   <div class="sname" id="sName"></div>
