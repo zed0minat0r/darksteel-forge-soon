@@ -143,12 +143,17 @@ form.notify input:focus{border-color:var(--ember)}
 .lane figure button{background:none;border:0;padding:0;margin:0;display:block;width:100%;text-align:left;cursor:zoom-in}
 .viewer{position:fixed;inset:0;z-index:60;display:none;place-items:center;padding:clamp(.8rem,3vw,2rem)}
 .viewer[open]{display:grid}
-.viewer::before{content:"";position:absolute;inset:0;background:rgba(3,4,5,.82);backdrop-filter:blur(7px)}
+.vbg{position:absolute;inset:0;background:rgba(3,4,5,.82);backdrop-filter:blur(7px);will-change:opacity}
 .vpanel{position:relative;width:min(940px,100%);max-height:92vh;overflow:auto;display:grid;
   grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:clamp(1rem,3vw,2rem);
   background:linear-gradient(180deg,#131519,#0c0e10);border:1px solid var(--line-2);border-radius:16px;
   padding:clamp(1rem,3vw,1.9rem);box-shadow:0 40px 90px rgba(0,0,0,.75)}
-.vpanel img{width:100%;border-radius:11px;background:#15181c;box-shadow:0 20px 44px rgba(0,0,0,.7)}
+.vpanel img{width:100%;border-radius:11px;background:#15181c;box-shadow:0 20px 44px rgba(0,0,0,.7);
+  transform-origin:top left;will-change:transform}
+.vart{position:relative}
+.vside{will-change:transform,opacity}
+/* The panel chrome fades on its own so the card art can fly independently of it. */
+.vpanel{will-change:opacity}
 .vgame{display:inline-flex;align-items:center;gap:.5rem;font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-3)}
 .vgame i{width:7px;height:7px;border-radius:2px;background:var(--ember)}
 .vname{font-family:var(--display);font-size:clamp(1.3rem,3.2vw,1.9rem);line-height:1.15;margin:.5rem 0 .2rem}
@@ -600,29 +605,117 @@ fetch("cards.json").then(r => r.json()).then(async cards => {
       .map(([k, v]) => `<div><dt>${LABEL[k]}</dt><dd>${esc(v)}</dd></div>`).join("");
     $("#vText").textContent = d.text || "";
   };
+  /* ---- motion ----
+     The card does not cut to the viewer, it flies there: measure where the
+     thumbnail is on screen, drop the big image straight onto those exact
+     coordinates, then release it to its real position (FLIP). Closing plays the
+     same move in reverse, back to wherever that card has drifted to by then.
+     Everything uses the Web Animations API so a half-finished move can be
+     cancelled cleanly when you click again mid-flight. */
+  const EASE_OUT = "cubic-bezier(.22,1,.36,1)";   // decelerating, long tail
+  const EASE_IN = "cubic-bezier(.55,0,.68,.35)";  // its mirror, for the return
+  const slow = matchMedia("(prefers-reduced-motion:reduce)");
+  const bg = $("#vBg"), panel = $("#vPanel"), side = $("#vSide"), art = $("#vImg");
+  let running = [], laneTimer = 0;
+  const play = (el, frames, ms, ease, delay = 0) => {
+    const a = el.animate(frames, { duration: slow.matches ? Math.min(ms, 120) : ms,
+                                   easing: ease, delay: slow.matches ? 0 : delay, fill: "both" });
+    running.push(a);
+    return a;
+  };
+  const stop = () => { running.forEach(a => { try { a.cancel(); } catch (e) {} }); running = []; };
+
+  // A card sits in the lanes up to four times (two lanes, each doubled). Fly to
+  // whichever copy is actually on screen, and nearest the middle of it.
+  const thumbFor = i => {
+    const seen = [...document.querySelectorAll(`button[data-i="${i}"] img`)]
+      .map(el => ({ el, r: el.getBoundingClientRect() }))
+      .filter(({ r }) => r.width && r.right > 0 && r.left < innerWidth && r.bottom > 0 && r.top < innerHeight);
+    if (!seen.length) return null;
+    const mid = innerWidth / 2;
+    seen.sort((a, b) => Math.abs(a.r.left + a.r.width / 2 - mid) - Math.abs(b.r.left + b.r.width / 2 - mid));
+    return seen[0].r;
+  };
+
+  const flyFrom = (from, ms, ease) => {
+    const to = art.getBoundingClientRect();
+    if (!from || !to.width) return play(art, [{ opacity: 0 }, { opacity: 1 }], ms, ease);
+    const f = [
+      { transform: `translate(${from.left - to.left}px,${from.top - to.top}px) scale(${from.width / to.width},${from.height / to.height})` },
+      { transform: "none" },
+    ];
+    return play(art, f, ms, ease);
+  };
+
   const open = i => {
+    stop();
     lastFocus = document.activeElement;
-    show(i); V.setAttribute("open", "");
-    lanes.forEach(l => l.style.animationPlayState = "paused");
-    $("#vClose").focus();
+    const from = thumbFor(i);
+    show(i);
+    V.setAttribute("open", "");
+    // Freezing 190 drifting cards the instant you click is a visible jolt, so
+    // hold the pause until the backdrop has most of its opacity and the freeze
+    // happens behind it.
+    clearTimeout(laneTimer);
+    laneTimer = setTimeout(() => lanes.forEach(l => l.style.animationPlayState = "paused"), slow.matches ? 0 : 190);
+    play(bg, [{ opacity: 0 }, { opacity: 1 }], 260, "linear");
+    play(panel, [{ opacity: 0 }, { opacity: 1 }], 200, "linear");
+    flyFrom(from, 460, EASE_OUT);
+    play(side, [{ opacity: 0, transform: "translateY(14px)" }, { opacity: 1, transform: "none" }], 420, EASE_OUT, 90);
+    $("#vClose").focus({ preventScroll: true });
   };
+
   const close = () => {
-    V.removeAttribute("open");
-    lanes.forEach(l => l.style.animationPlayState = "");
-    if (lastFocus) lastFocus.focus();
+    stop();
+    const back = thumbFor(at);
+    // Start the lanes moving again while the backdrop is still covering them,
+    // for the same reason the pause is delayed on the way in.
+    clearTimeout(laneTimer);
+    laneTimer = setTimeout(() => lanes.forEach(l => l.style.animationPlayState = ""), slow.matches ? 0 : 170);
+    const to = art.getBoundingClientRect();
+    if (back && to.width && !slow.matches) {
+      play(art, [{ transform: "none" },
+                 { transform: `translate(${back.left - to.left}px,${back.top - to.top}px) scale(${back.width / to.width},${back.height / to.height})` }],
+           380, EASE_IN);
+    }
+    play(side, [{ opacity: 1, transform: "none" }, { opacity: 0, transform: "translateY(10px)" }], 200, EASE_IN);
+    play(bg, [{ opacity: 1 }, { opacity: 0 }], 320, "linear");
+    const done = play(panel, [{ opacity: 1 }, { opacity: 0 }], 360, EASE_IN, 60);
+    done.onfinish = () => {
+      V.removeAttribute("open");
+      stop();
+      if (lastFocus) lastFocus.focus({ preventScroll: true });
+    };
   };
+
+  // Stepping inside the viewer: the outgoing card leaves in the direction of
+  // travel and the new one arrives from the other side, so the move reads as
+  // moving along the shelf rather than a blink.
+  const step = dir => {
+    stop();
+    const out = play(art, [{ opacity: 1, transform: "none" },
+                           { opacity: 0, transform: `translateX(${-18 * dir}px) scale(.97)` }], 150, EASE_IN);
+    play(side, [{ opacity: 1 }, { opacity: 0 }], 130, EASE_IN);
+    out.onfinish = () => {
+      show(at + dir);
+      play(art, [{ opacity: 0, transform: `translateX(${22 * dir}px) scale(.97)` },
+                 { opacity: 1, transform: "none" }], 300, EASE_OUT);
+      play(side, [{ opacity: 0, transform: "translateY(8px)" }, { opacity: 1, transform: "none" }], 280, EASE_OUT, 40);
+    };
+  };
+
   lanes.forEach(l => l.addEventListener("click", e => {
     const b = e.target.closest("button[data-i]"); if (b) open(+b.dataset.i);
   }));
   $("#vClose").addEventListener("click", close);
-  $("#vPrev").addEventListener("click", () => show(at - 1));
-  $("#vNext").addEventListener("click", () => show(at + 1));
-  V.addEventListener("click", e => { if (e.target === V) close(); });
+  $("#vPrev").addEventListener("click", () => step(-1));
+  $("#vNext").addEventListener("click", () => step(1));
+  V.addEventListener("click", e => { if (e.target === V || e.target === bg) close(); });
   addEventListener("keydown", e => {
     if (!V.hasAttribute("open")) return;
     if (e.key === "Escape") close();
-    if (e.key === "ArrowLeft") show(at - 1);
-    if (e.key === "ArrowRight") show(at + 1);
+    if (e.key === "ArrowLeft") step(-1);
+    if (e.key === "ArrowRight") step(1);
   });
 }).catch(() => { $("#lane").innerHTML = ""; });
 
@@ -656,10 +749,11 @@ $("#notify").addEventListener("submit", e => {
 });
 </script>
 <div class="viewer" id="viewer" role="dialog" aria-modal="true" aria-labelledby="vName">
-  <div class="vpanel">
+  <div class="vbg" id="vBg"></div>
+  <div class="vpanel" id="vPanel">
     <button class="vclose" id="vClose" type="button" aria-label="Close">&times;</button>
-    <div><img id="vImg" src="" alt=""></div>
-    <div>
+    <div class="vart"><img id="vImg" src="" alt=""></div>
+    <div class="vside" id="vSide">
       <span class="vgame"><i></i><span id="vGame"></span></span>
       <h3 class="vname" id="vName"></h3>
       <div class="vset" id="vSet"></div>
