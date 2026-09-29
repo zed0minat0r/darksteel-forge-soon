@@ -522,17 +522,22 @@ fetch("cards.json").then(r => r.json()).then(async cards => {
   const GAME = { magic: "Magic", pokemon: "Pokemon", onepiece: "One Piece", riftbound: "Riftbound" };
   const draw = (lane, c) => {
     const f = document.createElement("figure");
-    f.innerHTML = `<img src="${c.img}" alt="${c.name}" decoding="async" width="480" height="670"><figcaption>${c.name}<b>${GAME[c.game] || ""}</b></figcaption>`;
+    f.innerHTML = `<img src="${c.img}" alt="${c.name}" decoding="async" width="600" height="838"><figcaption>${c.name}<b>${GAME[c.game] || ""}</b></figcaption>`;
     lane.appendChild(f);
   };
   const a = cards.filter((_, i) => i % 2 === 0), b = cards.filter((_, i) => i % 2 === 1);
   const l1 = $("#lane"), l2 = $("#laneBack");
   [a, a].forEach(set => set.forEach(c => draw(l1, c)));
   [b, b].forEach(set => set.forEach(c => draw(l2, c)));
-  // every thumbnail is ~14 KB, so decode the whole set up front rather than streaming it mid-scroll
-  await Promise.all(cards.map(c => new Promise(res => {
-    const im = new Image(); im.onload = im.onerror = res; im.src = c.img;
-  })));
+  // Every card starts downloading NOW - that is what keeps cards from scrolling
+  // in blank, which is the thing that went wrong in September. But the lanes only
+  // wait on the handful that are actually on screen at the start; waiting on all
+  // 95 before moving would mean staring at a still marquee while ~9 MB lands.
+  // The rest have the whole length of the lane to arrive.
+  const loading = cards.map(c => { const im = new Image(); im.decoding = "async"; im.src = c.img; return im; });
+  const onScreen = Math.ceil(innerWidth / 160) + 2;
+  await Promise.all(loading.slice(0, onScreen).map(im =>
+    im.complete ? null : new Promise(res => { im.onload = im.onerror = res; })));
   l1.classList.add("ready"); l2.classList.add("ready");
 }).catch(() => { $("#lane").innerHTML = ""; });
 

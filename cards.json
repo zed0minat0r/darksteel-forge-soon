@@ -1,218 +1,566 @@
 [
-{
-"name": "Mew ex",
-"set": "Paldean Fates",
-"game": "pokemon",
-"img": "img/t/pk-sv4pt5-232.jpg"
-},
-{
-"name": "Charizard ex",
-"set": "151",
-"game": "pokemon",
-"img": "img/t/pk-sv3pt5-199.jpg"
-},
-{
-"name": "Pikachu ex",
-"set": "Surging Sparks",
-"game": "pokemon",
-"img": "img/t/pk-sv8-238.jpg"
-},
-{
-"name": "Charizard ex",
-"set": "Paldean Fates",
-"game": "pokemon",
-"img": "img/t/pk-sv4pt5-234.jpg"
-},
-{
-"name": "Mox Opal",
-"set": "Double Masters",
-"game": "magic",
-"img": "img/t/mtg-56001a36-126b-4c08-af98-a6cc4d84210e.jpg"
-},
-{
-"name": "Monkey.D.Luffy",
-"set": "BANDAI CARD GAMES Fest 24-25 World Tour Free Giveaway",
-"game": "onepiece",
-"img": "img/t/onepiece-P-080.jpg"
-},
-{
-"name": "Monkey.D.Luffy",
-"set": "Super Pre-Release",
-"game": "onepiece",
-"img": "img/t/onepiece-P-001_p1.jpg"
-},
-{
-"name": "DON!! Card (Elbaph Luffy) (May Treasure Cup 2026)",
-"set": "One Piece Promotion Cards",
-"game": "onepiece",
-"img": "img/t/onepiece-DON-702306.jpg"
-},
-{
-"name": "Latias ex",
-"set": "Surging Sparks",
-"game": "pokemon",
-"img": "img/t/pk-sv8-239.jpg"
-},
-{
-"name": "Gardevoir ex",
-"set": "Paldean Fates",
-"game": "pokemon",
-"img": "img/t/pk-sv4pt5-233.jpg"
-},
-{
-"name": "Monkey.D.Luffy",
-"set": "Offline Regional Participation Pack 2024 Vol. 3",
-"game": "onepiece",
-"img": "img/t/onepiece-OP07-091_p1.jpg"
-},
-{
-"name": "Chrome Mox",
-"set": "Double Masters",
-"game": "magic",
-"img": "img/t/mtg-f340cbf7-5bbe-45b9-a4bf-d1caa500ff93.jpg"
-},
-{
-"name": "Palant\u00edr of Orthanc",
-"set": "The Lord of the Rings: Tales of Middle-earth",
-"game": "magic",
-"img": "img/t/mtg-e9245b0e-f99e-46dd-90ad-87489197629e.jpg"
-},
-{
-"name": "Tony Tony.Chopper",
-"set": "Offline Regional Participation Pack 2024 Vol. 3",
-"game": "onepiece",
-"img": "img/t/onepiece-OP01-015_p1.jpg"
-},
-{
-"name": "Blastoise ex",
-"set": "151",
-"game": "pokemon",
-"img": "img/t/pk-sv3pt5-200.jpg"
-},
-{
-"name": "Radagast the Brown",
-"set": "The Lord of the Rings: Tales of Middle-earth",
-"game": "magic",
-"img": "img/t/mtg-4509adb6-f1ea-4369-9e11-cba60fd5449a.jpg"
-},
-{
-"name": "Roronoa Zoro",
-"set": "Prize for November 2025 Meet-up event",
-"game": "onepiece",
-"img": "img/t/onepiece-P-114.jpg"
-},
-{
-"name": "Milotic ex",
-"set": "Surging Sparks",
-"game": "pokemon",
-"img": "img/t/pk-sv8-237.jpg"
-},
-{
-"name": "And\u00faril, Flame of the West",
-"set": "The Lord of the Rings: Tales of Middle-earth",
-"game": "magic",
-"img": "img/t/mtg-5c411d18-c257-424a-9125-06eeafec1e66.jpg"
-},
-{
-"name": "Venusaur ex",
-"set": "151",
-"game": "pokemon",
-"img": "img/t/pk-sv3pt5-198.jpg"
-},
-{
-"name": "The One Ring",
-"set": "The Lord of the Rings: Tales of Middle-earth",
-"game": "magic",
-"img": "img/t/mtg-126ea71a-9a64-4d1e-a8ca-1efce3b8346f.jpg"
-},
-{
-"name": "Glamdring",
-"set": "The Lord of the Rings: Tales of Middle-earth",
-"game": "magic",
-"img": "img/t/mtg-a8b9410a-804a-43ad-979b-3dc9fb569f99.jpg"
-},
-{
-"name": "Monkey.D.Luffy",
-"set": "Sealed Battle 2023 Vol.1",
-"game": "onepiece",
-"img": "img/t/onepiece-P-047.jpg"
-},
-{
-"name": "Monkey.D.Luffy",
-"set": "Dreamhack Dallas 2024",
-"game": "onepiece",
-"img": "img/t/onepiece-P-043.jpg"
-},
-{
-"name": "Arwen, Mortal Queen",
-"set": "The Lord of the Rings: Tales of Middle-earth",
-"game": "magic",
-"img": "img/t/mtg-b161705c-9d12-416f-8e5c-54ea0d3befd0.jpg"
-},
-{
-"name": "Demonic Tutor",
-"set": "Commander Masters",
-"game": "magic",
-"img": "img/t/mtg-a24b4cb6-cebb-428b-8654-74347a6a8d63.jpg"
-},
-{
-"name": "Nico Olvia",
-"set": "Offline Regional Participation Pack 2025 Vol.1",
-"game": "onepiece",
-"img": "img/t/onepiece-OP09-106_p1.jpg"
-},
-{
-"name": "Master Yi - Wuju Bladesman - Starter",
-"set": "Proving Grounds",
-"game": "riftbound",
-"img": "img/t/riftbound-OGS-019.jpg"
-},
-{
-"name": "Lux - Lady of Luminosity - Starter",
-"set": "Proving Grounds",
-"game": "riftbound",
-"img": "img/t/riftbound-OGS-021.jpg"
-},
-{
-"name": "Teemo - Scout (Origins Store Demo Promo)",
-"set": "Origins",
-"game": "riftbound",
-"img": "img/t/riftbound-OGN-197-P.jpg"
-},
-{
-"name": "Flash",
-"set": "Proving Grounds",
-"game": "riftbound",
-"img": "img/t/riftbound-OGS-011.jpg"
-},
-{
-"name": "Rek'Sai - Breacher",
-"set": "Spiritforged",
-"game": "riftbound",
-"img": "img/t/riftbound-SFD-029.jpg"
-},
-{
-"name": "Salvage",
-"set": "Origins",
-"game": "riftbound",
-"img": "img/t/riftbound-OGN-224.jpg"
-},
-{
-"name": "Annie - Dark Child - Starter",
-"set": "Proving Grounds",
-"game": "riftbound",
-"img": "img/t/riftbound-OGS-017.jpg"
-},
-{
-"name": "Lux - Crownguard",
-"set": "Proving Grounds",
-"game": "riftbound",
-"img": "img/t/riftbound-OGS-014.jpg"
-},
-{
-"name": "Annie - Stubborn",
-"set": "Proving Grounds",
-"game": "riftbound",
-"img": "img/t/riftbound-OGS-010.jpg"
-}
+ {
+  "name": "Bayou",
+  "set": "Revised",
+  "game": "magic",
+  "img": "img/c/magic-56355ff3-2232-4a11-b868-aec9a50b9ee5.webp"
+ },
+ {
+  "name": "Mewtwo VSTAR",
+  "set": "Crown Zenith: Galarian Gallery",
+  "game": "pokemon",
+  "img": "img/c/pokemon-swsh12-5gg-gg44.webp"
+ },
+ {
+  "name": "Luffy-Tarou (SP)",
+  "set": "A Fist of Divine Speed",
+  "game": "onepiece",
+  "img": "img/c/onepiece-st18-005.webp"
+ },
+ {
+  "name": "Nasus - Curator of the Sands (Overnumbered)",
+  "set": "Vendetta",
+  "game": "riftbound",
+  "img": "img/c/riftbound-ven-192.webp"
+ },
+ {
+  "name": "Underground Sea",
+  "set": "Revised",
+  "game": "magic",
+  "img": "img/c/magic-1f35877c-e66c-4ef0-842a-f68cd233ae4b.webp"
+ },
+ {
+  "name": "Charizard ex (JP)",
+  "set": "Shiny Treasure ex",
+  "game": "pokemon",
+  "img": "img/c/pokemon-sv4a-349.webp"
+ },
+ {
+  "name": "Shanks (OP13-028) (SP)",
+  "set": "The World's Strongest Warriors",
+  "game": "onepiece",
+  "img": "img/c/onepiece-op13-028.webp"
+ },
+ {
+  "name": "Gangplank, Naval (Overnumbered)",
+  "set": "Vendetta",
+  "game": "riftbound",
+  "img": "img/c/riftbound-ven-181.webp"
+ },
+ {
+  "name": "Plateau",
+  "set": "Revised",
+  "game": "magic",
+  "img": "img/c/magic-c6ae9cff-8646-4069-8761-df734e067beb.webp"
+ },
+ {
+  "name": "Lucario EX (107 Full Art)",
+  "set": "Furious Fists",
+  "game": "pokemon",
+  "img": "img/c/pokemon-xy3-107.webp"
+ },
+ {
+  "name": "Gol.D.Roger (P-107) (SP)",
+  "set": "The World's Strongest Warriors",
+  "game": "onepiece",
+  "img": "img/c/onepiece-p-107.webp"
+ },
+ {
+  "name": "Aphelios - Exalted (Overnumbered)",
+  "set": "Spiritforged",
+  "game": "riftbound",
+  "img": "img/c/riftbound-sfd-049.webp"
+ },
+ {
+  "name": "Volcanic Island",
+  "set": "Revised",
+  "game": "magic",
+  "img": "img/c/magic-b12e5430-0e80-47dd-80ac-85728b656a24.webp"
+ },
+ {
+  "name": "Mega Darkrai ex",
+  "set": "Pitch Black",
+  "game": "pokemon",
+  "img": "img/c/pokemon-me05-116.webp"
+ },
+ {
+  "name": "Kouzuki Oden (ST32-002) (SP)",
+  "set": "The World's Strongest Warriors",
+  "game": "onepiece",
+  "img": "img/c/onepiece-st32-002.webp"
+ },
+ {
+  "name": "Arise!",
+  "set": "Spiritforged",
+  "game": "riftbound",
+  "img": "img/c/riftbound-sfd-198.webp"
+ },
+ {
+  "name": "Tundra",
+  "set": "Revised",
+  "game": "magic",
+  "img": "img/c/magic-9c9d5f72-e199-4d5b-ae7e-cc5b9bdfae99.webp"
+ },
+ {
+  "name": "Gardevoir & Sylveon GX (204) (Full Art)",
+  "set": "Unbroken Bonds",
+  "game": "pokemon",
+  "img": "img/c/pokemon-sm10-204.webp"
+ },
+ {
+  "name": "Edward.Newgate (SP)",
+  "set": "Kingdoms of Intrigue",
+  "game": "onepiece",
+  "img": "img/c/onepiece-op02-004.webp"
+ },
+ {
+  "name": "Seal of Rage",
+  "set": "Origins",
+  "game": "riftbound",
+  "img": "img/c/riftbound-ogn-040.webp"
+ },
+ {
+  "name": "Scrubland",
+  "set": "Revised",
+  "game": "magic",
+  "img": "img/c/magic-472034a2-0ba9-4876-ab7a-aa7013d603bb.webp"
+ },
+ {
+  "name": "Meowth ex",
+  "set": "Perfect Order",
+  "game": "pokemon",
+  "img": "img/c/pokemon-me03-121.webp"
+ },
+ {
+  "name": "Monkey.D.Luffy (Magazine Promo) (JP)",
+  "set": "One Piece Promos",
+  "game": "onepiece",
+  "img": "img/c/onepiece-st21-014.webp"
+ },
+ {
+  "name": "Thousand-Tailed Watcher",
+  "set": "Origins",
+  "game": "riftbound",
+  "img": "img/c/riftbound-ogn-116.webp"
+ },
+ {
+  "name": "Tropical Island",
+  "set": "Revised",
+  "game": "magic",
+  "img": "img/c/magic-a0f5c6bc-65dc-42a1-a62d-a0b101310a1f.webp"
+ },
+ {
+  "name": "Mega Feraligatr ex",
+  "set": "Ascended Heroes",
+  "game": "pokemon",
+  "img": "img/c/pokemon-me02-5-274.webp"
+ },
+ {
+  "name": "Roronoa Zoro (Alternate Art)",
+  "set": "Wings of the Captain",
+  "game": "onepiece",
+  "img": "img/c/onepiece-op06-118.webp"
+ },
+ {
+  "name": "Pyke - Dockside Butcher (Alternate Art)",
+  "set": "Unleashed",
+  "game": "riftbound",
+  "img": "img/c/riftbound-unl-028a.webp"
+ },
+ {
+  "name": "Badlands",
+  "set": "Revised",
+  "game": "magic",
+  "img": "img/c/magic-56058359-3c0b-49db-a0ce-9ded4c3f4372.webp"
+ },
+ {
+  "name": "Charizard (Prerelease)",
+  "set": "Sun & Moon Promo",
+  "game": "pokemon",
+  "img": "img/c/pokemon-smp-sm158.webp"
+ },
+ {
+  "name": "Jewelry Bonney (019) (Parallel)",
+  "set": "500 Years in the Future",
+  "game": "onepiece",
+  "img": "img/c/onepiece-op07-019.webp"
+ },
+ {
+  "name": "Savannah",
+  "set": "Revised",
+  "game": "magic",
+  "img": "img/c/magic-5ae71290-c133-406c-8b17-9ea22b437806.webp"
+ },
+ {
+  "name": "Zoroark",
+  "set": "White Flare",
+  "game": "pokemon",
+  "img": "img/c/pokemon-sv10-5w-143.webp"
+ },
+ {
+  "name": "Edward.Newgate (040) (TR)",
+  "set": "The World's Strongest Warriors",
+  "game": "onepiece",
+  "img": "img/c/onepiece-op17-040.webp"
+ },
+ {
+  "name": "Taiga",
+  "set": "Revised",
+  "game": "magic",
+  "img": "img/c/magic-54c5c65a-a444-4e0f-ae44-a3722cdd32a1.webp"
+ },
+ {
+  "name": "Jolteon",
+  "set": "Jungle",
+  "game": "pokemon",
+  "img": "img/c/pokemon-base2-4.webp"
+ },
+ {
+  "name": "Ground Death (Parallel) (JP)",
+  "set": "The Azure Sea's Seven",
+  "game": "onepiece",
+  "img": "img/c/onepiece-op14-096.webp"
+ },
+ {
+  "name": "Wheel of Fortune",
+  "set": "Revised",
+  "game": "magic",
+  "img": "img/c/magic-c14c07d4-6971-483a-add1-f3cdf18feae9.webp"
+ },
+ {
+  "name": "Mina (Full Art)",
+  "set": "Lost Thunder",
+  "game": "pokemon",
+  "img": "img/c/pokemon-sm8-211.webp"
+ },
+ {
+  "name": "Sugar (SP Ver.) (JP)",
+  "set": "The Azure Sea's Seven",
+  "game": "onepiece",
+  "img": "img/c/onepiece-op10-065.webp"
+ },
+ {
+  "name": "Mana Vault",
+  "set": "Revised",
+  "game": "magic",
+  "img": "img/c/magic-5cbc686e-a8ef-40de-b79a-803ef42f8384.webp"
+ },
+ {
+  "name": "Marshadow & Machamp GX (Secret)",
+  "set": "Unbroken Bonds",
+  "game": "pokemon",
+  "img": "img/c/pokemon-sm10-221.webp"
+ },
+ {
+  "name": "Trafalgar Law (Alternate Art)",
+  "set": "The Azure Sea's Seven",
+  "game": "onepiece",
+  "img": "img/c/onepiece-op14-001.webp"
+ },
+ {
+  "name": "Demonic Tutor",
+  "set": "Revised",
+  "game": "magic",
+  "img": "img/c/magic-881e5922-b464-4a1a-b074-664bd6c0a7f6.webp"
+ },
+ {
+  "name": "Chansey",
+  "set": "Base Set (Unlimited)",
+  "game": "pokemon",
+  "img": "img/c/pokemon-base1-3.webp"
+ },
+ {
+  "name": "Nico Robin (055) (Alternate Art)",
+  "set": "Extra Booster: One Piece Heroine's Edition",
+  "game": "onepiece",
+  "img": "img/c/onepiece-eb03-055.webp"
+ },
+ {
+  "name": "Mox Amber",
+  "set": "Dominaria",
+  "game": "magic",
+  "img": "img/c/magic-66024e69-ad60-4c9a-a0ca-da138d33ad80.webp"
+ },
+ {
+  "name": "Iron Crown ex",
+  "set": "Temporal Forces",
+  "game": "pokemon",
+  "img": "img/c/pokemon-sv05-206.webp"
+ },
+ {
+  "name": "King (Alternate Art)",
+  "set": "The Azure Sea's Seven",
+  "game": "onepiece",
+  "img": "img/c/onepiece-eb04-031.webp"
+ },
+ {
+  "name": "Mox Amber (retro frame)",
+  "set": "Brothers War",
+  "game": "magic",
+  "img": "img/c/magic-a361c9eb-0a12-4f33-a11d-1d7a40801540.webp"
+ },
+ {
+  "name": "Eevee",
+  "set": "WoTC Promo",
+  "game": "pokemon",
+  "img": "img/c/pokemon-basep-11.webp"
+ },
+ {
+  "name": "Donquixote Rosinante - OP12-108 (TR)",
+  "set": "The Azure Sea's Seven",
+  "game": "onepiece",
+  "img": "img/c/onepiece-op12-108.webp"
+ },
+ {
+  "name": "Storm of Saruman (Borderless Poster) (Serial Numbered)",
+  "set": "Lord of the Rings",
+  "game": "magic",
+  "img": "img/c/magic-8213e598-e594-4db1-aad5-836fa972df8f.webp"
+ },
+ {
+  "name": "Marill",
+  "set": "Paldea Evolved",
+  "game": "pokemon",
+  "img": "img/c/pokemon-sv02-204.webp"
+ },
+ {
+  "name": "Kaido (058) (Alternate Art)",
+  "set": "The World's Strongest Warriors",
+  "game": "onepiece",
+  "img": "img/c/onepiece-op17-058.webp"
+ },
+ {
+  "name": "Tom Bombadil (Borderless Poster)",
+  "set": "Lord of the Rings",
+  "game": "magic",
+  "img": "img/c/magic-c2b141f8-bc86-4fcc-b1e6-a1ed1ce36a7c.webp"
+ },
+ {
+  "name": "Charizard GX",
+  "set": "Sun & Moon Promo",
+  "game": "pokemon",
+  "img": "img/c/pokemon-smp-sm60.webp"
+ },
+ {
+  "name": "Enel (OP15-058) (Alternate Art)",
+  "set": "Adventure on Kami's Island",
+  "game": "onepiece",
+  "img": "img/c/onepiece-op15-058.webp"
+ },
+ {
+  "name": "Mount Doom (Borderless Poster)",
+  "set": "Lord of the Rings",
+  "game": "magic",
+  "img": "img/c/magic-d7852b73-3c05-45a3-b0dc-206c87bef7a3.webp"
+ },
+ {
+  "name": "Skyla",
+  "set": "BREAKpoint",
+  "game": "pokemon",
+  "img": "img/c/pokemon-xy9-122.webp"
+ },
+ {
+  "name": "Nefeltari Vivi (Parallel) (JP)",
+  "set": "Heroines Edition",
+  "game": "onepiece",
+  "img": "img/c/onepiece-eb03-024.webp"
+ },
+ {
+  "name": "Gandalf the White (Borderless Poster)",
+  "set": "Lord of the Rings",
+  "game": "magic",
+  "img": "img/c/magic-0195ad80-a105-493f-b468-666899fe35dd.webp"
+ },
+ {
+  "name": "Raichu",
+  "set": "Base Set (Unlimited)",
+  "game": "pokemon",
+  "img": "img/c/pokemon-base1-14.webp"
+ },
+ {
+  "name": "Nefeltari Vivi (Alternate Art) (JP)",
+  "set": "Kingdoms of Intrigue",
+  "game": "onepiece",
+  "img": "img/c/onepiece-op04-118.webp"
+ },
+ {
+  "name": "Last March of the Ents (Borderless Poster)",
+  "set": "Lord of the Rings",
+  "game": "magic",
+  "img": "img/c/magic-cebd776a-92ac-4a4c-a88f-335fbcb84c36.webp"
+ },
+ {
+  "name": "Mega Zeraora ex",
+  "set": "Pitch Black",
+  "game": "pokemon",
+  "img": "img/c/pokemon-me05-114.webp"
+ },
+ {
+  "name": "Perona (Parallel) (JP)",
+  "set": "The Azure Sea's Seven",
+  "game": "onepiece",
+  "img": "img/c/onepiece-op14-033.webp"
+ },
+ {
+  "name": "Orcish Bowmasters (Showcase Scrolls)",
+  "set": "Lord of the Rings",
+  "game": "magic",
+  "img": "img/c/magic-7cb981e3-2db7-48c8-83fb-f36ac43689e1.webp"
+ },
+ {
+  "name": "Alolan Ninetales GX (Full Art)",
+  "set": "Lost Thunder",
+  "game": "pokemon",
+  "img": "img/c/pokemon-sm8-205.webp"
+ },
+ {
+  "name": "Marshall.D.Teach (119)",
+  "set": "The Time of Battle",
+  "game": "onepiece",
+  "img": "img/c/onepiece-op16-119.webp"
+ },
+ {
+  "name": "Chrome Mox (Borderless)",
+  "set": "Double Masters (2XM)",
+  "game": "magic",
+  "img": "img/c/magic-0e94d334-e043-42f2-ba5c-be497d82f2c8.webp"
+ },
+ {
+  "name": "Ninetales",
+  "set": "Obsidian Flames",
+  "game": "pokemon",
+  "img": "img/c/pokemon-sv03-199.webp"
+ },
+ {
+  "name": "Mamaragan",
+  "set": "Adventure on Kami's Island",
+  "game": "onepiece",
+  "img": "img/c/onepiece-op15-078.webp"
+ },
+ {
+  "name": "Chrome Mox",
+  "set": "Double Masters (2XM)",
+  "game": "magic",
+  "img": "img/c/magic-f340cbf7-5bbe-45b9-a4bf-d1caa500ff93.webp"
+ },
+ {
+  "name": "Vaporeon",
+  "set": "Jungle",
+  "game": "pokemon",
+  "img": "img/c/pokemon-base2-12.webp"
+ },
+ {
+  "name": "O-Nami (Illustration Box Vol.1)",
+  "set": "One Piece Promotion Cards",
+  "game": "onepiece",
+  "img": "img/c/onepiece-op05-062.webp"
+ },
+ {
+  "name": "Chrome Mox",
+  "set": "Secret Lair Countdown Kit (SLC)",
+  "game": "magic",
+  "img": "img/c/magic-e0d88029-2569-461b-a57d-1af10673f4cf.webp"
+ },
+ {
+  "name": "Ninetales",
+  "set": "Base Set (Unlimited)",
+  "game": "pokemon",
+  "img": "img/c/pokemon-base1-12.webp"
+ },
+ {
+  "name": "Rocks.D.Xebec",
+  "set": "The World's Strongest Warriors",
+  "game": "onepiece",
+  "img": "img/c/onepiece-op17-118.webp"
+ },
+ {
+  "name": "Mox Opal (Borderless)",
+  "set": "Double Masters (2XM)",
+  "game": "magic",
+  "img": "img/c/magic-547e3aa5-d88a-4418-ab9d-dd65385f031b.webp"
+ },
+ {
+  "name": "Mew",
+  "set": "Evolutions",
+  "game": "pokemon",
+  "img": "img/c/pokemon-xy12-53.webp"
+ },
+ {
+  "name": "Edward.Newgate (Alternate Art)",
+  "set": "The Time of Battle",
+  "game": "onepiece",
+  "img": "img/c/onepiece-op16-003.webp"
+ },
+ {
+  "name": "Mox Opal",
+  "set": "Double Masters (2XM)",
+  "game": "magic",
+  "img": "img/c/magic-56001a36-126b-4c08-af98-a6cc4d84210e.webp"
+ },
+ {
+  "name": "Jolteon",
+  "set": "Jungle",
+  "game": "pokemon",
+  "img": "img/c/pokemon-base2-20.webp"
+ },
+ {
+  "name": "Koala (parallel) (JP)",
+  "set": "Legacy of the Master",
+  "game": "onepiece",
+  "img": "img/c/onepiece-op12-081.webp"
+ },
+ {
+  "name": "Serra's Sanctum",
+  "set": "Urza's Saga",
+  "game": "magic",
+  "img": "img/c/magic-f7a18130-dbaa-4657-a885-3a96a985935a.webp"
+ },
+ {
+  "name": "Darkness Energy (Secret)",
+  "set": "Evolving Skies",
+  "game": "pokemon",
+  "img": "img/c/pokemon-swsh7-236.webp"
+ },
+ {
+  "name": "Moby Dick (Alternate Art)",
+  "set": "The Time of Battle",
+  "game": "onepiece",
+  "img": "img/c/onepiece-op16-021.webp"
+ },
+ {
+  "name": "The One Ring",
+  "set": "Lord of the Rings",
+  "game": "magic",
+  "img": "img/c/magic-6e817a37-235f-46fd-b857-9003b2264d10.webp"
+ },
+ {
+  "name": "Blastoise GX",
+  "set": "Unbroken Bonds",
+  "game": "pokemon",
+  "img": "img/c/pokemon-sm10-35.webp"
+ },
+ {
+  "name": "Replenish",
+  "set": "Urza's Destiny",
+  "game": "magic",
+  "img": "img/c/magic-7fd2fe13-bbc0-42b7-bc42-3b51910ce118.webp"
+ },
+ {
+  "name": "Mew",
+  "set": "Unbroken Bonds",
+  "game": "pokemon",
+  "img": "img/c/pokemon-sm10-76.webp"
+ },
+ {
+  "name": "Volrath's Stronghold",
+  "set": "Stronghold",
+  "game": "magic",
+  "img": "img/c/magic-43bf015b-152e-4d67-b773-e75fb2487a32.webp"
+ },
+ {
+  "name": "Gaea's Cradle",
+  "set": "Urza's Saga",
+  "game": "magic",
+  "img": "img/c/magic-25b0b816-0583-44aa-9dc5-f3ff48993a51.webp"
+ }
 ]
