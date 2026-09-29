@@ -617,8 +617,12 @@ fetch("cards.json").then(r => r.json()).then(async cards => {
   const slow = matchMedia("(prefers-reduced-motion:reduce)");
   const bg = $("#vBg"), panel = $("#vPanel"), side = $("#vSide"), art = $("#vImg");
   let running = [], laneTimer = 0;
+  // Reduced motion means no flying and no scaling across the screen - it does
+  // NOT mean no animation at all. A cross-fade is the accepted substitute, so
+  // keep a real 300ms one rather than the near-instant cut this had, otherwise
+  // anyone with the iOS setting on sees the viewer snap into place.
   const play = (el, frames, ms, ease, delay = 0) => {
-    const a = el.animate(frames, { duration: slow.matches ? Math.min(ms, 120) : ms,
+    const a = el.animate(frames, { duration: slow.matches ? Math.min(ms, 300) : ms,
                                    easing: ease, delay: slow.matches ? 0 : delay, fill: "both" });
     running.push(a);
     return a;
@@ -639,6 +643,8 @@ fetch("cards.json").then(r => r.json()).then(async cards => {
 
   const flyFrom = (from, ms, ease) => {
     const to = art.getBoundingClientRect();
+    if (slow.matches) return play(art, [{ opacity: 0, transform: "scale(.985)" },
+                                        { opacity: 1, transform: "none" }], ms, ease);
     if (!from || !to.width) return play(art, [{ opacity: 0 }, { opacity: 1 }], ms, ease);
     const f = [
       { transform: `translate(${from.left - to.left}px,${from.top - to.top}px) scale(${from.width / to.width},${from.height / to.height})` },
