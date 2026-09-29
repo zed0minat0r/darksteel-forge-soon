@@ -929,7 +929,12 @@ marqueeReady.then(() => fetch("cards.json").then(r => r.json())).then(async card
     const el = renderer.domElement;
     const px = e => (e.touches ? e.touches[0].clientX : e.clientX), py = e => (e.touches ? e.touches[0].clientY : e.clientY);
     let downT = 0, moved = 0;
-    const down = e => { dragging = true; lastX = px(e); lastY = py(e); velY = 0; downT = performance.now(); moved = 0; };
+    // The tap that OPENS level 3 can still be travelling when the canvas appears
+    // under the finger, and it would land as a flip before the card has even
+    // arrived. Ignore the pointer until the entry has settled.
+    let armAt = 0;
+    const armed = () => performance.now() > armAt;
+    const down = e => { if (!armed()) return; dragging = true; lastX = px(e); lastY = py(e); velY = 0; downT = performance.now(); moved = 0; };
     const move = e => {
       if (!dragging) { if (e.touches) return; const r = el.getBoundingClientRect();
         const inside = px(e) >= r.left && px(e) <= r.right && py(e) >= r.top && py(e) <= r.bottom;
@@ -939,7 +944,7 @@ marqueeReady.then(() => fetch("cards.json").then(r => r.json())).then(async card
       userY += dx * .012; userX = Math.max(-.6, Math.min(.6, userX + dy * .006));
       velY = dx * .012; lastX = px(e); lastY = py(e);
     };
-    const up = () => { if (!dragging) return; dragging = false; if (performance.now() - downT < 260 && moved < 8) flipped = !flipped; };
+    const up = () => { if (!dragging || !armed()) return; dragging = false; if (performance.now() - downT < 260 && moved < 8) flipped = !flipped; };
     el.addEventListener("mousedown", down); addEventListener("mousemove", move); addEventListener("mouseup", up);
     el.addEventListener("touchstart", down, { passive: true });
     el.addEventListener("touchmove", move, { passive: true });
@@ -967,7 +972,9 @@ marqueeReady.then(() => fetch("cards.json").then(r => r.json())).then(async card
         camera.lookAt(0, -.25, 0);
         spin = e * e;                                  // rotation arrives late, after the size settles
       } else spin = 1;
-      if (!dragging) { userY += velY * (dt * 60); velY *= Math.pow(.95, dt * 60); autoT += .21 * dt * spin; }
+      // .21 rad/s is one turn every 30 seconds, which on a phone looks like a
+      // photograph. .58 is a turn every ~11s: clearly moving, not a fairground ride.
+      if (!dragging) { userY += velY * (dt * 60); velY *= Math.pow(.95, dt * 60); autoT += .58 * dt * spin; }
       const bob = Math.sin(t * .9) * .04;
       card.rotation.y = autoT + userY + (flipped ? Math.PI : 0);
       card.rotation.x += ((dragging ? userX : tiltX + userX * .5) - card.rotation.x) * .08;
@@ -990,7 +997,18 @@ marqueeReady.then(() => fetch("cards.json").then(r => r.json())).then(async card
       },
       resize() { camera.aspect = W() / H(); camera.updateProjectionMatrix(); renderer.setSize(W(), H()); },
       // called with the on-screen height of the still card, in px
-      enter(px) { entryFrom = distFor(px); entry = 0; spin = 0; camera.position.z = entryFrom; camera.lookAt(0, -.25, 0); },
+      enter(px) { entryFrom = distFor(px); entry = 0; spin = 0; armAt = performance.now() + 420; camera.position.z = entryFrom; camera.lookAt(0, -.25, 0); },
+      // Where the card is on screen RIGHT NOW, projected from the camera. The
+      // close hand-off needs this: the entry dolly leaves the card smaller than
+      // the still that flew in, so a ghost sized to the flight lands beside the
+      // 3D card instead of on it, and you see two cards at once.
+      cardRect() {
+        const vh = 2 * camera.position.z * Math.tan((30 * Math.PI / 180) / 2);
+        const px = H() / vh, ph = h * px, pw = w * px;
+        const r = renderer.domElement.getBoundingClientRect();
+        return { left: r.left + (r.width - pw) / 2, top: r.top + (r.height - ph) / 2 - (-.25 * px), width: pw, height: ph };
+      },
+      hideCanvas(on) { renderer.domElement.style.opacity = on ? "0" : ""; },
     };
   }
 
@@ -1028,12 +1046,14 @@ marqueeReady.then(() => fetch("cards.json").then(r => r.json())).then(async card
     try {
       const THREE = await loadThree();
       if (!gl) gl = buildStage(THREE);
+      gl.hideCanvas(true);          // stay blank until the still has landed
       gl.resize();
       await gl.show(c);
       // Let the still finish its flight first, so the hand-off happens between
       // two cards that are the same size in the same place, not mid-move.
       if (flight) { try { await flight.finished; } catch (e) {} }
       gl.enter(to.height);
+      gl.hideCanvas(false);
       $("#sLoad").classList.add("off");
       ghost.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 300, easing: "linear", fill: "both" })
         .onfinish = () => ghost.remove();
@@ -1046,16 +1066,18 @@ marqueeReady.then(() => fetch("cards.json").then(r => r.json())).then(async card
 
   const closeStage = () => {
     const back = art.getBoundingClientRect();
-    const to = ghostTo();
-    // Bring the still back for the return trip, sized to where the 3D card is
-    // sitting, so leaving mirrors arriving instead of blinking out.
+    // Hand off from exactly where the 3D card is sitting, not from where the
+    // still flew in - those are different sizes once the entry dolly has run,
+    // and the gap is what put two Luffys on screen at once in Matt's recording.
+    const to = (gl && gl.cardRect && gl.cardRect().width) ? gl.cardRect() : ghostTo();
     let g = S.querySelector(".sghost");
     if (!g) {
       g = document.createElement("img");
       g.className = "sghost"; g.src = cards[at].img; g.alt = "";
-      Object.assign(g.style, { left: to.left + "px", top: to.top + "px", width: to.width + "px", height: to.height + "px" });
       S.appendChild(g);
     }
+    Object.assign(g.style, { left: to.left + "px", top: to.top + "px", width: to.width + "px", height: to.height + "px", opacity: "1", transform: "none" });
+    if (gl && gl.hideCanvas) gl.hideCanvas(true);   // one card on screen, never two
     if (back.width && !slow.matches) {
       g.animate([{ transform: "none" },
                  { transform: `translate(${back.left - to.left}px,${back.top - to.top}px) scale(${back.width / to.width},${back.height / to.height})` }],
@@ -1063,6 +1085,7 @@ marqueeReady.then(() => fetch("cards.json").then(r => r.json())).then(async card
     }
     play(S, [{ opacity: 1 }, { opacity: 0 }], 460, EASE_IN, 120).onfinish = () => {
       S.removeAttribute("open"); S.style.opacity = ""; g.remove();
+      if (gl && gl.hideCanvas) gl.hideCanvas(false);
     };
     // and level 2 comes back up underneath as it goes
     play(bg, [{ opacity: 0 }, { opacity: 1 }], 380, "linear");
