@@ -132,13 +132,20 @@ form.notify input:focus{border-color:var(--ember)}
 .lane.ready{opacity:1;animation-play-state:running}
 .lane.back{animation:slideBack 104s linear infinite;animation-play-state:paused;margin-top:1.1rem}
 .lane.back.ready{opacity:.88;animation-play-state:running}
-.lane:hover{animation-play-state:paused}
+/* Hover only where there is a real pointer. On iOS the first tap on an element
+   that has :hover styling is spent activating that hover, and only the second
+   tap counts as a click - which is why a card had to be tapped twice to open. */
+@media (hover:hover) and (pointer:fine){
+  .lane:hover{animation-play-state:paused}
+}
 @keyframes slide{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 @keyframes slideBack{from{transform:translateX(-50%)}to{transform:translateX(0)}}
 .lane figure{margin:0;width:clamp(158px,42vw,200px);flex:0 0 auto}
 .lane img{width:100%;height:auto;aspect-ratio:63/88;object-fit:contain;border-radius:9px;background:#15181c;filter:brightness(1.12) contrast(1.03) saturate(1.05);box-shadow:0 16px 32px rgba(0,0,0,.65);
   transition:transform .4s ease,box-shadow .4s ease}
-.lane figure:hover img{transform:translateY(-8px) scale(1.02);box-shadow:0 26px 46px rgba(0,0,0,.8)}
+@media (hover:hover) and (pointer:fine){
+  .lane figure:hover img{transform:translateY(-8px) scale(1.02);box-shadow:0 26px 46px rgba(0,0,0,.8)}
+}
 .lane figcaption{margin-top:.55rem;font-size:.72rem;line-height:1.35;color:var(--ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .lane figcaption b{display:block;color:var(--ink-3);font-weight:500;font-size:.66rem;letter-spacing:.14em;text-transform:uppercase}
 
@@ -170,7 +177,11 @@ form.notify input:focus{border-color:var(--ember)}
 .vspecs dt{color:var(--ink-3);font-size:.7rem;letter-spacing:.18em;text-transform:uppercase}
 .vspecs dd{margin:0;text-align:right;font-size:.9rem}
 .vtext{color:var(--ink-2);font-size:.9rem;line-height:1.6;white-space:pre-wrap}
-.vclose{position:absolute;top:.5rem;right:.5rem;width:var(--tap);height:var(--tap);border:0;border-radius:10px;
+/* z-index matters here. .vart is positioned and .vside carries will-change, so
+   both establish stacking contexts, and both come AFTER this button in the DOM -
+   which put them on top of it. The X was drawn but every tap landed on the card
+   art behind it. Caught with elementFromPoint at the button's own centre. */
+.vclose{position:absolute;top:.5rem;right:.5rem;z-index:3;width:var(--tap);height:var(--tap);border:0;border-radius:10px;
   background:rgba(255,255,255,.06);display:grid;place-items:center;font-size:1.4rem;line-height:1}
 .vclose:hover{background:rgba(255,255,255,.12)}
 /* the close button is focused programmatically when the viewer opens, and Chrome
