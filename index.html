@@ -35,7 +35,14 @@ h1,h2{margin:0;font-weight:600}
    fire on the page is live: a WebGL shader burning on the blade, plus rising embers. The live fire is a WebGL
    shader (see the fire() block below) burning BEHIND the blade, with a faint copy in front for licks over
    the steel; a canvas adds rising embers and the glow behind the blade breathes. */
-.mark{position:relative;display:block;width:100%;isolation:isolate;left:-5.51%}   /* the sword sits at 64.8% of the artwork, so the lit mass reads right of centre - nudge the whole mark to balance it optically (uses `left`, not `transform`: the splash intro animates transform) */
+.mark{position:relative;display:block;width:100%;isolation:isolate;left:-5.51%;opacity:0;transition:opacity .55s ease}
+/* On a cold load the flame and ember canvases start drawing straight away while
+   logo.png (700px) is still coming down, so for the first half second you get a
+   bare flame column burning over nothing and the wordmark then materialises
+   through it. Hold the whole mark back until the artwork has decoded and bring
+   it up as one piece. Predates today's work - it is just easy to miss on a warm
+   cache, and every ?v= link I send is a cold one. */
+.mark.lit{opacity:1}   /* the sword sits at 64.8% of the artwork, so the lit mass reads right of centre - nudge the whole mark to balance it optically (uses `left`, not `transform`: the splash intro animates transform) */
 .mark img{display:block;width:100%;height:auto}
 .mark .base{position:relative;z-index:1;filter:brightness(1.85) contrast(1.02) saturate(1.04) drop-shadow(0 18px 40px rgba(0,0,0,.75))}
 /* the engraved runes: a pre-baked glow layer (light bleeding out of the grooves) that only animates
@@ -299,6 +306,18 @@ footer a{color:var(--ink-2);display:inline-block;padding:.6rem 0}
         <img class="rhot" src="img/runehot.png" alt="" aria-hidden="true">
         <img class="base" src="img/logo.png" alt="Darksteel Forge Gaming" width="700" height="547" fetchpriority="high">
         <canvas class="fx"></canvas><canvas class="fx2"></canvas><canvas class="emb"></canvas>
+        <script>
+        (() => {
+          const m = document.currentScript.closest(".mark");
+          if (!m) return;
+          const img = m.querySelector(".base");
+          const lit = () => m.classList.add("lit");
+          if (!img || (img.complete && img.naturalWidth)) return lit();
+          img.addEventListener("load", lit, { once: true });
+          img.addEventListener("error", lit, { once: true });
+          setTimeout(lit, 4000);   // never leave the mark invisible
+        })();
+        </script>
       </span>
       <div class="tape"><div class="band"><div class="run"><span>Under construction</span><span>Under construction</span><span>Under construction</span><span>Under construction</span><span>Under construction</span><span>Under construction</span><span>Under construction</span><span>Under construction</span><span>Under construction</span><span>Under construction</span><span>Under construction</span><span>Under construction</span><span>Under construction</span><span>Under construction</span></div></div></div>
       <div class="tape two" aria-hidden="true"><div class="band"><div class="run"><span>Under construction</span><span>Under construction</span><span>Under construction</span><span>Under construction</span><span>Under construction</span><span>Under construction</span><span>Under construction</span><span>Under construction</span><span>Under construction</span><span>Under construction</span><span>Under construction</span><span>Under construction</span><span>Under construction</span><span>Under construction</span></div></div></div>
@@ -557,7 +576,20 @@ document.querySelectorAll(".mark .emb").forEach(cv => {
 /* the marquee: two lanes drifting opposite ways, each duplicated so the loop is seamless.
    The art is decoded BEFORE the lanes start moving - lazy-loading inside a 5000px-wide lane meant
    cards scrolled in blank and popped (Matt 2026-09-27: "buggy and appeared late"). */
-fetch("cards.json").then(r => r.json()).then(async cards => {
+/* Hold the whole carousel - the fetch and every image with it - until the page
+   has loaded and gone idle. Starting it at parse time put ~9 MB of card art in
+   the queue alongside logo.png, and the logo did not finish arriving until
+   about 4.4s on a 4 Mbps phone. That is what made the mark load glitchy: the
+   flame canvases animate immediately, so they burn over an empty space until
+   the artwork lands. Measured after this change: see the commit. */
+const marqueeReady = (async () => {
+  if (document.readyState !== "complete") {
+    await new Promise(res => addEventListener("load", res, { once: true }));
+  }
+  await new Promise(res => (window.requestIdleCallback || (f => setTimeout(f, 200)))(res, { timeout: 1500 }));
+})();
+
+marqueeReady.then(() => fetch("cards.json").then(r => r.json())).then(async cards => {
   const GAME = { magic: "Magic", pokemon: "Pokemon", onepiece: "One Piece", riftbound: "Riftbound" };
   const esc = t => String(t).replace(/[&<>"]/g, m => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[m]));
   const draw = (lane, c) => {
