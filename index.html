@@ -210,6 +210,38 @@ form.notify input:focus{border-color:var(--ember)}
 .varr:active{transform:translateY(-50%) scale(.94)}
 @media (max-width:720px){.vpanel{grid-template-columns:1fr}.vpanel img{max-width:62%;margin:0 auto}}
 
+/* ============================================================ LEVEL 3
+   Click the card inside the viewer and it goes to the real thing: the card as
+   a 3D object, turning on a lit floor. Same build as the display case on the
+   full site - two planes and a thin edge, rounded-corner alpha map, hand-drawn
+   equirect environment through PMREM, a mirrored clone for the floor
+   reflection - so the two sites show a card the same way.
+   three.js is fetched on FIRST USE only. It is ~600 KB and most visitors will
+   never open this level; loading it up front would undo the work that got the
+   logo down to 1.4s. */
+.stage{position:fixed;inset:0;z-index:70;display:none;background:#050607}
+.stage[open]{display:block}
+.stage canvas{display:block;width:100%;height:100%}
+.stage .shost{position:absolute;inset:0}
+.stage .sclose{position:absolute;top:clamp(.6rem,2vw,1.2rem);right:clamp(.6rem,2vw,1.2rem);z-index:3;
+  width:var(--tap);height:var(--tap);border:1px solid var(--line-2);border-radius:50%;
+  background:rgba(14,16,19,.72);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
+  color:var(--ink-2);display:grid;place-items:center;font-size:1.3rem;line-height:1}
+.stage .shint{position:absolute;left:50%;bottom:clamp(1rem,4vh,2.2rem);transform:translateX(-50%);z-index:3;
+  font-size:.66rem;letter-spacing:.26em;text-transform:uppercase;color:var(--ink-2);pointer-events:none;text-align:center;
+  text-shadow:0 2px 8px rgba(0,0,0,.9)}   /* the floor is lit down there, so the hint needs help */
+.stage .sname{position:absolute;left:50%;top:clamp(1rem,4vh,2rem);transform:translateX(-50%);z-index:3;
+  font-family:var(--display);font-size:clamp(1rem,3.4vw,1.5rem);letter-spacing:.04em;color:var(--ink);pointer-events:none;text-align:center;max-width:76vw;
+  text-shadow:0 2px 10px rgba(0,0,0,.85),0 0 30px rgba(0,0,0,.6)}
+.stage .sload{position:absolute;inset:0;display:grid;place-items:center;z-index:2;
+  font-size:.66rem;letter-spacing:.3em;text-transform:uppercase;color:var(--ink-3);transition:opacity .4s ease}
+.stage .sload.off{opacity:0;pointer-events:none}
+/* the still card that flies from the viewer into the stage while WebGL warms up */
+.stage .sghost{position:fixed;z-index:4;border-radius:9px;box-shadow:0 26px 60px rgba(0,0,0,.75);pointer-events:none;transform-origin:top left}
+@media (hover:hover) and (pointer:fine){ .stage .sclose:hover{color:var(--ink);border-color:rgba(255,255,255,.34)} }
+/* the viewer's card art is now itself a control */
+.vart{cursor:zoom-in}
+
 /* Phone spacing for the top of the hero. The desktop rhythm reads as scrunched
    at 390px: 42px from the mark down to the tape, then only 8px between COMING
    SOON and "Forge your game night". `.tape.two` keeps its negative margin-top
@@ -803,6 +835,204 @@ marqueeReady.then(() => fetch("cards.json").then(r => r.json())).then(async card
     };
   };
 
+  /* ------------------------------------------------------------------ LEVEL 3
+     The card as an object. Ported from the display case on the full site so a
+     card reads the same on both. three.js is loaded the first time someone
+     asks for it and never before. */
+  const S = $("#stage");
+  let three = null, gl = null;
+
+  const loadThree = () => three || (three = new Promise((res, rej) => {
+    const sc = document.createElement("script");
+    sc.src = "https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js";
+    sc.onload = () => res(window.THREE);
+    sc.onerror = () => { three = null; rej(new Error("three.js failed")); };
+    document.head.appendChild(sc);
+  }));
+
+  // The real backs, as on the full site. One Piece and Riftbound have no openly
+  // published back, so those keep a plain sleeve rather than an invented one.
+  const BACKS = { pokemon: "img/back-pokemon.jpg", magic: "img/back-magic.jpg" };
+
+  function buildStage(THREE) {
+    const host = $("#sHost");
+    const W = () => host.clientWidth, H = () => host.clientHeight;
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: "high-performance" });
+    renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+    renderer.setSize(W(), H());
+    renderer.outputEncoding = THREE.sRGBEncoding;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.05;
+    host.appendChild(renderer.domElement);
+
+    const canvasTex = draw => { const c = document.createElement("canvas"); c.width = 372; c.height = 520; draw(c.getContext("2d"), c); const t = new THREE.CanvasTexture(c); t.encoding = THREE.sRGBEncoding; return t; };
+    const sleeve = canvasTex((x) => {
+      const g = x.createLinearGradient(0, 0, 372, 520);
+      g.addColorStop(0, "#15171b"); g.addColorStop(.5, "#0b0c0e"); g.addColorStop(1, "#15171b");
+      x.fillStyle = g; x.fillRect(0, 0, 372, 520);
+      x.strokeStyle = "rgba(255,255,255,.10)"; x.lineWidth = 2; x.strokeRect(18, 18, 336, 484);
+    });
+    const aMap = canvasTex((x) => {
+      x.fillStyle = "#000"; x.fillRect(0, 0, 372, 520); x.fillStyle = "#fff";
+      const r = 16; x.beginPath(); x.moveTo(r, 0);
+      x.arcTo(372, 0, 372, 520, r); x.arcTo(372, 520, 0, 520, r);
+      x.arcTo(0, 520, 0, 0, r); x.arcTo(0, 0, 372, 0, r); x.closePath(); x.fill();
+    });
+    const env = (() => {
+      const c = document.createElement("canvas"); c.width = 1024; c.height = 512; const x = c.getContext("2d");
+      x.fillStyle = "#0a0b0d"; x.fillRect(0, 0, 1024, 512);
+      const lamp = (cx, cy, rx, ry, col, a) => { const g = x.createRadialGradient(cx, cy, 0, cx, cy, rx); g.addColorStop(0, col); g.addColorStop(1, "rgba(0,0,0,0)"); x.save(); x.translate(cx, cy); x.scale(1, ry / rx); x.translate(-cx, -cy); x.globalAlpha = a; x.fillStyle = g; x.fillRect(0, 0, 1024, 512); x.restore(); };
+      lamp(300, 120, 260, 120, "#fff2e0", 1); lamp(800, 200, 220, 160, "#8fc2ff", .55);
+      lamp(512, 40, 700, 60, "#ffffff", .5); lamp(512, 470, 700, 50, "#ff6a1a", .35);
+      const t = new THREE.CanvasTexture(c); t.mapping = THREE.EquirectangularReflectionMapping; t.encoding = THREE.sRGBEncoding; return t;
+    })();
+
+    const scene = new THREE.Scene();
+    scene.environment = new THREE.PMREMGenerator(renderer).fromEquirectangular(env).texture;
+    const camera = new THREE.PerspectiveCamera(30, W() / H(), .1, 100);
+    // Pull back on a narrow screen. At 9.4 the card fills a phone top to bottom
+    // and runs under the card name; the full site never hits this because its
+    // display case is a fixed box inside a page, not the whole viewport.
+    const camZ = () => (innerWidth < 520 ? 11.6 : 9.4);
+    camera.position.set(0, -.25, camZ()); camera.lookAt(0, -.25, 0);
+    scene.add(new THREE.AmbientLight(0xffffff, .25));
+    const key = new THREE.SpotLight(0xfff1e0, 1.6, 30, .6, .6); key.position.set(3, 5, 6); scene.add(key);
+    const rim = new THREE.SpotLight(0x8fc2ff, 1.0, 30, .7, .8); rim.position.set(-4, 2, -4); scene.add(rim);
+    const warm = new THREE.PointLight(0xff6a1a, 1.2, 8); warm.position.set(0, -2.2, 1.2); scene.add(warm);
+
+    const w = 2.52, h = 3.52, d = .022, floorY = -2.35;
+    const group = new THREE.Group(), card = new THREE.Group(); group.add(card); scene.add(group);
+    const mat = t => new THREE.MeshPhysicalMaterial({ map: t, alphaMap: aMap, alphaTest: .5, roughness: .42, metalness: .04, clearcoat: .75, clearcoatRoughness: .28, envMapIntensity: .8, side: THREE.FrontSide });
+    const front = new THREE.Mesh(new THREE.PlaneGeometry(w, h), mat(null)); front.position.z = d / 2;
+    const back = new THREE.Mesh(new THREE.PlaneGeometry(w, h), mat(null)); back.position.z = -d / 2; back.rotation.y = Math.PI;
+    const edge = new THREE.Mesh(new THREE.BoxGeometry(w - .03, h - .03, d * .7), new THREE.MeshStandardMaterial({ color: 0xf1ecdf, roughness: .8 }));
+    card.add(edge, front, back);
+    const mirror = card.clone(); mirror.scale.y = -1; mirror.position.y = 2 * floorY;
+    mirror.traverse(o => { if (o.material) { o.material = o.material.clone(); o.material.opacity = .22; o.material.transparent = true; o.material.depthWrite = false; o.material.envMapIntensity = .4; } });
+    group.add(mirror);
+    const shadow = new THREE.Mesh(new THREE.CircleGeometry(1.9, 48), new THREE.MeshBasicMaterial({ color: 0, transparent: true, opacity: .55 }));
+    shadow.rotation.x = -Math.PI / 2; shadow.position.y = floorY + .01; shadow.scale.x = 1.25; scene.add(shadow);
+    const floor = new THREE.Mesh(new THREE.PlaneGeometry(40, 40), new THREE.MeshStandardMaterial({ color: 0x0b0d10, roughness: .9, metalness: .1 }));
+    floor.rotation.x = -Math.PI / 2; floor.position.y = floorY; scene.add(floor);
+
+    const loader = new THREE.TextureLoader(); loader.setCrossOrigin("anonymous");
+    const cache = new Map();
+    const tex = url => cache.get(url) || (cache.set(url, new Promise(res => loader.load(url,
+      t => { t.encoding = THREE.sRGBEncoding; t.anisotropy = renderer.capabilities.getMaxAnisotropy(); res(t); },
+      undefined, () => res(null)))), cache.get(url));
+
+    let autoT = 0, userY = 0, userX = 0, velY = 0, tiltX = 0, dragging = false, flipped = false, lastX = 0, lastY = 0, raf = 0;
+    const el = renderer.domElement;
+    const px = e => (e.touches ? e.touches[0].clientX : e.clientX), py = e => (e.touches ? e.touches[0].clientY : e.clientY);
+    let downT = 0, moved = 0;
+    const down = e => { dragging = true; lastX = px(e); lastY = py(e); velY = 0; downT = performance.now(); moved = 0; };
+    const move = e => {
+      if (!dragging) { if (e.touches) return; const r = el.getBoundingClientRect();
+        const inside = px(e) >= r.left && px(e) <= r.right && py(e) >= r.top && py(e) <= r.bottom;
+        tiltX = inside ? ((py(e) - r.top) / r.height - .5) * -.22 : 0; return; }
+      const dx = px(e) - lastX, dy = py(e) - lastY;
+      moved += Math.abs(dx) + Math.abs(dy);
+      userY += dx * .012; userX = Math.max(-.6, Math.min(.6, userX + dy * .006));
+      velY = dx * .012; lastX = px(e); lastY = py(e);
+    };
+    const up = () => { if (!dragging) return; dragging = false; if (performance.now() - downT < 260 && moved < 8) flipped = !flipped; };
+    el.addEventListener("mousedown", down); addEventListener("mousemove", move); addEventListener("mouseup", up);
+    el.addEventListener("touchstart", down, { passive: true });
+    el.addEventListener("touchmove", move, { passive: true });
+    el.addEventListener("touchend", up);
+    el.addEventListener("mouseleave", () => { tiltX = 0; });
+    addEventListener("resize", () => { if (!S.hasAttribute("open")) return; camera.position.z = camZ(); camera.aspect = W() / H(); camera.updateProjectionMatrix(); renderer.setSize(W(), H()); });
+
+    const t0 = performance.now(); let prev = t0;
+    const loop = now => {
+      raf = requestAnimationFrame(loop);
+      if (!S.hasAttribute("open")) return;            // never render behind a closed stage
+      const t = (now - t0) / 1000, dt = Math.min(.05, (now - prev) / 1000); prev = now;
+      if (!dragging) { userY += velY * (dt * 60); velY *= Math.pow(.95, dt * 60); autoT += .21 * dt; }
+      const bob = Math.sin(t * .9) * .04;
+      card.rotation.y = autoT + userY + (flipped ? Math.PI : 0);
+      card.rotation.x += ((dragging ? userX : tiltX + userX * .5) - card.rotation.x) * .08;
+      card.position.y = bob;
+      mirror.rotation.copy(card.rotation); mirror.rotation.x *= -1; mirror.position.y = 2 * floorY - bob;
+      if (!dragging) userX *= Math.pow(.98, dt * 60);
+      renderer.render(scene, camera);
+    };
+    raf = requestAnimationFrame(loop);
+
+    return {
+      async show(c) {
+        const [f, bk] = await Promise.all([tex(c.img), BACKS[c.game] ? tex(BACKS[c.game]) : Promise.resolve(sleeve)]);
+        const put = (mesh, t) => { if (!t) return; mesh.material.map = t; mesh.material.needsUpdate = true; };
+        put(front, f); put(back, bk);
+        put(mirror.children[1], f); if (mirror.children[2]) put(mirror.children[2], bk);
+        if (renderer.initTexture) { if (f) renderer.initTexture(f); if (bk) renderer.initTexture(bk); }
+        autoT = 0; userY = 0; userX = 0; velY = 0; flipped = false;
+        renderer.render(scene, camera);
+      },
+      resize() { camera.position.z = camZ(); camera.aspect = W() / H(); camera.updateProjectionMatrix(); renderer.setSize(W(), H()); },
+    };
+  }
+
+  // The still card flies from the viewer into the middle of the stage while
+  // WebGL warms up, so level 3 is a continuation of the same card rather than a
+  // cut to a loading screen.
+  const ghostTo = () => {
+    const vh = innerHeight, gh = Math.min(vh * .62, 620), gw = gh * 63 / 88;
+    return { left: (innerWidth - gw) / 2, top: (vh - gh) / 2, width: gw, height: gh };
+  };
+
+  const openStage = async () => {
+    const c = cards[at];
+    const from = art.getBoundingClientRect();
+    $("#sName").textContent = c.name;
+    $("#sLoad").classList.remove("off");
+    S.setAttribute("open", "");
+
+    const ghost = document.createElement("img");
+    ghost.className = "sghost"; ghost.src = c.img; ghost.alt = "";
+    const to = ghostTo();
+    Object.assign(ghost.style, { left: to.left + "px", top: to.top + "px", width: to.width + "px", height: to.height + "px" });
+    S.appendChild(ghost);
+    if (!slow.matches) {
+      ghost.animate([
+        { transform: `translate(${from.left - to.left}px,${from.top - to.top}px) scale(${from.width / to.width},${from.height / to.height})` },
+        { transform: "none" },
+      ], { duration: 620, easing: EASE_OUT, fill: "both" });
+    }
+    play(S, [{ opacity: 0 }, { opacity: 1 }], 320, "linear");
+
+    try {
+      const THREE = await loadThree();
+      if (!gl) gl = buildStage(THREE);
+      gl.resize();
+      await gl.show(c);
+      $("#sLoad").classList.add("off");
+      ghost.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 420, easing: "linear", fill: "both" })
+        .onfinish = () => ghost.remove();
+    } catch (e) {
+      // WebGL or the CDN is unavailable: keep the still card rather than an empty stage
+      $("#sLoad").textContent = "3D view unavailable";
+      $("#sLoad").classList.add("off");
+    }
+  };
+
+  const closeStage = () => {
+    const back = art.getBoundingClientRect();
+    const g = S.querySelector(".sghost");
+    const done = play(S, [{ opacity: 1 }, { opacity: 0 }], 360, EASE_IN);
+    done.onfinish = () => { S.removeAttribute("open"); S.style.opacity = ""; if (g) g.remove(); };
+    if (g && back.width && !slow.matches) {
+      const to = ghostTo();
+      g.animate([{ transform: "none", opacity: 1 },
+                 { transform: `translate(${back.left - to.left}px,${back.top - to.top}px) scale(${back.width / to.width},${back.height / to.height})`, opacity: .9 }],
+                { duration: 360, easing: EASE_IN, fill: "both" });
+    }
+  };
+
+  $(".vart").addEventListener("click", openStage);
+  $("#sClose").addEventListener("click", closeStage);
+  addEventListener("keydown", e => { if (S.hasAttribute("open") && e.key === "Escape") { e.stopPropagation(); closeStage(); } }, true);
+
   lanes.forEach(l => l.addEventListener("click", e => {
     const b = e.target.closest("button[data-i]"); if (b) open(+b.dataset.i);
   }));
@@ -862,6 +1092,14 @@ $("#notify").addEventListener("submit", e => {
   </div>
   <button class="varr prev" id="vPrev" type="button" aria-label="Previous card"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m15 5-7 7 7 7"/></svg></button>
   <button class="varr next" id="vNext" type="button" aria-label="Next card"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg></button>
+</div>
+
+<div class="stage" id="stage" role="dialog" aria-modal="true" aria-label="Card in 3D">
+  <div class="shost" id="sHost"></div>
+  <div class="sload" id="sLoad">Loading the display</div>
+  <div class="sname" id="sName"></div>
+  <button class="sclose" id="sClose" type="button" aria-label="Back to the card details">&times;</button>
+  <div class="shint"><b>Drag</b> to turn &nbsp;·&nbsp; <b>Tap</b> to flip</div>
 </div>
 </body>
 </html>
