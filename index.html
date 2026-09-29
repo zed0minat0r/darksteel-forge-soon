@@ -658,7 +658,9 @@ marqueeReady.then(() => fetch("cards.json").then(r => r.json())).then(async card
   const LABEL = {
     number: "Number", rarity: "Rarity", artist: "Artist", released: "Released",
     type: "Type", cost: "Cost", power: "Power", counter: "Counter",
-    might: "Might", color: "Colour", trait: "Traits", hp: "HP",
+    might: "Might", color: "Colour", hp: "HP",
+    // "trait" is deliberately absent - Matt asked for that row gone. The data is
+    // still captured and still in cards.json, so putting it back is one key.
   };
   const show = i => {
     const c = cards[(i + cards.length) % cards.length];
