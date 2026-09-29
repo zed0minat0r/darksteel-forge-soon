@@ -612,8 +612,8 @@ fetch("cards.json").then(r => r.json()).then(async cards => {
      same move in reverse, back to wherever that card has drifted to by then.
      Everything uses the Web Animations API so a half-finished move can be
      cancelled cleanly when you click again mid-flight. */
-  const EASE_OUT = "cubic-bezier(.22,1,.36,1)";   // decelerating, long tail
-  const EASE_IN = "cubic-bezier(.55,0,.68,.35)";  // its mirror, for the return
+  const EASE_OUT = "cubic-bezier(.16,1.04,.3,1)";  // decelerating with a touch of overshoot
+  const EASE_IN = "cubic-bezier(.5,0,.75,0)";      // gathers speed on the way back
   const slow = matchMedia("(prefers-reduced-motion:reduce)");
   const bg = $("#vBg"), panel = $("#vPanel"), side = $("#vSide"), art = $("#vImg");
   let running = [], laneTimer = 0;
@@ -628,6 +628,12 @@ fetch("cards.json").then(r => r.json()).then(async cards => {
     return a;
   };
   const stop = () => { running.forEach(a => { try { a.cancel(); } catch (e) {} }); running = []; };
+  const stagger = (from) => {
+    if (slow.matches) return;
+    [...$("#vSpecs").children].forEach((row, n) =>
+      play(row, [{ opacity: 0, transform: "translateY(14px)" }, { opacity: 1, transform: "none" }],
+           420, EASE_OUT, from + n * 55));
+  };
 
   // A card sits in the lanes up to four times (two lanes, each doubled). Fly to
   // whichever copy is actually on screen, and nearest the middle of it.
@@ -647,8 +653,9 @@ fetch("cards.json").then(r => r.json()).then(async cards => {
                                         { opacity: 1, transform: "none" }], ms, ease);
     if (!from || !to.width) return play(art, [{ opacity: 0 }, { opacity: 1 }], ms, ease);
     const f = [
-      { transform: `translate(${from.left - to.left}px,${from.top - to.top}px) scale(${from.width / to.width},${from.height / to.height})` },
-      { transform: "none" },
+      { transform: `translate(${from.left - to.left}px,${from.top - to.top}px) scale(${from.width / to.width},${from.height / to.height}) rotate(-2.5deg)`,
+        boxShadow: "0 6px 14px rgba(0,0,0,.5)" },
+      { transform: "none", boxShadow: "0 20px 44px rgba(0,0,0,.7)" },
     ];
     return play(art, f, ms, ease);
   };
@@ -664,10 +671,11 @@ fetch("cards.json").then(r => r.json()).then(async cards => {
     // happens behind it.
     clearTimeout(laneTimer);
     laneTimer = setTimeout(() => lanes.forEach(l => l.style.animationPlayState = "paused"), slow.matches ? 0 : 190);
-    play(bg, [{ opacity: 0 }, { opacity: 1 }], 260, "linear");
-    play(panel, [{ opacity: 0 }, { opacity: 1 }], 200, "linear");
-    flyFrom(from, 460, EASE_OUT);
-    play(side, [{ opacity: 0, transform: "translateY(14px)" }, { opacity: 1, transform: "none" }], 420, EASE_OUT, 90);
+    play(bg, [{ opacity: 0 }, { opacity: 1 }], 420, "linear");
+    play(panel, [{ opacity: 0, transform: "scale(.92)" }, { opacity: 1, transform: "none" }], 640, EASE_OUT);
+    flyFrom(from, 720, EASE_OUT);
+    play(side, [{ opacity: 0, transform: "translateY(26px)" }, { opacity: 1, transform: "none" }], 560, EASE_OUT, 140);
+    stagger(220);
     $("#vClose").focus({ preventScroll: true });
   };
 
@@ -680,13 +688,14 @@ fetch("cards.json").then(r => r.json()).then(async cards => {
     laneTimer = setTimeout(() => lanes.forEach(l => l.style.animationPlayState = ""), slow.matches ? 0 : 170);
     const to = art.getBoundingClientRect();
     if (back && to.width && !slow.matches) {
-      play(art, [{ transform: "none" },
-                 { transform: `translate(${back.left - to.left}px,${back.top - to.top}px) scale(${back.width / to.width},${back.height / to.height})` }],
-           380, EASE_IN);
+      play(art, [{ transform: "none", boxShadow: "0 20px 44px rgba(0,0,0,.7)" },
+                 { transform: `translate(${back.left - to.left}px,${back.top - to.top}px) scale(${back.width / to.width},${back.height / to.height}) rotate(-2.5deg)`,
+                   boxShadow: "0 6px 14px rgba(0,0,0,.5)" }],
+           520, EASE_IN);
     }
-    play(side, [{ opacity: 1, transform: "none" }, { opacity: 0, transform: "translateY(10px)" }], 200, EASE_IN);
-    play(bg, [{ opacity: 1 }, { opacity: 0 }], 320, "linear");
-    const done = play(panel, [{ opacity: 1 }, { opacity: 0 }], 360, EASE_IN, 60);
+    play(side, [{ opacity: 1, transform: "none" }, { opacity: 0, transform: "translateY(22px)" }], 300, EASE_IN);
+    play(bg, [{ opacity: 1 }, { opacity: 0 }], 480, "linear");
+    const done = play(panel, [{ opacity: 1, transform: "none" }, { opacity: 0, transform: "scale(.94)" }], 520, EASE_IN, 80);
     done.onfinish = () => {
       V.removeAttribute("open");
       stop();
@@ -700,13 +709,14 @@ fetch("cards.json").then(r => r.json()).then(async cards => {
   const step = dir => {
     stop();
     const out = play(art, [{ opacity: 1, transform: "none" },
-                           { opacity: 0, transform: `translateX(${-18 * dir}px) scale(.97)` }], 150, EASE_IN);
-    play(side, [{ opacity: 1 }, { opacity: 0 }], 130, EASE_IN);
+                           { opacity: 0, transform: `translateX(${-64 * dir}px) scale(.9) rotate(${-3 * dir}deg)` }], 260, EASE_IN);
+    play(side, [{ opacity: 1 }, { opacity: 0, transform: `translateX(${-24 * dir}px)` }], 220, EASE_IN);
     out.onfinish = () => {
       show(at + dir);
-      play(art, [{ opacity: 0, transform: `translateX(${22 * dir}px) scale(.97)` },
-                 { opacity: 1, transform: "none" }], 300, EASE_OUT);
-      play(side, [{ opacity: 0, transform: "translateY(8px)" }, { opacity: 1, transform: "none" }], 280, EASE_OUT, 40);
+      play(art, [{ opacity: 0, transform: `translateX(${78 * dir}px) scale(.9) rotate(${3 * dir}deg)` },
+                 { opacity: 1, transform: "none" }], 520, EASE_OUT);
+      play(side, [{ opacity: 0, transform: `translateX(${28 * dir}px)` }, { opacity: 1, transform: "none" }], 460, EASE_OUT, 60);
+      stagger(120);
     };
   };
 
