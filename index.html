@@ -956,7 +956,7 @@ marqueeReady.then(() => fetch("cards.json").then(r => r.json())).then(async card
       t => { t.encoding = THREE.sRGBEncoding; t.anisotropy = renderer.capabilities.getMaxAnisotropy(); res(t); },
       undefined, () => res(null)))), cache.get(url));
 
-    let autoT = 0, userY = 0, userX = 0, velY = 0, tiltX = 0, dragging = false, flipped = false, lastX = 0, lastY = 0, raf = 0;
+    let autoT = 0, userY = 0, userX = 0, velY = 0, tiltX = 0, dragging = false, lastX = 0, lastY = 0, raf = 0;
     const el = renderer.domElement;
     const px = e => (e.touches ? e.touches[0].clientX : e.clientX), py = e => (e.touches ? e.touches[0].clientY : e.clientY);
     let downT = 0, moved = 0;
@@ -975,7 +975,12 @@ marqueeReady.then(() => fetch("cards.json").then(r => r.json())).then(async card
       userY += dx * .012; userX = Math.max(-.6, Math.min(.6, userX + dy * .006));
       velY = dx * .012; lastX = px(e); lastY = py(e);
     };
-    const up = () => { if (!dragging || !armed()) return; dragging = false; if (performance.now() - downT < 260 && moved < 8) flipped = !flipped; };
+    // NO TAP-TO-FLIP. It came across with the port from the full site, where it
+    // is advertised in the display case. Here it fires on any tap on the card,
+    // including ones meant as the start of a drag - Matt: "when you click the
+    // card... it flips it into the back for no reason". Drag still turns it, and
+    // dragging past the side shows the back anyway.
+    const up = () => { if (!dragging || !armed()) return; dragging = false; };
     el.addEventListener("mousedown", down); addEventListener("mousemove", move); addEventListener("mouseup", up);
     el.addEventListener("touchstart", down, { passive: true });
     el.addEventListener("touchmove", move, { passive: true });
@@ -1011,7 +1016,7 @@ marqueeReady.then(() => fetch("cards.json").then(r => r.json())).then(async card
       // photograph. .58 is a turn every ~11s: clearly moving, not a fairground ride.
       if (!dragging) { userY += velY * (dt * 60); velY *= Math.pow(.95, dt * 60); autoT += .58 * dt * spin; }
       const bob = Math.sin(t * .9) * .04;
-      card.rotation.y = autoT + userY + (flipped ? Math.PI : 0);
+      card.rotation.y = autoT + userY;   // the back comes round on its own as it turns
       card.rotation.x += ((dragging ? userX : tiltX + userX * .5) - card.rotation.x) * .08;
       card.position.y = bob;
       mirror.rotation.copy(card.rotation); mirror.rotation.x *= -1; mirror.position.y = 2 * floorY - bob;
@@ -1027,7 +1032,7 @@ marqueeReady.then(() => fetch("cards.json").then(r => r.json())).then(async card
         put(front, f); put(back, bk);
         put(mirror.children[1], f); if (mirror.children[2]) put(mirror.children[2], bk);
         if (renderer.initTexture) { if (f) renderer.initTexture(f); if (bk) renderer.initTexture(bk); }
-        autoT = 0; userY = 0; userX = 0; velY = 0; flipped = false;
+        autoT = 0; userY = 0; userX = 0; velY = 0;
         renderer.render(scene, camera);
       },
       resize() { camera.aspect = W() / H(); camera.updateProjectionMatrix(); renderer.setSize(W(), H()); },
@@ -1066,7 +1071,9 @@ marqueeReady.then(() => fetch("cards.json").then(r => r.json())).then(async card
           group.position.x = gx + (tx - gx) * e;
           group.position.y = gy + (ty - gy) * e;
           // settle to face-on so it matches the flat card it becomes
-          card.rotation.y = r0 * (1 - e) + (flipped ? Math.PI : 0) * e;
+          // Always land face-on. The flat card underneath is the front, so
+          // settling to the back would swap the picture at the hand-over.
+          card.rotation.y = r0 * (1 - e);
           card.rotation.x = rx0 * (1 - e);
           camera.lookAt(0, -.25, 0);
           renderer.render(scene, camera);
@@ -1117,19 +1124,20 @@ marqueeReady.then(() => fetch("cards.json").then(r => r.json())).then(async card
     ready.enter(from);                          // sits exactly on the flat card
     ready.hideCanvas(false);
 
-    // Everything else arrives around the card rather than under it.
-    play($("#sBg"), [{ opacity: 0 }, { opacity: 1 }], 420, "linear");
-    play($("#sName"), [{ opacity: 0 }, { opacity: 1 }], 420, EASE_OUT, 260);
-    play($(".shint"), [{ opacity: 0 }, { opacity: 1 }], 420, EASE_OUT, 360);
-    play($("#sClose"), [{ opacity: 0 }, { opacity: 1 }], 380, EASE_OUT, 300);
-    play(panel, [{ opacity: 1 }, { opacity: 0 }], 260, "linear");
-    play(bg, [{ opacity: 1 }, { opacity: 0 }], 380, "linear");
+    // The viewer's own backdrop STAYS UP underneath while this one fades in over
+    // it. Fading both at once left a window where neither was opaque and the
+    // page showed through - Matt: "you can still see the background for a split
+    // second when you click the card". Only the panel goes.
+    play($("#sBg"), [{ opacity: 0 }, { opacity: 1 }], 220, "linear");
+    play($("#sName"), [{ opacity: 0 }, { opacity: 1 }], 420, EASE_OUT, 240);
+    play($(".shint"), [{ opacity: 0 }, { opacity: 1 }], 420, EASE_OUT, 320);
+    play($("#sClose"), [{ opacity: 0 }, { opacity: 1 }], 380, EASE_OUT, 280);
+    play(panel, [{ opacity: 1 }, { opacity: 0 }], 220, "linear");
   };
 
   const closeStage = () => {
     const back = art.getBoundingClientRect();
-    // Level 2 is already coming back up behind the card as it shrinks onto it.
-    play(bg, [{ opacity: 0 }, { opacity: 1 }], 360, "linear");
+    // The viewer's backdrop never went away, so only the panel has to come back.
     play(panel, [{ opacity: 0 }, { opacity: 1 }], 420, EASE_OUT, 60);
     play($("#sBg"), [{ opacity: 1 }, { opacity: 0 }], 460, EASE_IN);
     play($("#sName"), [{ opacity: 1 }, { opacity: 0 }], 200, EASE_IN);
@@ -1211,7 +1219,7 @@ $("#notify").addEventListener("submit", e => {
   <div class="sload" id="sLoad">Loading the display</div>
   <div class="sname" id="sName"></div>
   <button class="sclose" id="sClose" type="button" aria-label="Back to the card details">&times;</button>
-  <div class="shint"><b>Drag</b> to turn &nbsp;·&nbsp; <b>Tap</b> to flip</div>
+  <div class="shint"><b>Drag</b> to turn the card</div>
 </div>
 </body>
 </html>
