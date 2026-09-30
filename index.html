@@ -725,6 +725,29 @@ marqueeReady.then(() => fetch("cards.json").then(r => r.json())).then(async card
   const slow = matchMedia("(prefers-reduced-motion:reduce)");
   const bg = $("#vBg"), panel = $("#vPanel"), side = $("#vSide"), art = $("#vImg");
   let running = [], laneTimer = 0;
+
+  /* Scroll lock. With the page still scrollable behind the viewer, the lanes
+     and the card under them move while a card is open - and the close animation
+     measures that card to know where to fly back to, so it aimed at a rect that
+     had wandered off. Matt: "you can't scroll in the background because right
+     now you still can, and it ends up with some bugs."
+     `overflow:hidden` on body is not enough on iOS Safari, which keeps scrolling
+     the page under a fixed overlay. Pinning the body at a negative offset is the
+     technique that actually holds there; the page does not move visually because
+     the offset matches where it was scrolled to. */
+  let lockY = 0, locks = 0;
+  const lockScroll = () => {
+    if (locks++) return;
+    lockY = window.scrollY || document.documentElement.scrollTop || 0;
+    const b = document.body.style;
+    b.position = "fixed"; b.top = `-${lockY}px`; b.left = "0"; b.right = "0"; b.width = "100%";
+  };
+  const unlockScroll = () => {
+    if (!locks || --locks) return;
+    const b = document.body.style;
+    b.position = ""; b.top = ""; b.left = ""; b.right = ""; b.width = "";
+    window.scrollTo(0, lockY);
+  };
   // Reduced motion means no flying and no scaling across the screen - it does
   // NOT mean no animation at all. A cross-fade is the accepted substitute, so
   // keep a real 300ms one rather than the near-instant cut this had, otherwise
@@ -781,6 +804,7 @@ marqueeReady.then(() => fetch("cards.json").then(r => r.json())).then(async card
     stop();
     lastFocus = document.activeElement;
     const from = thumbFor(i);
+    lockScroll();
     show(i);
     V.setAttribute("open", "");
     // Freezing 190 drifting cards the instant you click is a visible jolt, so
@@ -822,6 +846,7 @@ marqueeReady.then(() => fetch("cards.json").then(r => r.json())).then(async card
     done.onfinish = () => {
       V.removeAttribute("open");
       stop();
+      unlockScroll();
       if (lastFocus) lastFocus.focus({ preventScroll: true });
     };
   };
