@@ -1,7 +1,8 @@
 # Launching the Darksteel Forge coming-soon site on the client's domain
 
 Written 2026-10-01. The site is ALREADY live and hosted - https://zed0minat0r.github.io/darksteel-forge-soon/
-This is a DNS job plus two things that have to be fixed before a real domain points at it.
+Everything that had to be fixed before a real domain points at it is now fixed. What is left is the
+DNS, one Web3Forms key, and the e-commerce decision at the bottom.
 
 ---
 
@@ -35,20 +36,33 @@ unchecked checkbox's `.value` is the string "on" regardless of state, and Web3Fo
 truthy botcheck, so every genuine signup would have been silently dropped. It reads `.checked` now.
 That bug was invisible to every test that did not inspect the posted body.
 
-## 2. `hello@darksteelforge.gg` is invented
+## 2. The contact address - DONE
 
-Hardcoded at line ~495 and never verified. If the client's real domain differs it bounces, and even
-if it matches, the mailbox has to exist. Replace with a real address before launch.
+`hello@darksteelforge.gg` was invented and would have bounced. It is `darksteelforge@gmail.com`
+everywhere now (Matt confirmed it 2026-10-01): the mailto on the page, the notify form's
+destination, and both fallback messages in the form.
 
-## 3. Page weight is 10.7 MB
+## 3. Page weight - DONE, 10.7 MB -> 2.64 MB
 
-9.3 MB of it is `img/c` card art. This is a DELIBERATE choice - Matt asked for "as high resolution
-as possible" on 2026-09-29, which took the page from 4.7 MB to ~10 MB, and the marquee deliberately
-does NOT lazy-load because he rejected that in September. It is over this project's own ~4 MB audit
-bar. Fine on wifi, slow on a phone. Leave or re-bake at 400px - his call, not a defect.
+Matt: "anything we can do to optimize the site to load really well without sacrificing any of the
+quality of the cards because I really like the way the cards all look." Nothing about the cards
+changed visually.
 
-GitHub Pages' limits are a 1 GB site cap and a 100 GB/month SOFT bandwidth limit, so ~10 MB a visit
-is roughly 10,000 visits a month before anyone contacts us. Not a near-term concern.
+The marquee now pulls from AVIF lanes sized to the device instead of the full-size WebP:
+
+    img/a4   400px, crf32   2.4 MB   serves DPR < 2.5
+    img/a6   600px, crf36   3.8 MB   serves DPR >= 2.5
+    img/c    original WebP  9.3 MB   AVIF-less browsers, and every full-size viewer open
+
+The lane is chosen at runtime from a 2x2 AVIF decode probe plus `devicePixelRatio`, NOT a
+`<picture>` element - the marquee preloads with `new Image()`, which does no type negotiation, so
+`<picture>` would have bought nothing. Opening a card still loads the full-size art.
+
+Rebuild the lanes with `scripts/bake_avif.sh` after any change to `img/c`.
+
+**ffmpeg's libaom AVIF encoder silently drops alpha.** The logo went 400 KB -> 32 KB and looked like
+a win until `pix_fmt` came back `yuv420p`, which would have put a black box behind the cutout. The
+logo is WebP with alpha (96 KB), checked by compositing over white AND black.
 
 ---
 
