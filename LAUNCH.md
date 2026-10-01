@@ -66,31 +66,66 @@ logo is WebP with alpha (96 KB), checked by compositing over white AND black.
 
 ---
 
-## THE DNS, once the domain is known
+## THE DNS
 
-Verified against GitHub's own docs 2026-10-01. Substitute the real domain.
+**The domain is almost certainly `darksteelforgegames.com`** - found by WHOIS on 2026-10-01, not
+told to us, so Matt confirms it before anything is typed. Registered at GoDaddy 2026-04-07, paid to
+2029, on GoDaddy's own nameservers (ns09/ns10.domaincontrol.com), currently serving a GoDaddy parked
+page. GitHub's IPs verified against GitHub's docs the same day.
 
-**In the repo:** Settings -> Pages -> Custom domain -> enter the domain -> Save. That writes a
-`CNAME` file. Then wait for the cert and tick **Enforce HTTPS** (can take up to 24h to become
-available - it is not automatic).
+### The live zone as it stands, read 2026-10-01
 
-**At the registrar**, for the apex (`darksteelforge.com` or whatever it is):
+    A      @      13.248.243.5          GoDaddy parking
+    A      @      76.223.105.230        GoDaddy parking
+    CNAME  www    darksteelforgegames.com.
+    MX     @      aspmx.l.google.com (1), alt1/alt2 (5), alt3/alt4 (10)
+    TXT    @      google-site-verification=F54E6dd_...
+    TXT    @      4843026616
+    TXT    @      v=spf1 include:dc-aa8e722993._spfm.darksteelforgegames.com ~all
+    NS     @      ns09.domaincontrol.com, ns10.domaincontrol.com
 
-    A     @    185.199.108.153
-    A     @    185.199.109.153
-    A     @    185.199.110.153
-    A     @    185.199.111.153
-    AAAA  @    2606:50c0:8000::153
-    AAAA  @    2606:50c0:8001::153
-    AAAA  @    2606:50c0:8002::153
-    AAAA  @    2606:50c0:8003::153
+### LEAVE ALONE
 
-and for www:
+**The five MX records and all three TXT records.** This domain has live Google Workspace email on
+it. The MX records route it and the SPF TXT is what stops their outgoing mail being marked as spam.
+Clearing the zone - the obvious move when repointing a parked domain - kills the client's email.
+The NS records are what makes GoDaddy's DNS page work at all.
 
-    CNAME www  zed0minat0r.github.io.
+### DELETE
 
-A registrar that supports `ALIAS`/`ANAME` can use one of those at the apex instead of the four A
-records.
+    A      @      13.248.243.5
+    A      @      76.223.105.230
+
+### ADD (or EDIT, for www)
+
+    A      @      185.199.108.153
+    A      @      185.199.109.153
+    A      @      185.199.110.153
+    A      @      185.199.111.153
+    AAAA   @      2606:50c0:8000::153
+    AAAA   @      2606:50c0:8001::153
+    AAAA   @      2606:50c0:8002::153
+    AAAA   @      2606:50c0:8003::153
+    CNAME  www    zed0minat0r.github.io          (edit the existing www record, do not add a second)
+
+A registrar with `ALIAS`/`ANAME` could use one record at the apex instead of the four A records.
+GoDaddy does not offer it, so it is the four.
+
+### THEN, in the repo
+
+Settings -> Pages -> Custom domain -> `darksteelforgegames.com` -> Save. That writes a `CNAME` file
+to the repo root. Wait for the certificate, then tick **Enforce HTTPS** - it can take up to 24h to
+become available and it is not automatic.
+
+### Verifying it worked
+
+    dig +short A darksteelforgegames.com        # expect the four 185.199.x.153
+    dig +short CNAME www.darksteelforgegames.com
+    dig +short MX darksteelforgegames.com       # MUST still be the five Google ones
+    curl -sI https://darksteelforgegames.com | head -1
+
+The MX check is not optional. It is the one that catches the mistake that actually costs the client
+something.
 
 ---
 
