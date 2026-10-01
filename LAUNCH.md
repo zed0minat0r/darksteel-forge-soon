@@ -73,28 +73,47 @@ told to us, so Matt confirms it before anything is typed. Registered at GoDaddy 
 2029, on GoDaddy's own nameservers (ns09/ns10.domaincontrol.com), currently serving a GoDaddy parked
 page. GitHub's IPs verified against GitHub's docs the same day.
 
-### The live zone as it stands, read 2026-10-01
+### The live zone, read off GoDaddy's own DNS page 2026-10-01
 
-    A      @      13.248.243.5          GoDaddy parking
-    A      @      76.223.105.230        GoDaddy parking
-    CNAME  www    darksteelforgegames.com.
-    MX     @      aspmx.l.google.com (1), alt1/alt2 (5), alt3/alt4 (10)
-    TXT    @      google-site-verification=F54E6dd_...
-    TXT    @      4843026616
-    TXT    @      v=spf1 include:dc-aa8e722993._spfm.darksteelforgegames.com ~all
-    NS     @      ns09.domaincontrol.com, ns10.domaincontrol.com
+Two screenshots from Matt, because `dig` was not enough - see the warning under the table.
 
-### LEAVE ALONE
+    A      @                      "WebsiteBuilder Site"      <- NOT an IP. GoDaddy-managed.
+    NS     @                      ns09 / ns10.domaincontrol.com     locked
+    SOA    @                      ns09.domaincontrol.com            locked
+    CNAME  pay                    paylinks.commerce.godaddy.com.
+    CNAME  www                    darksteelforgegames.com.
+    CNAME  _domainconnect         _domainconnect.gd.domaincontrol.com.
+    MX     @                      aspmx.l.google.com (1)
+    MX     @                      alt1 / alt2.aspmx.l.google.com (5)
+    MX     @                      alt3 / alt4.aspmx.l.google.com (10)
+    TXT    @                      4843026616
+    TXT    @                      google-site-verification=F54E6dd_eI080wLvWa8HFTpn7O9hfSrT5-X2JI_RPo4
+    TXT    @                      v=spf1 include:dc-aa8e722993._spfm.darksteelforgegames.com ~all
+    TXT    dc-aa8e722993._spfm    v=spf1 include:_spf.google.com ~all
+    TXT    _dmarc                 v=DMARC1; p=quarantine; adkim=r; aspf=r; rua=mailto:dmarc_rua@onsecureserver.net;
 
-**The five MX records and all three TXT records.** This domain has live Google Workspace email on
-it. The MX records route it and the SPF TXT is what stops their outgoing mail being marked as spam.
-Clearing the zone - the obvious move when repointing a parked domain - kills the client's email.
-The NS records are what makes GoDaddy's DNS page work at all.
+**`dig` DOES NOT SHOW YOU THE ZONE, IT SHOWS YOU THE ANSWERS.** Reading it with `dig` gave two A
+records holding `13.248.243.5` and `76.223.105.230`, so the instruction written from it told Matt to
+edit two rows containing those IPs. Neither row exists. There is ONE A record and the registrar
+displays it as the words "WebsiteBuilder Site". He had to come back with "these records aren't
+specific enough, how am I supposed to know what to change" before this was caught. `dig` also missed
+the `pay` and `_domainconnect` CNAMEs and both of the extra TXT records entirely, because nothing
+had queried those names. **Get a screenshot of the registrar's record list before writing a single
+instruction about it.**
+
+### THE BLOCKER: the Website Builder owns the A record
+
+The client started a GoDaddy Websites + Marketing site on this domain and has abandoned it. While
+that site is attached, GoDaddy manages the apex A record: editing it is refused and deleting it can
+be reverted. The builder has to be detached from the domain first - My Products -> Websites +
+Marketing -> the site -> Settings -> Site Domain, or via whatever GoDaddy offers when the row's
+delete is clicked.
+
+Until that is settled, the add list below cannot go in.
 
 ### DELETE
 
-    A      @      13.248.243.5
-    A      @      76.223.105.230
+    A      @      "WebsiteBuilder Site"      (detach the builder first - see above)
 
 ### ADD (or EDIT, for www)
 
