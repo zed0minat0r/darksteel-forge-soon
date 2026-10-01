@@ -101,15 +101,25 @@ the `pay` and `_domainconnect` CNAMEs and both of the extra TXT records entirely
 had queried those names. **Get a screenshot of the registrar's record list before writing a single
 instruction about it.**
 
-### THE BLOCKER: the Website Builder owns the A record
+### THE BLOCKER: the Website Builder owns the A record, and the unlock is not in the table
 
-The client started a GoDaddy Websites + Marketing site on this domain and has abandoned it. While
-that site is attached, GoDaddy manages the apex A record: editing it is refused and deleting it can
-be reverted. The builder has to be detached from the domain first - My Products -> Websites +
-Marketing -> the site -> Settings -> Site Domain, or via whatever GoDaddy offers when the row's
-delete is clicked.
+The client started a GoDaddy Websites + Marketing site on this domain and has abandoned it.
+Connecting a site to a domain LOCKS its DNS records - GoDaddy refuses to edit the apex A record
+while the connection exists, and it is not a row you can simply delete.
 
-Until that is settled, the add list below cannot go in.
+**The unlock is above the records table, not in it.** GoDaddy's own instructions
+(https://www.godaddy.com/help/remove-a-connection-from-my-domain-32079):
+
+    Domain Portfolio -> the domain -> DNS
+    Above the records table, next to the connected site's name: "Remove"
+    Confirm: "Yes, let's do it!"
+
+That frees the A record. Unpublishing the site instead
+(https://www.godaddy.com/help/unpublish-my-websites-marketing-site-32277) only swaps the visitor's
+page for a Coming Soon placeholder, and GoDaddy's documentation does not claim it releases DNS, so
+it is not the route.
+
+Both screenshots were cropped to the records table, which is why a first pass missed this entirely.
 
 ### DELETE
 
