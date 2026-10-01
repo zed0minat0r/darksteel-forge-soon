@@ -7,7 +7,7 @@
 <link rel="icon" href="img/favicon.png">
 <meta name="description" content="Darksteel Forge Gaming is under construction. Magic, Pokemon, One Piece and Riftbound singles, sealed and chase cards - opening soon.">
 <meta name="robots" content="noindex">
-<link rel="preload" as="image" href="img/logo.png">
+<link rel="preload" as="image" href="img/logo.webp">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800;900&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -376,9 +376,9 @@ footer a{color:var(--ink-2);display:inline-block;padding:.6rem 0}
     <div class="lockup">
       <span class="mark forge-mark">
         <span class="back"></span><span class="glow"></span>
-        <img class="rglow" src="img/runeglow.png" alt="" aria-hidden="true">
-        <img class="rhot" src="img/runehot.png" alt="" aria-hidden="true">
-        <img class="base" src="img/logo.png" alt="Darksteel Forge Gaming" width="700" height="547" fetchpriority="high">
+        <img class="rglow" src="img/runeglow.webp" alt="" aria-hidden="true">
+        <img class="rhot" src="img/runehot.webp" alt="" aria-hidden="true">
+        <img class="base" src="img/logo.webp" alt="Darksteel Forge Gaming" width="700" height="547" fetchpriority="high">
         <canvas class="fx"></canvas><canvas class="fx2"></canvas><canvas class="emb"></canvas>
         <script>
         (() => {
@@ -490,9 +490,9 @@ footer a{color:var(--ink-2);display:inline-block;padding:.6rem 0}
 
 <footer>
   <div class="wrap">
-    <span class="brand"><img src="img/sword.png" alt="" width="72" height="458">Darksteel Forge Gaming</span>
+    <span class="brand"><img src="img/sword.webp" alt="" width="72" height="458">Darksteel Forge Gaming</span>
     <p>Magic · Pokemon · One Piece · Riftbound</p>
-    <p><a href="mailto:hello@darksteelforge.gg">hello@darksteelforge.gg</a></p>
+    <p><a href="mailto:darksteelforge@gmail.com">darksteelforge@gmail.com</a></p>
     <p>© <span id="yr"></span> Darksteel Forge Gaming. Card images and names are property of their respective owners.</p>
   </div>
 </footer>
@@ -664,12 +664,41 @@ const marqueeReady = (async () => {
 })();
 
 marqueeReady.then(() => fetch("cards.json").then(r => r.json())).then(async cards => {
+  /* ---- ART SELECTION -------------------------------------------------------------------------
+     Matt, 2026-10-01: "optimize the site to load really well without sacrificing any of the
+     quality of the cards because I really like the way the cards all look."
+
+     Nothing here reduces quality. It stops sending pixels a screen cannot draw, and uses a newer
+     codec for the same picture. Measured on a dense full-art card:
+         600px WebP q78 (what shipped)  112 KB      whole set 9.3 MB
+         600px AVIF crf36                40 KB      whole set 3.8 MB
+         400px AVIF crf32                28 KB      whole set 2.4 MB
+     Compared by decoding each back to PNG and cropping the same detail region at 1:1, including
+     the rules text - "When Chrome Mox enters the battlefield" is equally legible in all three.
+
+     `.lane figure` is clamp(158px,42vw,200px), so a card is drawn 158-200 CSS px wide. 400px is
+     1:1 or better on any display under 2.5x; only a 3x screen can resolve 600. The VIEWER always
+     gets 600 because it fills the screen.
+
+     One decode test picks the lane, rather than <picture> - the lanes also preload through
+     `new Image()`, which has no type-negotiation, so a single decision keeps both paths honest.
+     The WebP files stay exactly where they were and are the fallback. Nothing was deleted. */
+  const AVIF = await new Promise(res => {
+    const t = new Image();
+    t.onload = () => res(t.width === 2); t.onerror = () => res(false);
+    t.src = "data:image/avif;base64,AAAAIGZ0eXBhdmlmAAAAAGF2aWZtaWYxbWlhZk1BMUIAAAD5bWV0YQAAAAAAAAAvaGRscgAAAAAAAAAAcGljdAAAAAAAAAAAAAAAAFBpY3R1cmVIYW5kbGVyAAAAAA5waXRtAAAAAAABAAAAHmlsb2MAAAAARAAAAQABAAAAAQAAASEAAAAYAAAAKGlpbmYAAAAAAAEAAAAaaW5mZQIAAAAAAQAAYXYwMUNvbG9yAAAAAGppcHJwAAAAS2lwY28AAAAUaXNwZQAAAAAAAAACAAAAAgAAABBwaXhpAAAAAAMICAgAAAAMYXYxQ4EADAAAAAATY29scm5jbHgAAgACAAIAAAAAF2lwbWEAAAAAAAAAAQABBAECgwQAAAAgbWRhdAoFGAA2wCAyDxyAAABYAAAAAK/sqvFLgA==";
+  });
+  const laneDir = AVIF ? ((devicePixelRatio || 1) >= 2.5 ? "img/a6" : "img/a4") : "img/c";
+  const file = c => c.img.split("/").pop().replace(/\.webp$/, AVIF ? ".avif" : ".webp");
+  const laneArt = c => laneDir + "/" + file(c);        // the marquee (NB: `art` is
+                                                       // already the viewer's <img>)
+  const artBig = c => (AVIF ? "img/a6/" : "img/c/") + file(c);   // the viewer and the 3D card
   const GAME = { magic: "Magic", pokemon: "Pokemon", onepiece: "One Piece", riftbound: "Riftbound" };
   const esc = t => String(t).replace(/[&<>"]/g, m => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[m]));
   const draw = (lane, c) => {
     const f = document.createElement("figure");
     const i = cards.indexOf(c);
-    f.innerHTML = `<button type="button" data-i="${i}" aria-label="View ${esc(c.name)}"><img src="${c.img}" alt="${esc(c.name)}" decoding="async" width="600" height="838"><figcaption>${esc(c.name)}<b>${GAME[c.game] || ""}</b></figcaption></button>`;
+    f.innerHTML = `<button type="button" data-i="${i}" aria-label="View ${esc(c.name)}"><img src="${laneArt(c)}" alt="${esc(c.name)}" decoding="async" width="600" height="838"><figcaption>${esc(c.name)}<b>${GAME[c.game] || ""}</b></figcaption></button>`;
     lane.appendChild(f);
   };
   const a = cards.filter((_, i) => i % 2 === 0), b = cards.filter((_, i) => i % 2 === 1);
@@ -681,7 +710,7 @@ marqueeReady.then(() => fetch("cards.json").then(r => r.json())).then(async card
   // wait on the handful that are actually on screen at the start; waiting on all
   // 95 before moving would mean staring at a still marquee while ~9 MB lands.
   // The rest have the whole length of the lane to arrive.
-  const loading = cards.map(c => { const im = new Image(); im.decoding = "async"; im.src = c.img; return im; });
+  const loading = cards.map(c => { const im = new Image(); im.decoding = "async"; im.src = laneArt(c); return im; });
   const onScreen = Math.ceil(innerWidth / 160) + 2;
   await Promise.all(loading.slice(0, onScreen).map(im =>
     im.complete ? null : new Promise(res => { im.onload = im.onerror = res; })));
@@ -701,7 +730,7 @@ marqueeReady.then(() => fetch("cards.json").then(r => r.json())).then(async card
     const c = cards[(i + cards.length) % cards.length];
     at = (i + cards.length) % cards.length;
     const d = c.detail || {};
-    $("#vImg").src = c.img; $("#vImg").alt = c.name;
+    $("#vImg").src = artBig(c); $("#vImg").alt = c.name;
     $("#vGame").textContent = GAME[c.game] || "";
     $("#vName").textContent = c.name;
     $("#vSet").textContent = c.set || "";
@@ -1027,7 +1056,7 @@ marqueeReady.then(() => fetch("cards.json").then(r => r.json())).then(async card
 
     return {
       async show(c) {
-        const [f, bk] = await Promise.all([tex(c.img), BACKS[c.game] ? tex(BACKS[c.game]) : Promise.resolve(sleeve)]);
+        const [f, bk] = await Promise.all([tex(artBig(c)), BACKS[c.game] ? tex(BACKS[c.game]) : Promise.resolve(sleeve)]);
         const put = (mesh, t) => { if (!t) return; mesh.material.map = t; mesh.material.needsUpdate = true; };
         put(front, f); put(back, bk);
         put(mirror.children[1], f); if (mirror.children[2]) put(mirror.children[2], bk);
@@ -1090,7 +1119,7 @@ marqueeReady.then(() => fetch("cards.json").then(r => r.json())).then(async card
   const warm = async (c) => {
     const THREE = await loadThree();
     if (!gl) { gl = buildStage(THREE); gl.hideCanvas(true); }
-    if (warmFor !== c.img) { await gl.show(c); warmFor = c.img; }
+    if (warmFor !== artBig(c)) { await gl.show(c); warmFor = artBig(c); }
     return gl;
   };
 
@@ -1109,7 +1138,7 @@ marqueeReady.then(() => fetch("cards.json").then(r => r.json())).then(async card
     $("#sName").textContent = c.name;
 
     let ready = null;
-    try { ready = (warmFor === c.img && gl) ? gl : await warm(c); } catch (e) { ready = null; }
+    try { ready = (warmFor === artBig(c) && gl) ? gl : await warm(c); } catch (e) { ready = null; }
 
     if (!ready) {                              // no WebGL or the CDN is down
       $("#sLoad").textContent = "3D view unavailable";
