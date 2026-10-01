@@ -5,33 +5,35 @@ This is a DNS job plus two things that have to be fixed before a real domain poi
 
 ---
 
-## 1. BLOCKER: the email signup goes nowhere
+## 1. The email signup - BUILT, needs one key
 
-`index.html` line ~1193:
+`index.html` used to clear the box, print "You are on the list" and **discard the address**. It now
+POSTs to Web3Forms, which emails darksteelforge@gmail.com:
 
-```js
-$("#notify").addEventListener("submit", e => {
-  e.preventDefault();
-  e.target.querySelector("input").value = "";
-  $("#said").textContent = "You are on the list. We will email you the day the doors open.";
-});
-```
+    Subject: Darksteel Forge - someone wants to be notified
+    buyer@example.com says: I want to be notified when you open your doors.
 
-It clears the box, prints a confirmation, and **discards the address**. No endpoint, no storage,
-no list. That was correct for a demo and is not correct on a live site: it tells real customers
-something untrue and throws away every lead, which is the only job a coming-soon page has.
+Reply-to is set to the customer, so hitting reply in Gmail answers them directly. Web3Forms was
+picked over FormSubmit because FormSubmit injects adverts into the submission email.
 
-The page is static on GitHub Pages, so it cannot store anything itself - it needs a third-party
-endpoint. Preference, in order:
+**The one remaining gate:** `const NOTIFY_KEY = ""` near the bottom of `index.html`. Get the key at
+web3forms.com with darksteelforge@gmail.com, paste it between the quotes, push. While it is blank
+the form says "The list is not switched on yet. Email darksteelforge@gmail.com and we will add you."
+rather than lying to a customer.
 
-1. **A real email platform** (Mailchimp, Beehiiv, Kit). Free into the hundreds of contacts, and the
-   list ends up in the tool they will actually send the launch email from. One embed/POST URL.
-2. A form relay (Formspree and similar). Fine technically, but it just forwards to an inbox and
-   somebody has to re-key the addresses into a mailer later.
+Verified 2026-10-01 against a stubbed `window.fetch`, all four paths:
 
-Whichever is chosen, the handler becomes a `fetch(ENDPOINT, {method:"POST", body})` with real
-success and failure states - and **the confirmation line must only print on a successful response**.
-Printing it regardless is the bug that exists today, just with extra steps.
+| case | result |
+|---|---|
+| no key | "not switched on yet" message, **0 network calls**, input preserved |
+| 200 `success:true` | "You are on the list", input cleared, button re-enabled |
+| 401 | "That did not send. Try again, or email darksteelforge@gmail.com.", input preserved |
+| network throw | same failure message, no unhandled rejection |
+
+An offscreen honeypot checkbox (`name="botcheck"`) sits in the form. **It was posting `"on"`** - an
+unchecked checkbox's `.value` is the string "on" regardless of state, and Web3Forms spam-rejects any
+truthy botcheck, so every genuine signup would have been silently dropped. It reads `.checked` now.
+That bug was invisible to every test that did not inspect the posted body.
 
 ## 2. `hello@darksteelforge.gg` is invented
 

@@ -113,6 +113,9 @@ h1.soon .molten{background-image:linear-gradient(100deg,#8a2f06 0%,#ff6a1a 22%,#
 form.notify{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap;max-width:520px;margin:2.2rem auto 0}
 form.notify input{flex:1 1 240px;min-height:var(--tap);background:#111317;border:1px solid var(--line);color:var(--ink);padding:0 1.1rem;font:inherit;outline:0;border-radius:3px}
 form.notify input:focus{border-color:var(--ember)}
+/* honeypot - never shown to a person, bots fill it and the submission is rejected */
+form.notify .hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none}
+form.notify button[disabled]{opacity:.6;pointer-events:none}
 .btn{display:inline-flex;align-items:center;justify-content:center;min-height:var(--tap);padding:0 1.5rem;border:1px solid transparent;
   background:linear-gradient(180deg,#ff8a3d,#ff5a12);color:#1a0a02;font-size:.74rem;letter-spacing:.26em;text-transform:uppercase;font-weight:700;
   box-shadow:0 10px 30px rgba(255,106,26,.28);transition:background .3s,transform .3s}
@@ -410,6 +413,7 @@ footer a{color:var(--ink-2);display:inline-block;padding:.6rem 0}
 
     <form class="notify" id="notify">
       <input type="email" required placeholder="Email me when it opens" aria-label="Email address">
+      <input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
       <button class="btn" type="submit">Notify me</button>
     </form>
     <p class="said" id="said"></p>
@@ -1219,10 +1223,67 @@ marqueeReady.then(() => fetch("cards.json").then(r => r.json())).then(async card
 })();
 
 
-$("#notify").addEventListener("submit", e => {
+/* ---- THE NOTIFY-ME FORM ---------------------------------------------------------------------
+   Matt, 2026-10-01: "If they put their email in the notify me box just have it send an email with
+   darksteelforge@gmail.com with their email saying I want to be notified when you open your doors."
+
+   WHAT THIS REPLACED, and why it mattered: the old handler cleared the box and printed "You are on
+   the list" while THROWING THE ADDRESS AWAY. Nothing was ever sent or stored. Harmless in a demo;
+   on a live site it tells real customers something untrue and loses every lead the page collects,
+   which is the only job a coming-soon page has.
+
+   The site is static on GitHub Pages, so it cannot send mail itself - it needs a relay. Web3Forms
+   over FormSubmit because FormSubmit injects ADVERTS into every submission email, and these land
+   in the client's own inbox. Free tier is 250 submissions a month, which is plenty here.
+
+   THE CONFIRMATION ONLY PRINTS ON A SUCCESSFUL RESPONSE. Printing it regardless is exactly the bug
+   that was here before, just with a network call in front of it.
+
+   SET THIS: get the key at web3forms.com with darksteelforge@gmail.com as the destination (it is
+   emailed to that address, takes a minute). Until it is set the form says so rather than lying. */
+const NOTIFY_KEY = "";   // <-- Web3Forms access key for darksteelforge@gmail.com
+
+$("#notify").addEventListener("submit", async e => {
   e.preventDefault();
-  e.target.querySelector("input").value = "";
-  $("#said").textContent = "You are on the list. We will email you the day the doors open.";
+  const form = e.target;
+  const input = form.querySelector("input");
+  const btn = form.querySelector("button");
+  const say = $("#said");
+  const email = (input.value || "").trim();
+  if (!email) return;
+
+  if (!NOTIFY_KEY) {
+    say.textContent = "The list is not switched on yet. Email darksteelforge@gmail.com and we will add you.";
+    return;
+  }
+
+  btn.disabled = true;
+  say.textContent = "Adding you...";
+  try {
+    const r = await fetch("https://api.web3forms.com/submit", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      body: JSON.stringify({
+        access_key: NOTIFY_KEY,
+        subject: "Darksteel Forge - someone wants to be notified",
+        from_name: "Darksteel Forge coming soon page",
+        email,                                   // reply-to lands on the customer
+        message: `${email} says: I want to be notified when you open your doors.`,
+        botcheck: form.botcheck ? form.botcheck.checked : false,
+      }),
+    });
+    const out = await r.json().catch(() => ({}));
+    if (r.ok && out.success) {
+      input.value = "";
+      say.textContent = "You are on the list. We will email you the day the doors open.";
+    } else {
+      say.textContent = "That did not send. Try again, or email darksteelforge@gmail.com.";
+    }
+  } catch {
+    say.textContent = "That did not send. Try again, or email darksteelforge@gmail.com.";
+  } finally {
+    btn.disabled = false;
+  }
 });
 </script>
 <div class="viewer" id="viewer" role="dialog" aria-modal="true" aria-labelledby="vName">
