@@ -101,29 +101,26 @@ the `pay` and `_domainconnect` CNAMEs and both of the extra TXT records entirely
 had queried those names. **Get a screenshot of the registrar's record list before writing a single
 instruction about it.**
 
-### THE BLOCKER: the Website Builder owns the A record, and the unlock is not in the table
+### The apex A record reads "WebsiteBuilder Site" - and it is NOT locked
 
-The client started a GoDaddy Websites + Marketing site on this domain and has abandoned it.
-Connecting a site to a domain LOCKS its DNS records - GoDaddy refuses to edit the apex A record
-while the connection exists, and it is not a row you can simply delete.
+The client started a GoDaddy Websites + Marketing site on this domain and abandoned it, so the apex
+A record shows the product name instead of an address. **It is still an ordinary, deletable row.**
+In the screenshot its Delete and Edit icons are solid black; the NS and SOA rows directly below have
+greyed icons with "?" badges. Those two are the locked records. The A record is not one of them.
 
-**The unlock is above the records table, not in it.** GoDaddy's own instructions
-(https://www.godaddy.com/help/remove-a-connection-from-my-domain-32079):
+**A wrong turn worth not repeating.** On seeing "WebsiteBuilder Site" the assumption was that the
+connection locked the record, and GoDaddy's article on removing a *template* connection
+(https://www.godaddy.com/help/remove-a-connection-from-my-domain-32079) was read as confirmation. It
+describes third-party DNS templates - Squarespace, Instagram - and Matt went looking for a "Remove"
+link that is not on his page: *"Not seeing any remove button? What are you talking about?"* The
+screenshot that disproved it had been in hand for half an hour. A generic help page does not
+outrank the actual screen.
 
-    Domain Portfolio -> the domain -> DNS
-    Above the records table, next to the connected site's name: "Remove"
-    Confirm: "Yes, let's do it!"
-
-That frees the A record. Unpublishing the site instead
-(https://www.godaddy.com/help/unpublish-my-websites-marketing-site-32277) only swaps the visitor's
-page for a Coming Soon placeholder, and GoDaddy's documentation does not claim it releases DNS, so
-it is not the route.
-
-Both screenshots were cropped to the records table, which is why a first pass missed this entirely.
+If the delete ever IS refused, the connection route above is the fallback. It was not needed here.
 
 ### DELETE
 
-    A      @      "WebsiteBuilder Site"      (detach the builder first - see above)
+    A      @      "WebsiteBuilder Site"      ordinary delete, the row is not locked
 
 ### ADD (or EDIT, for www)
 
