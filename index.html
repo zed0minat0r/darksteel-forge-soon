@@ -182,7 +182,13 @@ form.notify button[disabled]{opacity:.6;pointer-events:none}
   grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:clamp(1rem,3vw,2rem);
   background:linear-gradient(180deg,#131519,#0c0e10);border:1px solid var(--line-2);border-radius:16px;
   padding:clamp(1rem,3vw,1.9rem);box-shadow:0 40px 90px rgba(0,0,0,.75)}
-.vpanel img{width:100%;border-radius:11px;background:#15181c;box-shadow:0 20px 44px rgba(0,0,0,.7);
+/* The card art is capped by the VIEWPORT as well as by the column. Measured at
+   844x390 (a phone on its side): the art came out 487px tall inside a 359px
+   panel and the bottom 155px of the card was simply clipped away - Matt:
+   "some of the bigger cards go too close to the top of the page and it looks
+   awkward or even gets cut off". max-height only binds when the screen is
+   short; at 375x667 and up the column is still the limit and nothing moves. */
+.vpanel img{max-width:100%;width:auto;height:auto;max-height:70vh;display:block;margin-inline:auto;border-radius:11px;background:#15181c;box-shadow:0 20px 44px rgba(0,0,0,.7);
   transform-origin:top left;will-change:transform}
 .vart{position:relative}
 .vside{will-change:transform,opacity}
@@ -502,7 +508,7 @@ footer a{color:var(--ink-2);display:inline-block;padding:.6rem 0}
     <p>Drops, restocks and the opening date land here first.</p>
     <div class="socials">
       <a href="#" data-soon onclick="event.preventDefault();document.getElementById('soonNote').hidden=false" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 22v-8h2.7l.4-3.1h-3.1V8.9c0-.9.3-1.5 1.6-1.5h1.6V4.6c-.3 0-1.2-.1-2.3-.1-2.3 0-3.9 1.4-3.9 4v2.4H7.8V14h2.7v8h3z"/></svg>Facebook</a>
-      <a href="#" data-soon onclick="event.preventDefault();document.getElementById('soonNote').hidden=false" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.2c3.2 0 3.6 0 4.9.1 1.2.1 1.8.2 2.2.4.6.2 1 .5 1.4.9.4.4.7.8.9 1.4.2.4.4 1 .4 2.2.1 1.3.1 1.7.1 4.9s0 3.6-.1 4.9c-.1 1.2-.2 1.8-.4 2.2-.2.6-.5 1-.9 1.4-.4.4-.8.7-1.4.9-.4.2-1 .4-2.2.4-1.3.1-1.7.1-4.9.1s-3.6 0-4.9-.1c-1.2-.1-1.8-.2-2.2-.4-.6-.2-1-.5-1.4-.9-.4-.4-.7-.8-.9-1.4-.2-.4-.4-1-.4-2.2C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.9c.1-1.2.2-1.8.4-2.2.2-.6.5-1 .9-1.4.4-.4.8-.7 1.4-.9.4-.2 1-.4 2.2-.4C8.4 2.2 8.8 2.2 12 2.2zm0 1.8c-3.1 0-3.5 0-4.8.1-.9 0-1.4.2-1.7.3-.4.2-.7.4-1 .7-.3.3-.5.6-.7 1-.1.3-.3.8-.3 1.7-.1 1.3-.1 1.7-.1 4.8s0 3.5.1 4.8c0 .9.2 1.4.3 1.7.2.4.4.7.7 1 .3.3.6.5 1 .7.3.1.8.3 1.7.3 1.3.1 1.7.1 4.8.1s3.5 0 4.8-.1c.9 0 1.4-.2 1.7-.3.4-.2.7-.4 1-.7.3-.3.5-.6.7-1 .1-.3.3-.8.3-1.7.1-1.3.1-1.7.1-4.8s0-3.5-.1-4.8c0-.9-.2-1.4-.3-1.7-.2-.4-.4-.7-.7-1-.3-.3-.6-.5-1-.7-.3-.1-.8-.3-1.7-.3-1.3-.1-1.7-.1-4.8-.1zm0 3.1a4.9 4.9 0 1 1 0 9.8 4.9 4.9 0 0 1 0-9.8zm0 8.1a3.2 3.2 0 1 0 0-6.4 3.2 3.2 0 0 0 0 6.4zm6.3-8.3a1.15 1.15 0 1 1-2.3 0 1.15 1.15 0 0 1 2.3 0z"/></svg>Instagram</a>
+      <a href="https://www.instagram.com/darksteelforgegames" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.2c3.2 0 3.6 0 4.9.1 1.2.1 1.8.2 2.2.4.6.2 1 .5 1.4.9.4.4.7.8.9 1.4.2.4.4 1 .4 2.2.1 1.3.1 1.7.1 4.9s0 3.6-.1 4.9c-.1 1.2-.2 1.8-.4 2.2-.2.6-.5 1-.9 1.4-.4.4-.8.7-1.4.9-.4.2-1 .4-2.2.4-1.3.1-1.7.1-4.9.1s-3.6 0-4.9-.1c-1.2-.1-1.8-.2-2.2-.4-.6-.2-1-.5-1.4-.9-.4-.4-.7-.8-.9-1.4-.2-.4-.4-1-.4-2.2C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.9c.1-1.2.2-1.8.4-2.2.2-.6.5-1 .9-1.4.4-.4.8-.7 1.4-.9.4-.2 1-.4 2.2-.4C8.4 2.2 8.8 2.2 12 2.2zm0 1.8c-3.1 0-3.5 0-4.8.1-.9 0-1.4.2-1.7.3-.4.2-.7.4-1 .7-.3.3-.5.6-.7 1-.1.3-.3.8-.3 1.7-.1 1.3-.1 1.7-.1 4.8s0 3.5.1 4.8c0 .9.2 1.4.3 1.7.2.4.4.7.7 1 .3.3.6.5 1 .7.3.1.8.3 1.7.3 1.3.1 1.7.1 4.8.1s3.5 0 4.8-.1c.9 0 1.4-.2 1.7-.3.4-.2.7-.4 1-.7.3-.3.5-.6.7-1 .1-.3.3-.8.3-1.7.1-1.3.1-1.7.1-4.8s0-3.5-.1-4.8c0-.9-.2-1.4-.3-1.7-.2-.4-.4-.7-.7-1-.3-.3-.6-.5-1-.7-.3-.1-.8-.3-1.7-.3-1.3-.1-1.7-.1-4.8-.1zm0 3.1a4.9 4.9 0 1 1 0 9.8 4.9 4.9 0 0 1 0-9.8zm0 8.1a3.2 3.2 0 1 0 0-6.4 3.2 3.2 0 0 0 0 6.4zm6.3-8.3a1.15 1.15 0 1 1-2.3 0 1.15 1.15 0 0 1 2.3 0z"/></svg>Instagram</a>
       <a href="#" data-soon onclick="event.preventDefault();document.getElementById('soonNote').hidden=false" aria-label="X"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.2 3h3.3l-7.2 8.2L21.8 21h-6.6l-5.2-6.6L4.1 21H.8l7.7-8.8L.4 3H7l4.7 6.1L17.2 3zm-1.2 16h1.8L7.8 4.8H5.9L16 19z"/></svg>X</a>
     </div>
     <p id="soonNote" class="said" hidden>Accounts go live with the shop - the email list gets the links first.</p>
@@ -751,7 +757,38 @@ marqueeReady.then(() => fetch("cards.json").then(r => r.json())).then(async card
     const c = cards[(i + cards.length) % cards.length];
     at = (i + cards.length) % cards.length;
     const d = c.detail || {};
-    $("#vImg").src = artBig(c); $("#vImg").alt = c.name;
+    /* THE CARD MUST NEVER OPEN AROUND AN EMPTY BOX. `#vImg` carries no width or
+       height, and .vpanel img is width:100% with an automatic height, so until
+       the full-size art arrived the image measured 211 x 0 and the panel opened
+       around a zero-height sliver that then popped to 320px. Measured on the
+       live site: 3 frames at h=0 before it snapped open - that pop is the
+       "flash" going from level 1 to level 2.
+       Two parts to the fix. The width/height attributes give the box its aspect
+       ratio before any pixels exist, so the layout is right on frame one. And
+       the first thing painted is the LANE's copy of the same art, which is
+       already downloaded and decoded, so the card is visible immediately; the
+       bigger file replaces it only once it has decoded, which is a swap between
+       two identical pictures and invisible. */
+    const img = $("#vImg");
+    /* Take the ratio from this card's own lane copy, which is already decoded,
+       rather than hardcoding one: the art is 600x838, 600x825 or 600x839
+       depending on the game, and a fixed ratio would stretch a third of the set
+       by 1.5%. Falls back to the commonest size if the lane image is not in yet. */
+    const tImg = document.querySelector(`button[data-i="${at}"] img`);
+    const nw = tImg && tImg.naturalWidth ? tImg.naturalWidth : 600;
+    const nh = tImg && tImg.naturalHeight ? tImg.naturalHeight : 838;
+    img.setAttribute("width", nw); img.setAttribute("height", nh);
+    img.alt = c.name;
+    const big = artBig(c), mine = at;
+    if (img.getAttribute("data-art") !== big) {
+      img.setAttribute("data-art", big);
+      img.src = laneArt(c);
+      const up = new Image();
+      up.decoding = "async";
+      up.src = big;
+      const swap = () => { if (at === mine && img.getAttribute("data-art") === big) img.src = big; };
+      (up.decode ? up.decode().then(swap, swap) : (up.onload = swap));
+    }
     $("#vGame").textContent = GAME[c.game] || "";
     $("#vName").textContent = c.name;
     $("#vSet").textContent = c.set || "";
@@ -861,10 +898,15 @@ marqueeReady.then(() => fetch("cards.json").then(r => r.json())).then(async card
     // hold the pause until the backdrop has most of its opacity and the freeze
     // happens behind it.
     clearTimeout(laneTimer);
-    laneTimer = setTimeout(() => lanes.forEach(l => l.style.animationPlayState = "paused"), slow.matches ? 0 : 190);
+    // 190ms was not actually behind the backdrop. The backdrop is a 420ms LINEAR
+    // fade, so at 190ms it is only 45% opaque - measured on the live site, the
+    // freeze landed at opacity 0.357 and 190 drifting cards visibly stopped dead
+    // in plain sight. 340ms puts it at 81%, which is what "most of its opacity"
+    // was always meant to say.
+    laneTimer = setTimeout(() => lanes.forEach(l => l.style.animationPlayState = "paused"), slow.matches ? 0 : 340);
     play(bg, [{ opacity: 0 }, { opacity: 1 }], 420, "linear");
     play(panel, [{ opacity: 0, transform: "scale(.92)" }, { opacity: 1, transform: "none" }], 640, EASE_OUT);
-    flyFrom(from, 720, EASE_OUT);
+    const flight = flyFrom(from, 720, EASE_OUT);
     play(side, [{ opacity: 0, transform: "translateY(26px)" }, { opacity: 1, transform: "none" }], 560, EASE_OUT, 140);
     stagger(220);
     placeArrows();
@@ -872,7 +914,14 @@ marqueeReady.then(() => fetch("cards.json").then(r => r.json())).then(async card
     // renderer, upload THIS card's texture. By the time the card is tapped there
     // is nothing left to do but place the camera, which is what lets level 3
     // open with no switch and no wait.
-    (window.requestIdleCallback || (f => setTimeout(f, 300)))(() => { warm(cards[at]).catch(() => {}); });
+    // ...but NOT during the flight. requestIdleCallback fires in the gaps between
+    // animation frames, and three.js arriving is one long main-thread block:
+    // measured on the live site it landed 582ms in and stalled the page for
+    // 189ms, right in the middle of the card flying. Wait for the card to land.
+    const warmNow = () => (window.requestIdleCallback || (f => setTimeout(f, 1)))(
+      () => { warm(cards[at]).catch(() => {}); });
+    if (flight && flight.finished) flight.finished.then(warmNow, warmNow);
+    else setTimeout(warmNow, 760);
     $("#vClose").focus({ preventScroll: true });
   };
 
