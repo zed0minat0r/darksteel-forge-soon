@@ -1350,7 +1350,12 @@ marqueeReady.then(() => fetch("cards.json").then(r => r.json())).then(async card
 
    SET THIS: get the key at web3forms.com with darksteelforge@gmail.com as the destination (it is
    emailed to that address, takes a minute). Until it is set the form says so rather than lying. */
-const NOTIFY_KEY = "fd589e6c-675a-4426-92db-1ea5134f0cbe";   // <-- Web3Forms access key for darksteelforge@gmail.com
+const NOTIFY_KEY = "fd589e6c-675a-4426-92db-1ea5134f0cbe";
+/* A Web3Forms key is bound to whichever address signed up for it, and NOTHING here can see
+   which one that is - `success:true` means the API accepted the POST, not where the mail
+   went. The first key issued for this form was created from Matt's own inbox and every
+   signup landed there instead of the client's. Whenever this key changes, confirm the
+   destination by having someone open darksteelforge@gmail.com and say the test arrived. */
 
 $("#notify").addEventListener("submit", async e => {
   e.preventDefault();
