@@ -172,3 +172,23 @@ the client that is coming rather than discovering it when it blocks them.
 **The two repos are separate and must stay that way** (see the darksteel-forge-site memory): this
 one is `darksteel-forge-soon`, the full build is `darksteel-forge`. They go back to the full site
 later. Pointing the domain here does not commit them to anything.
+
+---
+
+## DONE 2026-10-02
+
+Live at **https://darksteelforgegames.com** with HTTPS enforced. Custom domain and the cert were
+both set through the Pages API rather than the Settings UI:
+
+    gh api -X PUT repos/zed0minat0r/darksteel-forge-soon/pages -f cname=darksteelforgegames.com
+    gh api -X PUT repos/zed0minat0r/darksteel-forge-soon/pages -F https_enforced=true
+
+Certificate was approved within minutes, covering apex and www, not the 24h the docs warn about.
+
+Verified after the change: 4 A, 4 AAAA, `www` -> zed0minat0r.github.io (301 to apex over HTTPS),
+**5 MX and 5 TXT intact**, and the served page md5-identical to the repo.
+
+Link previews: the page had no Open Graph tags, so iMessage flattened the transparent logo onto
+white. `img/og.jpg` (1200x630) and the full og:/twitter: set fixed it.
+
+**The one thing still open: `NOTIFY_KEY`.**
