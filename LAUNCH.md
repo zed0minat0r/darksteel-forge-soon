@@ -191,4 +191,12 @@ Verified after the change: 4 A, 4 AAAA, `www` -> zed0minat0r.github.io (301 to a
 Link previews: the page had no Open Graph tags, so iMessage flattened the transparent logo onto
 white. `img/og.jpg` (1200x630) and the full og:/twitter: set fixed it.
 
-**The one thing still open: `NOTIFY_KEY`.**
+`NOTIFY_KEY` is in (2026-10-02). A real submission through the live site returned `success:true`
+and delivered to darksteelforge@gmail.com.
+
+**Nothing is open. The site is finished.** The next decision is the e-commerce move described above:
+GitHub Pages bans sites primarily facilitating commercial transactions, so the full shop cannot live
+here.
+
+Testing note: Web3Forms sits behind Cloudflare and 403s both `curl` and headless Chrome. Test the
+form with `headless:false` or the result is meaningless.
